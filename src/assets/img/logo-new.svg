@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Creator: CorelDRAW (Evaluation Version) -->
+<svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" width="210mm" height="297mm" version="1.1" style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd"
+viewBox="0 0 21000 29700"
+ xmlns:xlink="http://www.w3.org/1999/xlink"
+ xmlns:xodm="http://www.corel.com/coreldraw/odm/2003">
+ <defs>
+  <style type="text/css">
+   <![CDATA[
+    .str0 {stroke:#14B8A6;stroke-width:20;stroke-miterlimit:22.9256}
+    .str1 {stroke:white;stroke-width:20;stroke-miterlimit:22.9256}
+    .fil0 {fill:#14B8A6}
+    .fil1 {fill:white}
+   ]]>
+  </style>
+ </defs>
+ <g id="Layer_x0020_1">
+  <metadata id="CorelCorpID_0Corel-Layer"/>
+  <ellipse class="fil0 str0" cx="10740.47" cy="4798.4" rx="2638.87" ry="2538.03"/>
+  <ellipse class="fil0 str0" cx="4516.59" cy="11323.05" rx="2638.87" ry="2538.03"/>
+  <ellipse class="fil0 str0" cx="17275.04" cy="11920.32" rx="2638.87" ry="2538.03"/>
+  <path class="fil0 str0" d="M7015.99 18832.1l-5343.68 857.62c0,0 -692.73,-4123.2 2539.89,-4321.13 3232.63,-197.92 2803.79,3463.51 2803.79,3463.51z"/>
+  <path class="fil0 str0" d="M14477.4 18889.81l5353.17 857.26c0,0 666.79,-3886.29 -2362.24,-4343.49 -3029.04,-457.21 -3200.49,3162.37 -2990.93,3486.23z"/>
+  <path class="fil0 str0" d="M10660.54 19870.24l2680.41 -1010.41 14.02 -7493.88c0,0 -139.42,-2419.45 -2537.69,-2483.13 -2398.28,-63.69 -2790.93,1867.64 -2812.15,2048.07 -21.22,180.42 -28.14,7930.81 -28.14,7930.81l2683.55 1008.54z"/>
+  <g id="_1734082039920">
+   <path class="fil0 str0" d="M1548.19 22259.65l-58.2 -1362.06c0,0 7892.99,-1757.9 9266.7,628.64 1373.72,2386.53 442.39,803.28 442.39,803.28l-337.59 343.8 -279.4 0c0,0 -1571.62,-2031.84 -9033.9,-413.66z"/>
+   <path class="fil0 str0" d="M19982.43 22289.37l58.41 -1366.85c0,0 -7920.77,-1764.09 -9299.32,630.85 -1378.55,2394.93 -443.95,806.11 -443.95,806.11l338.79 345.01 280.38 0c0,0 1577.15,-2039 9065.69,-415.12z"/>
+  </g>
+  <polygon class="fil1 str1" points="9199.22,21935.58 9467.42,22012.34 10806.74,22713.47 12238.25,21994.32 10857.21,24124.81 "/>
+ </g>
+</svg>

@@ -1,0 +1,22 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.changeArticle {
+  max-height: 486px;
+}
+
+.commentDetail {
+  max-height: 280px;
+}
+.forumDetail {
+  max-height: 500px;
+}
+.features {
+  margin-top: -60px;
+}
+
+ul .active{
+  color: #14b8a6;
+}
+
