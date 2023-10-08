@@ -37,7 +37,7 @@ const ArticlePage = () => {
   };
 
   const filteredArticles = articles?.filter(
-    (article) => article.categori === "terbaru"
+    (article) => article.categori === "terbaru",
   );
 
   const displayedArticles = showAll
@@ -126,7 +126,9 @@ const ArticlePage = () => {
                     className="rounded-t-md"
                   />
                   <div className="m-2">
-                    <h2 className="text-lg font-medium line-clamp-3">{article.title}</h2>
+                    <h2 className="text-lg font-medium line-clamp-3">
+                      {article.title}
+                    </h2>
                     <span className="text-md text-slate-500">
                       {dayjs(article.createdAt).fromNow()}
                     </span>

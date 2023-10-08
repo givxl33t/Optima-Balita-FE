@@ -13,10 +13,10 @@ StuntingCenter adalah sebuah proyek akhir yang bertujuan untuk menyediakan infor
 
 ## Group Members
 
-- Wahdan Najmil Fata  
+- Wahdan Najmil Fata
 - Fitroh Izatul Malkiyah
-- Mugi Alfonso Rachman 
-- Nurul Aini 
+- Mugi Alfonso Rachman
+- Nurul Aini
 
 ## Features
 
@@ -33,4 +33,3 @@ StuntingCenter adalah sebuah proyek akhir yang bertujuan untuk menyediakan infor
 - Context
 - Mockapi
 - Tailwind CSS
-

@@ -1,10 +1,10 @@
 export const setCurrentUser = (user) => {
   const userData = JSON.stringify(user);
-  localStorage.setItem('currentUser', userData);
+  localStorage.setItem("currentUser", userData);
 };
 
 export const getCurrentUser = () => {
-  const userData = localStorage.getItem('currentUser');
+  const userData = localStorage.getItem("currentUser");
   if (userData) {
     return JSON.parse(userData);
   }
@@ -12,7 +12,7 @@ export const getCurrentUser = () => {
 };
 
 export const clearCurrentUser = () => {
-  localStorage.removeItem('currentUser');
+  localStorage.removeItem("currentUser");
 };
 
 export const updateCurrentUser = (newName) => {
@@ -30,6 +30,3 @@ export const getUserFromLocalStorage = (userId) => {
   }
   return null;
 };
-
-
-

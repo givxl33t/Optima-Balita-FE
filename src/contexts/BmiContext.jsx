@@ -13,10 +13,10 @@ export const BMIProvider = ({ children }) => {
     const fetchBMIList = async () => {
       try {
         const response = await axios.get(
-          "https://6450b0c5a3221969114f68c0.mockapi.io/api/loginRegister/bmi"
+          "https://6450b0c5a3221969114f68c0.mockapi.io/api/loginRegister/bmi",
         );
         const filteredBMIList = response.data.filter(
-          (data) => data.userId === currentUser.id
+          (data) => data.userId === currentUser.id,
         );
         setBMIList(filteredBMIList);
       } catch (error) {
@@ -33,7 +33,7 @@ export const BMIProvider = ({ children }) => {
     try {
       const response = await axios.post(
         "https://6450b0c5a3221969114f68c0.mockapi.io/api/loginRegister/bmi",
-        newBMIEntry
+        newBMIEntry,
       );
 
       setBMIList([...bmiList, response.data]);

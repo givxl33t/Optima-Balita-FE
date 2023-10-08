@@ -49,7 +49,6 @@ const LoginForm = () => {
   return (
     <div className="flex flex-col-reverse md:flex-row items-center justify-around min-h-screen font-sans">
       <div className="w-full max-w-md flex overflow-hidden">
-        
         <div className="w-full p-8">
           <h1 className=" text-center pb-16 text-2xl font-bold text-black">
             Silahkan login untuk melanjutkan
@@ -164,7 +163,6 @@ const LoginForm = () => {
       </div>
       <div className="w-full max-w-md flex bg-none overflow-hidden">
         <div className="w-full mx-auto md:mr-0">
-
           <img src={imgSide} alt="Side Image" className="w-full" />
         </div>
       </div>

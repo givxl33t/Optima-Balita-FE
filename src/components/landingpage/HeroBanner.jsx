@@ -22,7 +22,7 @@ const HeroBanner = () => {
             <div className="items-center flex">
               <div className="w-full lg:w-6/12 px-4">
                 <h1 className="text-white font-bold text-3xl md:text-5xl">
-                  Langkah Kecil Mencegah Dampak Besar
+                  Tumbuh Sehat, Lawan Stunting Bersama Kami!
                 </h1>
                 <p className="mt-4 text-lg text-gray-300 font-medium">
                   Kami hadir untuk mendukung perjalanan dalam mengatasi masalah

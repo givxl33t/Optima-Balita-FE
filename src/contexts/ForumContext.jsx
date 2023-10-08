@@ -8,17 +8,14 @@ export const ForumContext = createContext();
 // eslint-disable-next-line react/prop-types
 export const ForumProvider = ({ children }) => {
   const queryClient = useQueryClient();
-  const { currentUser} = useContext(AuthContext);
+  const { currentUser } = useContext(AuthContext);
   const { data: forums, isLoading } = useQuery("forums", fetchForum);
 
-  const postNewComment = useMutation(({ forumId }) =>
-    postComment(forumId)
-  );
+  const postNewComment = useMutation(({ forumId }) => postComment(forumId));
 
   const postNewDiscussion = useMutation((discussion) =>
-    postDiscussion(discussion)
+    postDiscussion(discussion),
   );
-
 
   const handlePostDiscussion = (discussion) => {
     postNewDiscussion.mutate(discussion, {
@@ -31,7 +28,6 @@ export const ForumProvider = ({ children }) => {
     });
   };
 
-  
   const handleReplyPost = async (forumId, newComment) => {
     if (newComment.trim() === "") return;
 

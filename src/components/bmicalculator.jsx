@@ -26,7 +26,7 @@ export const BmiCalculator = () => {
     const currentDate = new Date();
     const selectedDateOfBirth = new Date(date);
     const ageDiff = Math.floor(
-      (currentDate - selectedDateOfBirth) / (1000 * 60 * 60 * 24 * 30.44)
+      (currentDate - selectedDateOfBirth) / (1000 * 60 * 60 * 24 * 30.44),
     );
     const years = Math.floor(ageDiff / 12);
     const months = ageDiff % 12;
@@ -145,7 +145,9 @@ export const BmiCalculator = () => {
                       placeholderText="Pilih Tanggal"
                       className="p-2 rounded-md"
                     />
-                    <span className="text-xs pt-1 font-medium">{formBmiState.age}</span>
+                    <span className="text-xs pt-1 font-medium">
+                      {formBmiState.age}
+                    </span>
                   </div>
                 </div>
 
@@ -272,11 +274,21 @@ export const BmiCalculator = () => {
                   <table className="w-full border-collapse">
                     <thead className="text-md text-left font-medium text-gray-900">
                       <tr>
-                        <th className="border-b border-gray-500 md:px-4 px-1">Nama</th>
-                        <th className="border-b border-gray-500 md:px-4 px-1">Umur</th>
-                        <th className="border-b border-gray-500 md:px-4 px-1">TB</th>
-                        <th className="border-b border-gray-500 md:px-4 px-1">BB</th>
-                        <th className="border-b border-gray-500 md:px-4 px-1">BMI</th>
+                        <th className="border-b border-gray-500 md:px-4 px-1">
+                          Nama
+                        </th>
+                        <th className="border-b border-gray-500 md:px-4 px-1">
+                          Umur
+                        </th>
+                        <th className="border-b border-gray-500 md:px-4 px-1">
+                          TB
+                        </th>
+                        <th className="border-b border-gray-500 md:px-4 px-1">
+                          BB
+                        </th>
+                        <th className="border-b border-gray-500 md:px-4 px-1">
+                          BMI
+                        </th>
                         <th className="border-b border-gray-500 md:px-4 px-1">
                           Kategori
                         </th>

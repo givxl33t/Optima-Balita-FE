@@ -1,22 +1,22 @@
-import HeroBanner from "../components/landingpage/HeroBanner"
-import About from "../components/landingpage/About"
-import Article from "../components/landingpage/Article"
-import Forum from "../components/landingpage/Forum"
+import HeroBanner from "../components/landingpage/HeroBanner";
+import About from "../components/landingpage/About";
+import Article from "../components/landingpage/Article";
+import Forum from "../components/landingpage/Forum";
 
-import NavbarPage from "../components/landingpage/NavbarPage"
-import Footer from "../components/Footer"
+import NavbarPage from "../components/landingpage/NavbarPage";
+import Footer from "../components/Footer";
 
 const HomePage = () => {
   return (
     <>
-      <NavbarPage/>
+      <NavbarPage />
       <HeroBanner />
       <About />
       <Article />
       <Forum />
-      <Footer/>
+      <Footer />
     </>
-  )
-}
+  );
+};
 
-export default HomePage
+export default HomePage;

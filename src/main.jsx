@@ -26,5 +26,5 @@ ReactDOM.render(
       </AuthProvider>
     </Provider>
   </QueryClientProvider>,
-  document.getElementById("root")
+  document.getElementById("root"),
 );

@@ -69,80 +69,8 @@ const Navbar = () => {
             className="sm:w-12 w-12"
           />
         </NavLink>
-        <div className="lg:hidden">
-          <button
-            onClick={toggleMobileMenu}
-            className="block text-white focus:outline-none"
-          >
-            <svg className="h-6 w-6" viewBox="0 0 24 24">
-              {isMobileMenuOpen ? (
-                <path
-                  fillRule="evenodd"
-                  clipRule="evenodd"
-                  d="M4 6h16v1H4V6zm0 6h16v1H4v1zm16 4H4v1h16v-1z"
-                />
-              ) : (
-                <path
-                  fillRule="evenodd"
-                  clipRule="evenodd"
-                  d="M4 5h16v1H4V5zm0 6h16v1H4v-1zm0 6h16v1H4v-1z"
-                />
-              )}
-            </svg>
-          </button>
-        </div>
         <div>
-          <nav
-            className={`${
-              isMobileMenuOpen ? "block" : "hidden"
-            } lg:flex lg:items-center lg:w-auto w-full`}
-          >
-            <ul className="text-base text-gray-200 flex flex-col lg:flex-row items-center lg:justify-end lg:gap-8 space-x-3">
-              <li
-                className={`hover:text-teal-400 font-semibold text-md ${
-                  isScrolled ? "text-gray-500" : ""
-                }`}
-              >
-                <button className="flex gap-2 items-center">
-                  <AiFillHome className="menu text-lg" />
-                  <NavLink to="/">Home</NavLink>
-                </button>
-              </li>
-              <li
-                className={`hover:text-teal-400 font-semibold text-md ${
-                  isScrolled ? "text-gray-500" : ""
-                }`}
-              >
-                <button className="flex items-center gap-2">
-                  <AiFillFileText className="menu text-lg" />
-                  <NavLink to="/article">Artikel</NavLink>
-                </button>
-              </li>
-              <li
-                className={`hover:text-teal-400 font-semibold text-md ${
-                  isScrolled ? "text-gray-500" : ""
-                }`}
-              >
-                <button className="flex items-center gap-2">
-                  <AiFillCalculator className="menu text-lg" />
-                  <NavLink to="/bmi">BMI</NavLink>
-                </button>
-              </li>
-              <li
-                className={`hover:text-teal-400 font-semibold text-md ${
-                  isScrolled ? "text-gray-500" : ""
-                }`}
-              >
-                <button className="flex items-center gap-2">
-                  <AiFillMessage className="text-lg" />
-                  <NavLink to="/forum">Forum Diskusi</NavLink>
-                </button>
-              </li>
-            </ul>
-          </nav>
-        </div>
-        <div>
-          <div className="lg:px-4 py-2 hover:text-blue-500 font-semibold text-lg lg:pl-6">
+          <div className="lg:px-4 py-2  hover:text-blue-500 font-semibold text-lg lg:pl-6">
             {currentUser && (
               <div
                 className="flex items-center cursor-pointer hover:text-primary gap-2 bg-slate"
@@ -200,6 +128,99 @@ const Navbar = () => {
               </div>
             )}
           </div>
+        </div>
+        <div className="lg:hidden">
+          <button
+            onClick={toggleMobileMenu}
+            className="lg:hidden block text-white focus:outline-none relative"
+          >
+            <div className="h-6 w-6">
+              {isMobileMenuOpen ? (
+                <svg
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  className={`w-full h-full absolute top-0 left-0 transition-transform ${
+                    isMobileMenuOpen
+                      ? "rotate-90 opacity-100"
+                      : "rotate-0 opacity-50"
+                  }`}
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              ) : (
+                <svg
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  className="w-6 h-6 absolute top-0 left-0 transition-transform transform rotate-0"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M4 5h16v1H4V5zm0 6h16v1H4v-1zm0 6h16v1H4v-1z"
+                  />
+                </svg>
+              )}
+            </div>
+          </button>
+        </div>
+
+        <div>
+          <nav
+            className={`${
+              isMobileMenuOpen ? "block" : "hidden"
+            } lg:flex lg:items-center lg:w-auto w-full`}
+          >
+            <ul className="text-base text-gray-200 flex flex-col lg:flex-row items-center lg:justify-end lg:gap-8 space-x-3">
+              <li
+                className={`hover:text-teal-400 font-semibold text-md ${
+                  isScrolled ? "text-gray-500" : ""
+                }`}
+              >
+                <button className="flex gap-2 items-center">
+                  <AiFillHome className="menu text-lg" />
+                  <NavLink to="/">Home</NavLink>
+                </button>
+              </li>
+              <li
+                className={`hover:text-teal-400 font-semibold text-md ${
+                  isScrolled ? "text-gray-500" : ""
+                }`}
+              >
+                <button className="flex items-center gap-2">
+                  <AiFillFileText className="menu text-lg" />
+                  <NavLink to="/article">Artikel</NavLink>
+                </button>
+              </li>
+              <li
+                className={`hover:text-teal-400 font-semibold text-md ${
+                  isScrolled ? "text-gray-500" : ""
+                }`}
+              >
+                <button className="flex items-center gap-2">
+                  <AiFillCalculator className="menu text-lg" />
+                  <NavLink to="/bmi">BMI</NavLink>
+                </button>
+              </li>
+              <li
+                className={`hover:text-teal-400 font-semibold text-md ${
+                  isScrolled ? "text-gray-500" : ""
+                }`}
+              >
+                <button className="flex items-center gap-2">
+                  <AiFillMessage className="text-lg" />
+                  <NavLink to="/forum">Forum Diskusi</NavLink>
+                </button>
+              </li>
+            </ul>
+          </nav>
         </div>
       </div>
     </header>

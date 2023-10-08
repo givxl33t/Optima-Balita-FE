@@ -12,7 +12,6 @@ import relativeTime from "dayjs/plugin/relativeTime";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 
-
 function DetailDiskusi() {
   const { id } = useParams();
 
@@ -42,8 +41,6 @@ function DetailDiskusi() {
     setNewComment("");
   };
 
-
-
   return (
     <>
       <Navbar />
@@ -53,7 +50,9 @@ function DetailDiskusi() {
             <button>
               <BsChevronLeft className="text-xl" onClick={goBack} />
             </button>
-            <p className="font-semibold text-lg">Postingan { isLoading ? "Loading..." :forum?.username }</p>
+            <p className="font-semibold text-lg">
+              Postingan {isLoading ? "Loading..." : forum?.username}
+            </p>
             <button>
               <IoShareSocialOutline className="text-xl" onClick={sharePost} />
             </button>
@@ -106,7 +105,9 @@ function DetailDiskusi() {
                               className="rounded-full w-12"
                             />
                             <div>
-                              <p className="font-semibold text-md">{reply.username}</p>
+                              <p className="font-semibold text-md">
+                                {reply.username}
+                              </p>
                               <span className="text-sm text-slate-600">
                                 {dayjs(reply.createdAt).fromNow()}
                               </span>

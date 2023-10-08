@@ -78,7 +78,7 @@ export const updateUserInApi = async (userId, updatedUser) => {
 
 export const fetchArticles = () =>
   fetch("https://644e64ed1b4567f4d5866c65.mockapi.io/article").then(
-    (response) => response.json()
+    (response) => response.json(),
   );
 
 export const fetchForum = () =>
@@ -87,8 +87,8 @@ export const fetchForum = () =>
     .then((forums) => {
       const commentPromises = forums.map((forum) =>
         fetch(`${forumUrl}/${forum.id}/replies`).then((response) =>
-          response.json()
-        )
+          response.json(),
+        ),
       );
 
       return Promise.all(commentPromises).then((comments) => {
@@ -103,7 +103,7 @@ export const postComment = async (forumId, comment) => {
   try {
     const response = await axios.post(
       `${forumUrl}/${forumId}/replies`,
-      comment
+      comment,
     );
     return response.data;
   } catch (error) {
@@ -120,7 +120,6 @@ export const postDiscussion = (discussion) =>
     },
     body: JSON.stringify(discussion),
   }).then((response) => response.json());
-
 
 export const deleteDiscussion = (discussion) =>
   fetch("https://647d55a0af98471085499e81.mockapi.io/forums", {

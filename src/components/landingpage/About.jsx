@@ -14,16 +14,16 @@ const About = () => {
             <div className="md:w-1/2 p-4">
               <div data-aos="fade-up">
                 <h4 className="font-bold mb-3 text-2xl sm:text-3xl">
-                  Tentang Stunting Information Center
+                  Tentang Optima Balita
                 </h4>
                 <p className="font-normal mb-3 text-md sm:text-lg text-gray-800">
-                  Stunting Informasi Center merupakan sebuah website yang
-                  bergerak di bidang kesehatan. Website ini menyediakan berbagai
-                  fitur yang dapat digunakan secara gratis oleh pengguna.
-                  Stunting Information Center hadir untuk berbagi informasi
-                  penting mengenai stunting kepada pengguna dan menyediakan
-                  ruang diskusi bagi pengguna yang mengalami kesulitan, baik
-                  dalam pencegahan stunting maupun pengobatan stunting.
+                  Optima Balita merupakan sebuah website yang bergerak di bidang
+                  kesehatan. Website ini menyediakan berbagai fitur yang dapat
+                  digunakan secara gratis oleh pengguna. Optima Balita hadir
+                  untuk berbagi informasi penting mengenai stunting kepada
+                  pengguna dan menyediakan ruang diskusi bagi pengguna yang
+                  mengalami kesulitan, baik dalam pencegahan stunting maupun
+                  pengobatan stunting.
                 </p>
               </div>
             </div>

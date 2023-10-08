@@ -1,16 +1,15 @@
-import { createSlice } from '@reduxjs/toolkit';
-import { getUsers, createUser } from '../utils/api';
+import { createSlice } from "@reduxjs/toolkit";
+import { getUsers, createUser } from "../utils/api";
 import {
   getUserFromApi,
   removeUserFromApi,
   updateUserInApi,
-} from '../utils/api';
+} from "../utils/api";
 import {
   setCurrentUser,
   getCurrentUser,
   clearCurrentUser,
-} from '../utils/localStorage';
-
+} from "../utils/localStorage";
 
 export const loadUser = () => {
   return async (dispatch) => {
@@ -22,14 +21,14 @@ export const loadUser = () => {
           dispatch(setUser(response));
           setCurrentUser(response.id); // Simpan ID pengguna ke dalam local storage
         } else {
-          throw new Error('Invalid response');
+          throw new Error("Invalid response");
         }
       }
     } catch (error) {
-      console.error('Error loading user:', error);
+      console.error("Error loading user:", error);
       throw error;
     }
-  };  
+  };
 };
 
 export const logoutUser = () => {
@@ -42,7 +41,7 @@ export const logoutUser = () => {
         dispatch(logout());
       }
     } catch (error) {
-      console.error('Error removing user:', error);
+      console.error("Error removing user:", error);
       throw error;
     }
   };
@@ -53,16 +52,18 @@ export const loginUser = (credentials) => async (dispatch) => {
     dispatch(loginRequest());
     const users = await getUsers();
     const user = users.find(
-      (user) => user.email === credentials.email && user.password === credentials.password
+      (user) =>
+        user.email === credentials.email &&
+        user.password === credentials.password,
     );
 
     if (user) {
       dispatch(loginSuccess(user));
     } else {
-      throw new Error('Invalid email or password');
+      throw new Error("Invalid email or password");
     }
   } catch (error) {
-    throw new Error('An error occurred while logging in');
+    throw new Error("An error occurred while logging in");
   }
 };
 
@@ -72,7 +73,7 @@ export const registerUser = (user) => async (dispatch) => {
     await createUser(user);
     dispatch(registerSuccess());
   } catch (error) {
-    dispatch(registerFailure('Terjadi kesalahan saat melakukan register'));
+    dispatch(registerFailure("Terjadi kesalahan saat melakukan register"));
   }
 };
 
@@ -82,7 +83,7 @@ export const updateUserProfile = (userId, updatedUser) => {
       await updateUserInApi(userId, updatedUser);
       dispatch(authSlice.actions.updateUserProfile(updatedUser));
     } catch (error) {
-      console.error('Error updating user profile:', error);
+      console.error("Error updating user profile:", error);
       throw error;
     }
   };
@@ -95,7 +96,7 @@ const initialState = {
 };
 
 const authSlice = createSlice({
-  name: 'auth',
+  name: "auth",
   initialState,
   reducers: {
     setUser: (state, action) => {

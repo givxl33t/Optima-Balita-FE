@@ -17,7 +17,7 @@ export const AuthProvider = ({ children }) => {
     try {
       const response = await axios.get(MOCKAPI_USERS_URL);
       const foundedUser = response.data.find(
-        (user) => user.email === email && user.password === password
+        (user) => user.email === email && user.password === password,
       );
 
       if (!foundedUser) {
@@ -72,7 +72,6 @@ export const AuthProvider = ({ children }) => {
       return false;
     }
   };
-
 
   const isLoggedIn = Boolean(currentUser);
 

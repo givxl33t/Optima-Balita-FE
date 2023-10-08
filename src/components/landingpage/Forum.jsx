@@ -32,7 +32,9 @@ const Forum = () => {
                     src={forum.userProfile}
                     alt=""
                   />
-                  <h3 className="text-center font-semibold">{forum.username}</h3>
+                  <h3 className="text-center font-semibold">
+                    {forum.username}
+                  </h3>
                   <div className="flex items-center justify-center gap-1 py-2">
                     {[
                       ...Array(Math.min(Math.floor(forum.replies.length), 4)),
