@@ -94,10 +94,34 @@ export const fetchForum = () =>
       return Promise.all(commentPromises).then((comments) => {
         forums.forEach((forum, index) => {
           forum.replies = comments[index];
+          forum.likes = 0;
         });
         return forums;
       });
     });
+
+export const likeDiscussion = async (forumId) => {
+  try {
+    const response = await axios.put(`${forumUrl}/${forumId}`, {
+      likes: 1,
+    });
+    return response.data;
+  } catch (error) {
+    console.log("gagal menambahkan like", error);
+    throw error;
+  }
+};
+export const unlikeDiscussion = async (forumId) => {
+  try {
+    const response = await axios.put(`${forumUrl}/${forumId}`, {
+      likes: -1, // Kurangkan 1 dari jumlah likes
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Gagal menghapus like:", error);
+    throw error;
+  }
+};
 
 export const postComment = async (forumId, comment) => {
   try {

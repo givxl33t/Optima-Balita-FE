@@ -117,9 +117,9 @@ const authSlice = createSlice({
     register: (state, action) => {
       state.user = action.payload;
     },
-    updateUserProfile: (state, action) => {
-      // state.userProfile = action.payload;
-    },
+    // updateUserProfile: (state, action) => {
+    //   // state.userProfile = action.payload;
+    // },
   },
 });
 

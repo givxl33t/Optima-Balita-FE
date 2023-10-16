@@ -54,7 +54,7 @@ const Forum = () => {
       </div>
       <div className="flex justify-center">
         <button className="py-3 px-5 text-lg bg-gradient-to-r from-teal-600 to-teal-300 rounded-full font-semibold text-white">
-          <NavLink to="/login">Bergabung</NavLink>
+          <NavLink to="/forum">Bergabung</NavLink>
         </button>
       </div>
     </section>

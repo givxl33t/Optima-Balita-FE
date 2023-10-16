@@ -45,6 +45,23 @@ export const ForumProvider = ({ children }) => {
     }
   };
 
+  const handleLikeDiscussion = async (forumId) => {
+    try {
+      const likeDiscussion = forums.find((forum) => forum.id === forumId);
+
+      if (likeDiscussions.includes(forumId)) {
+        await unlikeDiscussion(forumId); // Panggil fungsi untuk menghapus like
+      } else {
+        await likeDiscussion(forumId); // Panggil fungsi untuk menambah like
+      }
+
+      // Perbarui state atau tampilan sesuai dengan jumlah likes yang diperbarui
+      // ...
+    } catch (error) {
+      console.error("Gagal mengelola like:", error);
+    }
+  };
+
   return (
     <ForumContext.Provider
       value={{
