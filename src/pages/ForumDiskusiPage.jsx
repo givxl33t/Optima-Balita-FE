@@ -98,20 +98,7 @@ function ForumDiskusiPage() {
       <Navbar />
       <div className="pt-10 mx-4 md:mx-32">
         <div className="max-w-2xl mx-auto">
-          <form onSubmit={handleSearch} className="space-y-4 flex items-center">
-            <div className="relative">
-              <input
-                type="text"
-                placeholder="Cari Diskusi"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="border-2 border-gray-300 rounded-md p-2 pl-10 w-full"
-              />
-              <div className="absolute top-2 left-2 text-gray-500">
-                <FaSearch />
-              </div>
-            </div>
-          </form>
+
 
           <div className="space-y-4 col-span-1 flex flex-col">
             <form onSubmit={handleSubmitDiscussion} className="space-y-4">
@@ -139,6 +126,20 @@ function ForumDiskusiPage() {
                 Post Discussion
               </button>
             </form>
+                      <form onSubmit={handleSearch} className="space-y-4 flex items-center">
+            <div className="relative">
+              <input
+                type="text"
+                placeholder="Cari Diskusi"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="border-2 border-gray-300 rounded-md p-2 pl-10 w-full"
+              />
+              <div className="absolute top-2 left-2 text-gray-500">
+                <FaSearch />
+              </div>
+            </div>
+          </form>
           </div>
           <div className="forumDetail overflow-y-auto overflow-x-hidden mt-8">
             {filteredForums.map((forum) => (

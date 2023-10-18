@@ -3,12 +3,12 @@ import { NavLink } from "react-router-dom";
 
 const Footer = () => {
   return (
-    <footer className="text-white mt-36" style={{ backgroundColor: "#05799D" }}>
+    <footer className="text-white mt-36 pl-16 pr-16 bg-teal-600">
       <div className="container p-4 mx-auto justify-center">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 py-3">
           <div className="">
             <h6 className="text-uppercase mb-4 font-bold text-md md:text-xl">
-              Stunting Center
+              Optima Balita
             </h6>
             <p className="text-white font-normal text-base">
               Apabila terdapat kendala saat mengakses website, atau terdapat

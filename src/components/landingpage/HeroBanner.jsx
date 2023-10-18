@@ -18,7 +18,7 @@ const HeroBanner = () => {
               className="w-full h-full absolute opacity-60 bg-black"
             ></span>
           </div>
-          <div className="container relative mx-auto">
+          <div className="container relative ml-10 mr-10">
             <div className="items-center flex">
               <div className="w-full lg:w-6/12 px-4">
                 <h1 className="text-white font-bold text-3xl md:text-5xl">

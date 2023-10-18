@@ -107,10 +107,10 @@ export const BmiCalculator = () => {
   return (
     <>
       <section className="justify-center sm:p-8 sm:px-24">
-        <div className="grid grid-cols-1 md:grid-cols-2 bg-teal-500 rounded-lg p-4 gap-4 md:p-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 bg-teal-400 rounded-lg p-4 gap-4 md:p-6">
           <div className=" flex flex-col max-w-md md:max-w-full rounded-lg">
             <div className="space-y-4">
-              <form className="space-y-3 md:space-y-4 bg-teal-300 p-4 rounded-lg">
+              <form className="space-y-3 md:space-y-4 bg-white p-4 rounded-lg">
                 <h1 className="text-xl font-bold text-center leading-tight tracking-tight text-gray-900 md:text-xl">
                   BMI Kalkulator
                 </h1>
@@ -265,7 +265,7 @@ export const BmiCalculator = () => {
             </div>
           </div>
           <div className="flex flex-col max-w-md md:max-w-full">
-            <div className="space-y-4 bg-gray-300 p-4 rounded-lg">
+            <div className="space-y-4 bg-white p-4 rounded-lg">
               <h1 className="text-lg font-bold text-center leading-tight tracking-tight md:text-xl">
                 Riwayat BMI
               </h1>
