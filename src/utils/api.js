@@ -111,10 +111,11 @@ export const likeDiscussion = async (forumId) => {
     throw error;
   }
 };
+
 export const unlikeDiscussion = async (forumId) => {
   try {
     const response = await axios.put(`${forumUrl}/${forumId}`, {
-      likes: -1, // Kurangkan 1 dari jumlah likes
+      likes: -1, // Decrease likes by 1
     });
     return response.data;
   } catch (error) {

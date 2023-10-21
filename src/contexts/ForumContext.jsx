@@ -45,34 +45,47 @@ export const ForumProvider = ({ children }) => {
     }
   };
 
-  const handleLikeDiscussion = async (forumId) => {
-    try {
-      const likeDiscussion = forums.find((forum) => forum.id === forumId);
+const handleLikeDiscussion = async (forumId) => {
+  try {
+    const forum = forums.find((forum) => forum.id === forumId);
 
-      if (likeDiscussions.includes(forumId)) {
-        await unlikeDiscussion(forumId); // Panggil fungsi untuk menghapus like
-      } else {
-        await likeDiscussion(forumId); // Panggil fungsi untuk menambah like
-      }
-
-      // Perbarui state atau tampilan sesuai dengan jumlah likes yang diperbarui
-      // ...
-    } catch (error) {
-      console.error("Gagal mengelola like:", error);
+    if (!forum) {
+      console.error("Forum not found");
+      return;
     }
-  };
 
-  return (
-    <ForumContext.Provider
-      value={{
-        forums,
-        isLoading,
-        handlePostDiscussion,
-        handleReplyPost,
-        postNewComment,
-      }}
-    >
-      {children}
-    </ForumContext.Provider>
-  );
+    if (forum.likes === undefined) {
+      forum.likes = 0;
+    }
+
+    if (forum.likes >= 0) {
+      await likeDiscussion(forumId); // Call the function to add a like
+      forum.likes += 1; // Increment the number of likes
+    } else {
+      await unlikeDiscussion(forumId); // Call the function to remove a like
+      forum.likes -= 1; // Decrement the number of likes
+    }
+
+    queryClient.invalidateQueries("forums"); // Refresh the forum data
+
+    // You can update the state or view according to the updated number of likes
+  } catch (error) {
+    console.error("Failed to manage like:", error);
+  }
+};
+
+return (
+  <ForumContext.Provider
+    value={{
+      forums,
+      isLoading,
+      handlePostDiscussion,
+      handleReplyPost,
+      handleLikeDiscussion,
+      postNewComment,
+    }}
+  >
+    {children}
+  </ForumContext.Provider>
+);
 };
