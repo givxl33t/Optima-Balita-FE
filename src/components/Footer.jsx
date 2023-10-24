@@ -106,7 +106,7 @@ const Footer = () => {
             </p>
             <p>
               <NavLink to="/" className="text-white font-normal text-base">
-                najmilwahdan@gmail.com
+                test@gmail.com
               </NavLink>
             </p>
             <p>
