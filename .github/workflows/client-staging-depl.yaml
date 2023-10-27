@@ -1,4 +1,4 @@
-name: client Staging Deployment
+name: Client Staging Deployment
 
 on:
   push:
