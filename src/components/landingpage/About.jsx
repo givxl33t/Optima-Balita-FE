@@ -14,7 +14,7 @@ const About = () => {
             <div className="md:w-1/2 p-4">
               <div data-aos="fade-up">
                 <h4 className="font-bold mb-3 text-2xl sm:text-3xl">
-                  Tentang Optima Balita
+                  Tentang Optima Balitaaaa
                 </h4>
                 <p className="font-normal mb-3 text-md sm:text-lg text-gray-800">
                   Optima Balita merupakan sebuah website yang bergerak di bidang
