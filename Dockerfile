@@ -1,14 +1,22 @@
-# Use the official NodeJS image.
-# https://hub.docker.com/_/node
-FROM node:18-buster-slim
+# Common build stage
+FROM node:18-buster-slim as common-build-stage
 
-# Copy local code to the container image.
 ENV APP_HOME /app
 WORKDIR $APP_HOME
 COPY . ./
 
-# Install production dependencies.
+# Development build stage
+FROM common-build-stage as development-build-stage
+
+RUN npm install
+
+CMD [ "npm", "run", "dev" ]
+
+# Production build stage
+FROM common-build-stage as production-build-stage
+
 RUN npm install --omit=dev
 
-# Run the web service on container startup.
-CMD [ "npm", "run", "dev" ]
+RUN npm run build
+
+CMD [ "npm", "run", "preview" ]
