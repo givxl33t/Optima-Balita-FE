@@ -1,8 +1,8 @@
 import axios from "axios";
 
-const apiUrl =
-  "https://6450b0c5a3221969114f68c0.mockapi.io/api/loginRegister/users";
+const apiUrl = "https://www.givxl33t.site/api/auth";
 const forumUrl = "https://647d55a0af98471085499e81.mockapi.io/forums";
+
 export const getUsers = async () => {
   try {
     const response = await axios.get(apiUrl);
@@ -11,7 +11,19 @@ export const getUsers = async () => {
     console.error("Gagal mendapatkan data pengguna:", error);
     throw error;
   }
+  s;
 };
+
+export const registerUser = async (user) => {
+  try {
+    const response = await axios.post(`${apiUrl}/register`, user);
+    return response.data;
+  } catch (error) {
+    console.error("Gagal mendaftar pengguna:", error);
+    throw error;
+  }
+};
+
 export const createUser = async (user) => {
   const response = await axios.post(apiUrl, user);
   return response.data;
@@ -39,8 +51,7 @@ export const saveUserToApi = async (user) => {
 };
 
 export const getUserFromApi = (email, password) => {
-  const url =
-    "https://6450b0c5a3221969114f68c0.mockapi.io/api/loginRegister/users";
+  const url = "https://www.givxl33t.site/api/auth";
   return axios.get(url).then((response) => {
     const users = response.data;
 
