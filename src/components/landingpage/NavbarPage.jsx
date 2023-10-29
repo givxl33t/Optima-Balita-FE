@@ -15,7 +15,7 @@ import Swal from "sweetalert2";
 const Navbar = () => {
   const [showDropdown, setShowDropdown] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const { currentUser, logout } = useContext(AuthContext);
+  const { currentUser, logout } = useContext(AuthContext); // Dapatkan currentUser dari AuthContext
   const [isScrolled, setIsScrolled] = useState(false);
 
   const handleLogout = () => {
@@ -103,7 +103,7 @@ const Navbar = () => {
                 <li>
                   <button
                     onClick={handleLogout}
-                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left"
+                    className="block px-4 py-2 text-sm text-gray-700 hover.bg-gray-100 w-full text-left"
                   >
                     Logout
                   </button>
