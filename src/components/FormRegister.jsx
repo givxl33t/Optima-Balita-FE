@@ -13,6 +13,7 @@ const RegisterForm = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
 
   const handleRegisterSuccess = () => {
@@ -22,25 +23,44 @@ const RegisterForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const success = await register(username, email, password);
+    try {
+      const success = await register(username, email, password);
 
-    if (success) {
-      // Redirect to login page
-      Swal.fire({
-        icon: "success",
-        title: "Akun Berhasil Dibuat",
-        text: "Login untuk melanjutkan",
-      }).then(() => {
-        handleRegisterSuccess();
-      });
-      console.log("Registration successful");
-    } else {
-      Swal.fire({
-        icon: "error",
-        title: "Akun Gagal Dibuat",
-        text: "Gagal mendaftar. Coba lagi nanti.",
-      });
-      console.log("Registration failed");
+      if (success) {
+        // Redirect to login page
+        Swal.fire({
+          icon: "success",
+          title: "Akun Berhasil Dibuat",
+          text: "Login untuk melanjutkan",
+        }).then(() => {
+          handleRegisterSuccess();
+        });
+        console.log("Registration successful");
+      } else {
+        // Reset the error message to be empty
+        setErrorMessage("");
+
+        Swal.fire({
+          icon: "error",
+          title: "Akun Gagal Dibuat",
+          text: "Gagal mendaftar. Coba lagi nanti.",
+        });
+        console.log("Registration failed");
+      }
+    } catch (error) {
+      // Check if the error response contains a message
+      if (
+        error.response &&
+        error.response.data &&
+        error.response.data.message
+      ) {
+        // Set the error message from the response
+        setErrorMessage(error.response.data.message);
+      } else {
+        // If there's no error message in the response, set a default error message
+        setErrorMessage("kata sandi tidak cukup kuat");
+      }
+      console.log("Registration failed with error:", error);
     }
   };
 
@@ -162,6 +182,10 @@ const RegisterForm = () => {
               Daftar
             </button>
             <p className="text-center text-gray-800 mb-4">
+              {errorMessage && (
+                <span className="text-red-500 text-sm">{errorMessage}</span>
+              )}
+              <br />
               Sudah punya akun?{" "}
               <NavLink
                 to="/login"
