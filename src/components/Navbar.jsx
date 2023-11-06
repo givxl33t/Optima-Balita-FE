@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import "../styles/index.css";
 import {
@@ -15,6 +15,8 @@ const Navbar = () => {
   const [showDropdown, setShowDropdown] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { currentUser, logout } = useContext(AuthContext);
+
+  console.log(currentUser);
 
   const handleLogout = () => {
     Swal.fire({
@@ -41,7 +43,7 @@ const Navbar = () => {
   };
 
   return (
-    <header className="sticky top-0 z-30 py-2 bg-white shadow-md">
+    <header className={`sticky top-0 z-50 py-2 bg-white shadow-md`}>
       <div className="flex justify-between items-center xl:max-w-7xl xl:mx-auto max-w-full flex-wrap px-4">
         <NavLink to="/home" className="cursor-pointer">
           <img
@@ -78,26 +80,28 @@ const Navbar = () => {
               isMobileMenuOpen ? "block" : "hidden"
             } lg:flex lg:items-center lg:w-auto w-full`}
           >
-            <ul className="text-base text-gray-200 flex flex-col lg:flex-row items-center lg:justify-end lg:gap-8 space-x-3">
-              <li className="hover:text-teal-400 font-semibold text-md text-gray-500">
+            <ul className="text-base text-gray-500 flex flex-col lg:flex-row items-center lg:justify-end lg:gap-8 space-x-3">
+              <li
+                className={`hover:text-teal-400 font-semibold text-md text-grey-500`}
+              >
                 <button className="flex gap-2 items-center">
                   <AiFillHome className="menu text-lg" />
                   <NavLink to="/">Home</NavLink>
                 </button>
               </li>
-              <li className="hover:text-teal-400 font-semibold text-md text-gray-500">
+              <li className={`hover:text-teal-400 font-semibold text-md`}>
                 <button className="flex items-center gap-2">
                   <AiFillFileText className="menu text-lg" />
                   <NavLink to="/article">Artikel</NavLink>
                 </button>
               </li>
-              <li className="hover:text-teal-400 font-semibold text-md text-gray-500">
+              <li className={`hover:text-teal-400 font-semibold text-md`}>
                 <button className="flex items-center gap-2">
                   <AiFillCalculator className="menu text-lg" />
                   <NavLink to="/bmi">BMI</NavLink>
                 </button>
               </li>
-              <li className="hover:text-teal-400 font-semibold text-md text-gray-500">
+              <li className={`hover:text-teal-400 font-semibold text-md`}>
                 <button className="flex items-center gap-2">
                   <AiFillMessage className="text-lg" />
                   <NavLink to="/forum">Forum Diskusi</NavLink>
@@ -115,10 +119,14 @@ const Navbar = () => {
               >
                 <img
                   src={currentUser.profile}
-                  alt={`Profile user ${currentUser.id}`}
+                  alt={`Profile${currentUser.id}`}
                   className="w-6 rounded-full"
                 />
-                <span className="text-slate-500">{currentUser.username}</span>
+                <span
+                  className={`hover:text-teal-400 text-gray-200 font-semibold text-md`}
+                >
+                  {currentUser.username}
+                </span>
               </div>
             )}
             {showDropdown && currentUser && (

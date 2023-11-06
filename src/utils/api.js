@@ -91,6 +91,23 @@ export const fetchArticles = () =>
   fetch("https://644e64ed1b4567f4d5866c65.mockapi.io/article").then(
     (response) => response.json(),
   );
+var requestOptions = {
+  method: "GET",
+  redirect: "follow",
+};
+
+fetch("https://www.givxl33t.site/api/article", requestOptions)
+  .then((response) => response.text())
+  .then((result) => console.log(result))
+  .catch((error) => console.log("error", error));
+// export const fetchArticles = async () => {
+//   try {
+//     const response = await axios.get("https://www.givxl33t.site/api/article");
+//     return response.data;
+//   } catch (error) {
+//     throw new Error("Failed to fetch articles");
+//   }
+// };
 
 export const fetchForum = () =>
   fetch("https://647d55a0af98471085499e81.mockapi.io/forums")
