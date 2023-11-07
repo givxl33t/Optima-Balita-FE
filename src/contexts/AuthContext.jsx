@@ -102,7 +102,12 @@ export const AuthProvider = ({ children }) => {
           setCurrentUser({ email, username, profile });
         }
       } catch (error) {
-        console.error(error);
+        if (error.response && error.response.status === 401) {
+          // Token kadaluwarsa, maka logout pengguna
+          logout();
+        } else {
+          console.error(error);
+        }
       }
     }
   };

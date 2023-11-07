@@ -98,13 +98,19 @@ const Navbar = () => {
               <li className={`hover:text-teal-400 font-semibold text-md`}>
                 <button className="flex items-center gap-2">
                   <AiFillCalculator className="menu text-lg" />
-                  <NavLink to="/bmi">BMI</NavLink>
+                  <NavLink to="/bmi">Status Gizi</NavLink>
                 </button>
               </li>
               <li className={`hover:text-teal-400 font-semibold text-md`}>
                 <button className="flex items-center gap-2">
                   <AiFillMessage className="text-lg" />
                   <NavLink to="/forum">Forum Diskusi</NavLink>
+                </button>
+              </li>
+              <li className={`hover:text-teal-400 font-semibold text-md`}>
+                <button className="flex items-center gap-2">
+                  <AiFillMessage className="text-lg" />
+                  <NavLink to="/consult">Konsultasi</NavLink>
                 </button>
               </li>
             </ul>
@@ -123,7 +129,7 @@ const Navbar = () => {
                   className="w-6 rounded-full"
                 />
                 <span
-                  className={`hover:text-teal-400 text-gray-200 font-semibold text-md`}
+                  className={`hover:text-teal-400 text-gray-500 font-semibold text-md`}
                 >
                   {currentUser.username}
                 </span>
