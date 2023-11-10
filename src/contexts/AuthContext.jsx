@@ -10,6 +10,19 @@ export const AuthProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState(null);
   const [checkingUser, setCheckingUser] = useState(true);
 
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      // Jika ada token di local storage, maka pengguna sudah login sebelumnya
+      // Ambil data pengguna dari token
+      const { email, username, profile } = JSON.parse(token);
+      setCurrentUser({ email, username, profile });
+      // Ambil data profil pengguna saat komponen dimuat
+      getUserProfile();
+    }
+    setCheckingUser(false);
+  }, []);
+
   const login = async (email, password) => {
     try {
       const response = await axios.post(`${API_URL}/login`, {
@@ -19,8 +32,8 @@ export const AuthProvider = ({ children }) => {
 
       if (response.data) {
         // Simpan data pengguna ke dalam currentUser
-        const { email, username, password } = response.data;
-        setCurrentUser({ email, username, password });
+        const { email, username, profile } = response.data;
+        setCurrentUser({ email, username, profile });
         localStorage.setItem("token", JSON.stringify(response.data));
 
         // Setelah pengguna berhasil login, ambil data profil pengguna
@@ -51,8 +64,8 @@ export const AuthProvider = ({ children }) => {
 
       if (response.data) {
         localStorage.setItem("token", JSON.stringify(response.data));
-        const { email, username, password } = response.data;
-        setCurrentUser({ email, username, password });
+        const { email, username, profile } = response.data;
+        setCurrentUser({ email, username, profile });
         return true;
       } else {
         return false;
@@ -84,26 +97,22 @@ export const AuthProvider = ({ children }) => {
             Authorization: `Bearer ${accessToken}`,
           },
         });
-
         if (response.data) {
           const { email, username, profile } = response.data.data;
           setCurrentUser({ email, username, profile });
         }
       } catch (error) {
-        console.error(error);
+        if (error.response && error.response.status === 401) {
+          // Token kadaluwarsa, maka logout pengguna
+          logout();
+        } else {
+          console.error(error);
+        }
       }
     }
   };
 
   const isLoggedIn = Boolean(currentUser);
-
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      setCurrentUser(JSON.parse(token));
-    }
-    setCheckingUser(false);
-  }, []);
 
   return (
     <AuthContext.Provider
