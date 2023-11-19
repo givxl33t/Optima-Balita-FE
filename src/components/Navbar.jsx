@@ -10,14 +10,12 @@ import {
 import { useContext } from "react";
 import { AuthContext } from "../contexts/AuthContext";
 import Swal from "sweetalert2";
+import { BsPersonFillAdd } from "react-icons/bs";
 
 const Navbar = () => {
   const [showDropdown, setShowDropdown] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { currentUser, logout } = useContext(AuthContext);
-
-  console.log(currentUser);
-
   const handleLogout = () => {
     Swal.fire({
       title: "Konfirmasi Logout?",
@@ -109,7 +107,7 @@ const Navbar = () => {
               </li>
               <li className={`hover:text-teal-400 font-semibold text-md`}>
                 <button className="flex items-center gap-2">
-                  <AiFillMessage className="text-lg" />
+                  <BsPersonFillAdd className="text-lg" />
                   <NavLink to="/consult">Konsultasi</NavLink>
                 </button>
               </li>

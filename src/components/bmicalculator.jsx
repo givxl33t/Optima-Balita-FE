@@ -213,10 +213,14 @@ export const BmiCalculator = () => {
                   <span id="tinggiError" style={{ color: "red" }}>
                     {tinggiError}
                   </span>
-                  <p className="text-gray-900">
-                    keterangan : untuk balita usia 0-23 bulan , hitung dengan
-                    posisi terlentang, dan balita usia 24-59 dengan berdiri
-                  </p>
+                  <p className="text-gray-900">keterangan :</p>
+                  <li>
+                    untuk balita usia 0-23 bulan , hitung dengan posisi
+                    terlentang
+                  </li>
+                  <li>
+                    untuk balita usia 24-59 bulan , hitung dengan posisi berdiri
+                  </li>
                 </div>
                 <div>
                   <p
