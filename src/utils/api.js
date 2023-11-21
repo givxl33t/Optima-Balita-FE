@@ -87,28 +87,76 @@ export const updateUserInApi = async (userId, updatedUser) => {
   }
 };
 
-export const fetchArticles = () =>
-  fetch("https://644e64ed1b4567f4d5866c65.mockapi.io/article").then(
-    (response) => response.json(),
-  );
-var requestOptions = {
-  method: "GET",
-  redirect: "follow",
-};
+//  export const handleProfileUpdate = async () => {
+//    try {
+//      // Update username and email
+//      await axios.put(`${API_URL}/profile`, {
+//        username: newUsername,
+//        email: newEmail,
+//      });
 
-fetch("https://www.givxl33t.site/api/article", requestOptions)
-  .then((response) => response.text())
-  .then((result) => console.log(result))
-  .catch((error) => console.log("error", error));
-// export const fetchArticles = async () => {
-//   try {
-//     const response = await axios.get("https://www.givxl33t.site/api/article");
-//     return response.data;
-//   } catch (error) {
-//     throw new Error("Failed to fetch articles");
-//   }
-// };
+//      // Upload profile image
+//      if (newProfileImage) {
+//        const formData = new FormData();
+//        formData.append("profileImage", newProfileImage);
 
+//        await axios.post(`${API_URL}/profile`, formData, {
+//          headers: {
+//            "Content-Type": "multipart/form-data",
+//          },
+//        });
+//      }
+
+//      // After updating, refresh user profile
+//      await getUserProfile();
+//    } catch (error) {
+//      console.error(error);
+//      // Handle error as needed
+//    }
+//  };
+ // api.js
+ export async function fetchArticles() {
+   const response = await fetch("https://www.givxl33t.site/api/article");
+   if (!response.ok) {
+     throw new Error("Failed to fetch articles");
+   }
+   const data = await response.json();
+   return data;
+ }
+ export async function fetchArticlesRandom() {
+   const response = await fetch(
+     "https://www.givxl33t.site/api/article?limit=3&page=1&sort=RANDOM",
+   );
+   if (!response.ok) {
+     throw new Error("Failed to fetch articles");
+   }
+   const data = await response.json();
+   return data;
+ } 
+
+export async function fetchArticlesId(articleId) {
+  try {
+    const response = await fetch(
+      `https://www.givxl33t.site/api/article/${articleId}`,
+    );
+
+    if (!response.ok) {
+      // Handle non-successful HTTP status
+      throw new Error(
+        `Failed to fetch article with ID ${articleId}. Status: ${response.status}`,
+      );
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    // Handle other errors
+    console.error("Error fetching article:", error);
+    throw error;
+  }
+}
+
+  
 export const fetchForum = () =>
   fetch("https://647d55a0af98471085499e81.mockapi.io/forums")
     .then((response) => response.json())
