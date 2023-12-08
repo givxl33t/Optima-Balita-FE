@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const apiUrl = "https://www.givxl33t.site/api/auth";
-const forumUrl = "https://647d55a0af98471085499e81.mockapi.io/forums";
+
 
 export const getUsers = async () => {
   try {
@@ -11,7 +11,6 @@ export const getUsers = async () => {
     console.error("Gagal mendapatkan data pengguna:", error);
     throw error;
   }
-  s;
 };
 
 export const registerUser = async (user) => {
@@ -87,52 +86,24 @@ export const updateUserInApi = async (userId, updatedUser) => {
   }
 };
 
-//  export const handleProfileUpdate = async () => {
-//    try {
-//      // Update username and email
-//      await axios.put(`${API_URL}/profile`, {
-//        username: newUsername,
-//        email: newEmail,
-//      });
-
-//      // Upload profile image
-//      if (newProfileImage) {
-//        const formData = new FormData();
-//        formData.append("profileImage", newProfileImage);
-
-//        await axios.post(`${API_URL}/profile`, formData, {
-//          headers: {
-//            "Content-Type": "multipart/form-data",
-//          },
-//        });
-//      }
-
-//      // After updating, refresh user profile
-//      await getUserProfile();
-//    } catch (error) {
-//      console.error(error);
-//      // Handle error as needed
-//    }
-//  };
- // api.js
- export async function fetchArticles() {
-   const response = await fetch("https://www.givxl33t.site/api/article");
-   if (!response.ok) {
-     throw new Error("Failed to fetch articles");
-   }
-   const data = await response.json();
-   return data;
- }
- export async function fetchArticlesRandom() {
-   const response = await fetch(
-     "https://www.givxl33t.site/api/article?limit=3&page=1&sort=RANDOM",
-   );
-   if (!response.ok) {
-     throw new Error("Failed to fetch articles");
-   }
-   const data = await response.json();
-   return data;
- } 
+export async function fetchArticles() {
+  const response = await fetch("https://www.givxl33t.site/api/article");
+  if (!response.ok) {
+    throw new Error("Failed to fetch articles");
+  }
+  const data = await response.json();
+  return data;
+}
+export async function fetchArticlesRandom() {
+  const response = await fetch(
+    "https://www.givxl33t.site/api/article?limit=3&page=1&sort=RANDOM",
+  );
+  if (!response.ok) {
+    throw new Error("Failed to fetch articles");
+  }
+  const data = await response.json();
+  return data;
+}
 
 export async function fetchArticlesId(articleId) {
   try {
@@ -141,7 +112,6 @@ export async function fetchArticlesId(articleId) {
     );
 
     if (!response.ok) {
-      // Handle non-successful HTTP status
       throw new Error(
         `Failed to fetch article with ID ${articleId}. Status: ${response.status}`,
       );
@@ -156,77 +126,55 @@ export async function fetchArticlesId(articleId) {
   }
 }
 
-  
-export const fetchForum = () =>
-  fetch("https://647d55a0af98471085499e81.mockapi.io/forums")
-    .then((response) => response.json())
-    .then((forums) => {
-      const commentPromises = forums.map((forum) =>
-        fetch(`${forumUrl}/${forum.id}/replies`).then((response) =>
-          response.json(),
-        ),
-      );
+const BASE_URL = "https://www.givxl33t.site/api/forum";
 
-      return Promise.all(commentPromises).then((comments) => {
-        forums.forEach((forum, index) => {
-          forum.replies = comments[index];
-          forum.likes = 0;
-        });
-        return forums;
-      });
-    });
-
-export const likeDiscussion = async (forumId) => {
+export const fetchForum = async () => {
   try {
-    const response = await axios.put(`${forumUrl}/${forumId}`, {
-      likes: 1,
+    const token = localStorage.getItem("token");
+    const response = await axios.get(`${BASE_URL}?option=WITHCOMMENT`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
     });
     return response.data;
   } catch (error) {
-    console.log("gagal menambahkan like", error);
-    throw error;
+    console.error("Failed to fetch forum discussions:", error);
+    throw new Error(
+      `Failed to fetch forum discussions. Error: ${error.message}`,
+    );
   }
 };
 
-export const unlikeDiscussion = async (forumId) => {
+export const postDiscussion = async (discussion) => {
   try {
-    const response = await axios.put(`${forumUrl}/${forumId}`, {
-      likes: -1, // Decrease likes by 1
+    const token = localStorage.getItem("token");
+    const response = await axios.post(BASE_URL, discussion, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
     });
     return response.data;
   } catch (error) {
-    console.error("Gagal menghapus like:", error);
-    throw error;
+    throw new Error("Failed to post discussion");
   }
 };
 
-export const postComment = async (forumId, comment) => {
+export const postComment = async (discussionId, comment) => {
   try {
+    const token = localStorage.getItem("token");
     const response = await axios.post(
-      `${forumUrl}/${forumId}/replies`,
+      `${BASE_URL}/${discussionId}/comment`,
       comment,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      },
     );
     return response.data;
   } catch (error) {
-    console.error("Gagal memposting komentar:", error);
-    throw error;
+    throw new Error("Failed to post comment");
   }
 };
-
-export const postDiscussion = (discussion) =>
-  fetch("https://647d55a0af98471085499e81.mockapi.io/forums", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(discussion),
-  }).then((response) => response.json());
-
-export const deleteDiscussion = (discussion) =>
-  fetch("https://647d55a0af98471085499e81.mockapi.io/forums", {
-    method: "DELETE",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(discussion),
-  }).then((response) => response.json());

@@ -83,6 +83,10 @@ const ArticlePage = () => {
                         <span className="text-md text-slate-500">
                           {article.created_at}
                         </span>
+                        <br />
+                        <span className="text-md text-slate-500">
+                          {article.author}
+                        </span>
                       </div>
                     </div>
                   </Link>

@@ -52,7 +52,7 @@ const HeroBanner = () => {
                 Pantau Tumbuh Kembang Anak
               </h6>
               <p className="mt-2 mb-4 text-blueGray-500">
-                Fitur BMI Calculator di Stunting Center telah dilengkapi dengan
+                Fitur Status Gizi di OptimaBalita telah dilengkapi dengan
                 riwayat perhitungan, sehingga memudahkan pemantauan pertumbuhan
                 anak
               </p>

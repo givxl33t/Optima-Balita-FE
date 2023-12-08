@@ -3,7 +3,7 @@ export const setCurrentUser = (user) => {
 };
 
 export const getCurrentUser = () => {
-  const userData = localStorage.getItem("token"); // Ambil dari "token" bukan "currentUser"
+  const userData = localStorage.getItem("token");
   if (userData) {
     return JSON.parse(userData);
   }
@@ -11,14 +11,14 @@ export const getCurrentUser = () => {
 };
 
 export const clearCurrentUser = () => {
-  localStorage.removeItem("token"); // Hapus "token" bukan "currentUser"
+  localStorage.removeItem("token");
 };
 
 export const updateCurrentUser = (newName) => {
   const currentUser = getCurrentUser();
   if (currentUser) {
-    currentUser.username = newName; // Memperbarui username
-    setCurrentUser(currentUser); // Simpan ke "token"
+    currentUser.username = newName;
+    setCurrentUser(currentUser);
   }
 };
 

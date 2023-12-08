@@ -20,6 +20,8 @@
     "chart.js": "^4.3.0",
     "dayjs": "^1.11.8",
     "framer-motion": "^10.12.16",
+    "jsonwebtoken": "^9.0.2",
+    "jwt-decode": "^4.0.0",
     "localforage": "^1.10.0",
     "match-sorter": "^6.3.1",
     "react": "^18.2.0",
@@ -43,7 +45,8 @@
     "sort-by": "^1.2.0",
     "sweetalert": "^2.1.2",
     "sweetalert2": "^11.7.12",
-    "sweetalert2-react-content": "^5.0.7"
+    "sweetalert2-react-content": "^5.0.7",
+    "swiper": "^11.0.5"
   },
   "devDependencies": {
     "@types/react": "^18.0.28",

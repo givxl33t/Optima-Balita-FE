@@ -76,11 +76,9 @@ export const AuthProvider = ({ children }) => {
         error.response.data &&
         error.response.data.message
       ) {
-        // Jika server memberikan pesan error, kembalikan pesan error tersebut
         throw new Error(error.response.data.message);
       } else {
         console.error(error);
-        // Jika tidak ada pesan error dari server, kembalikan pesan default
         throw new Error("Registrasi Gagal. Terjadi kesalahan.");
       }
     }

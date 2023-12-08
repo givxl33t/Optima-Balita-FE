@@ -37,7 +37,6 @@ const RegisterForm = () => {
         });
         console.log("Registration successful");
       } else {
-        // Reset the error message to be empty
         setErrorMessage("");
 
         Swal.fire({
@@ -48,22 +47,11 @@ const RegisterForm = () => {
         console.log("Registration failed");
       }
     } catch (error) {
-      // Check if the error response contains a message
-      if (
-        error.response &&
-        error.response.data &&
-        error.response.data.message
-      ) {
-        // Set the error message from the response
-        setErrorMessage(error.response.data.message);
-      } else {
-        // If there's no error message in the response, set a default error message
-        setErrorMessage("kata sandi tidak cukup kuat");
-      }
-      console.log("Registration failed with error:", error);
+      console.error("Registration failed with error:", error);
+
+      setErrorMessage(error.message || "Gagal mendaftar. Coba lagi nanti.");
     }
   };
-
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
