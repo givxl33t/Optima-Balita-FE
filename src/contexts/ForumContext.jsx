@@ -1,91 +1,62 @@
-import { createContext, useContext } from "react";
-import { useQuery, useQueryClient, useMutation } from "react-query";
-import { fetchForum, postDiscussion, postComment } from "../utils/api";
+import React, { createContext, useContext, useEffect, useState } from "react";
 import { AuthContext } from "./AuthContext";
+import { fetchForum, postDiscussion, postComment } from "../utils/api";
 
 export const ForumContext = createContext();
 
-// eslint-disable-next-line react/prop-types
 export const ForumProvider = ({ children }) => {
-  const queryClient = useQueryClient();
-  const { currentUser } = useContext(AuthContext);
-  const { data: forums, isLoading } = useQuery("forums", fetchForum);
+  const { currentUser, isLoggedIn } = useContext(AuthContext);
+  const [forumData, setForumData] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
-  const postNewComment = useMutation(({ forumId }) => postComment(forumId));
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        const data = await fetchForum(); // Use fetchForum instead of getUserProfile
+        setForumData(data);
+      } catch (error) {
+        setError(error.message);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  const postNewDiscussion = useMutation((discussion) =>
-    postDiscussion(discussion),
-  );
+    if (isLoggedIn) {
+      fetchData();
+    }
+  }, [isLoggedIn, currentUser]);
 
-  const handlePostDiscussion = (discussion) => {
-    postNewDiscussion.mutate(discussion, {
-      onSuccess: () => {
-        queryClient.invalidateQueries("forums");
-      },
-      onError: (error) => {
-        console.error("Gagal membuat diskusi baru:", error);
-      },
-    });
-  };
-
-  const handleReplyPost = async (forumId, newComment) => {
-    if (newComment.trim() === "") return;
-
+  const createDiscussion = async (discussion) => {
     try {
-      const comment = {
-        username: currentUser.username,
-        contentReply: newComment,
-        createdAt: new Date().toISOString(),
-      };
-
-      await postComment(forumId, comment);
-      queryClient.invalidateQueries("forums");
+      const data = await postDiscussion(discussion);
+      setForumData((prevData) => [data, ...prevData]);
     } catch (error) {
-      console.error("Gagal mengirim komentar:", error);
+      console.error("Failed to create discussion:", error);
     }
   };
 
-const handleLikeDiscussion = async (forumId) => {
-  try {
-    const forum = forums.find((forum) => forum.id === forumId);
-
-    if (!forum) {
-      console.error("Forum not found");
-      return;
+  const addComment = async (discussionId, comment) => {
+    try {
+      const data = await postComment(discussionId, comment);
+      setForumData((prevData) =>
+        prevData.map((discussion) =>
+          discussion._id === discussionId
+            ? { ...discussion, comments: [...discussion.comments, data] }
+            : discussion,
+        ),
+      );
+    } catch (error) {
+      console.error("Failed to add comment:", error);
     }
+  };
 
-    if (forum.likes === undefined) {
-      forum.likes = 0;
-    }
-
-    if (forum.likes >= 0) {
-      await likeDiscussion(forumId); // Call the function to add a like
-      forum.likes += 1; // Increment the number of likes
-    } else {
-      await unlikeDiscussion(forumId); // Call the function to remove a like
-      forum.likes -= 1; // Decrement the number of likes
-    }
-
-    queryClient.invalidateQueries("forums"); // Refresh the forum data
-
-    // You can update the state or view according to the updated number of likes
-  } catch (error) {
-    console.error("Failed to manage like:", error);
-  }
-};
-
-return (
-  <ForumContext.Provider
-    value={{
-      forums,
-      isLoading,
-      handlePostDiscussion,
-      handleReplyPost,
-      handleLikeDiscussion,
-      postNewComment,
-    }}
-  >
-    {children}
-  </ForumContext.Provider>
-);
+  return (
+    <ForumContext.Provider
+      value={{ forumData, loading, error, createDiscussion, addComment }}
+    >
+      {children}
+    </ForumContext.Provider>
+  );
 };
