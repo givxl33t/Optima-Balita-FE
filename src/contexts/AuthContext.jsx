@@ -1,6 +1,5 @@
 import axios from "axios";
-import { createContext, useContext } from "react";
-import { useEffect, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 
 const API_URL = "https://www.givxl33t.site/api/auth";
 
@@ -9,19 +8,7 @@ export const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState(null);
   const [checkingUser, setCheckingUser] = useState(true);
-
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      // Jika ada token di local storage, maka pengguna sudah login sebelumnya
-      // Ambil data pengguna dari token
-      const { email, username, profile } = JSON.parse(token);
-      setCurrentUser({ email, username, profile });
-      // Ambil data profil pengguna saat komponen dimuat
-      getUserProfile();
-    }
-    setCheckingUser(false);
-  }, []);
+  const [refreshToken, setRefreshToken] = useState(null);
 
   const login = async (email, password) => {
     try {
@@ -30,28 +17,27 @@ export const AuthProvider = ({ children }) => {
         password,
       });
 
-      if (response.data) {
-        // Simpan data pengguna ke dalam currentUser
-        const { email, username, profile } = response.data;
-        setCurrentUser({ email, username, profile });
-        localStorage.setItem("token", JSON.stringify(response.data));
-
-        // Setelah pengguna berhasil login, ambil data profil pengguna
-        await getUserProfile();
-
+      if (response.data.accessToken) {
+        const { accessToken, refreshToken } = response.data;
+        setCurrentUser(response.data);
+        localStorage.setItem(
+          "token",
+          JSON.stringify({ accessToken, refreshToken }),
+        );
+        await getUserProfile(); // Fetch user profile after successful login
         return true;
       } else {
         return false;
       }
     } catch (error) {
-      console.error(error);
+      console.error("Error during login:", error);
       return false;
     }
   };
-
   const logout = () => {
     localStorage.removeItem("token");
     setCurrentUser(null);
+    setRefreshToken(null); // Clear refreshToken state on logout
   };
 
   const register = async (username, email, password) => {
@@ -62,10 +48,11 @@ export const AuthProvider = ({ children }) => {
         password,
       });
 
-      if (response.data) {
+      if (response.data.accessToken) {
         localStorage.setItem("token", JSON.stringify(response.data));
         const { email, username, profile } = response.data;
         setCurrentUser({ email, username, profile });
+        await getUserProfile(); // Fetch user profile after successful registration
         return true;
       } else {
         return false;
@@ -85,31 +72,139 @@ export const AuthProvider = ({ children }) => {
   };
 
   const getUserProfile = async () => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      try {
-        const accessToken = JSON.parse(token).accessToken;
+    try {
+      const storedToken = localStorage.getItem("token");
 
-        const response = await axios.get(`${API_URL}/me`, {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        });
-        if (response.data) {
-          const { email, username, profile } = response.data.data;
-          setCurrentUser({ email, username, profile });
+      if (storedToken) {
+        const { accessToken, refreshToken: storedRefreshToken } =
+          JSON.parse(storedToken);
+
+        if (storedRefreshToken) {
+          setRefreshToken(storedRefreshToken);
+
+          const response = await axios.get(`${API_URL}/me`, {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          });
+
+          if (response.data) {
+            const { email, username, profile } = response.data.data;
+            setCurrentUser({ email, username, profile });
+            console.log("User profile fetched successfully!");
+          }
         }
-      } catch (error) {
-        if (error.response && error.response.status === 401) {
-          // Token kadaluwarsa, maka logout pengguna
+      }
+    } catch (error) {
+      console.error("Error fetching user profile:", error);
+
+      if (error.response && error.response.status === 401) {
+        try {
+          const newAccessToken = await refreshAccessToken();
+
+          if (newAccessToken) {
+            const retryResponse = await axios.get(`${API_URL}/me`, {
+              headers: {
+                Authorization: `Bearer ${newAccessToken}`,
+              },
+            });
+
+            if (retryResponse.data) {
+              const { email, username, profile } = retryResponse.data.data;
+              setCurrentUser({ email, username, profile });
+              console.log("Token refresh successful!");
+            }
+          }
+        } catch (refreshError) {
+          console.error("Error refreshing token:", refreshError);
           logout();
-        } else {
-          console.error(error);
         }
+      } else {
+        console.error("Server error:", error.response?.data);
       }
     }
   };
 
+  const refreshAccessToken = async () => {
+    try {
+      const storedToken = localStorage.getItem("token");
+
+      if (storedToken) {
+        const { refreshToken: storedRefreshToken } = JSON.parse(storedToken);
+
+        const refreshResponse = await axios.put(`${API_URL}/refresh`, {
+          refreshToken: storedRefreshToken,
+        });
+
+        if (refreshResponse.data.accessToken) {
+          const { accessToken, refreshToken: newRefreshToken } =
+            refreshResponse.data;
+
+          localStorage.setItem(
+            "token",
+            JSON.stringify({
+              accessToken,
+              refreshToken: newRefreshToken,
+            }),
+          );
+
+          setRefreshToken(newRefreshToken);
+
+          return accessToken;
+        } else {
+          console.error("Invalid refresh response:", refreshResponse.data);
+          throw new Error("Invalid refresh response");
+        }
+      }
+
+      return null;
+    } catch (error) {
+      console.error("Error refreshing token:", error);
+      throw error;
+    }
+  };
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    const fetchUserProfile = async () => {
+      if (token) {
+        const { email, username, profile } = JSON.parse(token);
+        setCurrentUser({ email, username, profile });
+        try {
+          await getUserProfile(); // Fetch user profile when the component mounts
+        } catch (error) {
+          // Handle error during initial fetch or token refresh
+          console.error("Error fetching user profile:", error);
+          logout();
+        }
+      }
+      setCheckingUser(false);
+    };
+
+    if (token) {
+      const { refreshToken } = JSON.parse(token);
+      // Set a timer for token refresh just before it expires
+      const refreshTimer = setTimeout(
+        async () => {
+          try {
+            await refreshAccessToken();
+            await fetchUserProfile();
+          } catch (refreshError) {
+            // Handle error during token refresh
+            console.error("Error during token refresh:", refreshError);
+            logout();
+          }
+        } /* Set the timer duration based on token expiry time */,
+      );
+
+      fetchUserProfile();
+
+      // Clear the timer on component unmount
+      return () => clearTimeout(refreshTimer);
+    } else {
+      setCheckingUser(false);
+    }
+  }, []);
   const isLoggedIn = Boolean(currentUser);
 
   return (
@@ -121,6 +216,7 @@ export const AuthProvider = ({ children }) => {
         login,
         logout,
         getUserProfile,
+        refreshAccessToken,
       }}
     >
       {!checkingUser && children}
