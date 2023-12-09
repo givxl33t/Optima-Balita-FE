@@ -11,7 +11,7 @@ import { useContext } from "react";
 import { AuthContext } from "../../contexts/AuthContext";
 import Swal from "sweetalert2";
 import { BsPersonFillAdd } from "react-icons/bs";
-
+import Logo from "../../assets/img/logo_puskesmas.png";
 const Navbar = () => {
   const [showDropdown, setShowDropdown] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -65,11 +65,7 @@ const Navbar = () => {
     >
       <div className="flex justify-between items-center xl:max-w-7xl xl:mx-auto max-w-full flex-wrap px-4">
         <NavLink to="/home" className="cursor-pointer">
-          <img
-            src={"https://i.postimg.cc/d3QWvCGR/logo-new1.png"}
-            alt="Logo"
-            className="sm:w-12 w-12"
-          />
+          <img src={Logo} alt="Logo" className="sm:w-12 w-12" />
         </NavLink>
         <div className="lg:hidden">
           <button

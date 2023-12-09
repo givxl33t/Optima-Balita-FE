@@ -1,61 +1,35 @@
+// ForumContext.jsx
 import React, { createContext, useContext, useEffect, useState } from "react";
-import { AuthContext } from "./AuthContext";
-import { fetchForum, postDiscussion, postComment } from "../utils/api";
+import { fetchForum } from "../utils/api";
 
 export const ForumContext = createContext();
 
 export const ForumProvider = ({ children }) => {
-  const { currentUser, isLoggedIn } = useContext(AuthContext);
   const [forumData, setForumData] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        setLoading(true);
-        const data = await fetchForum(); // Use fetchForum instead of getUserProfile
-        setForumData(data);
+        const token = localStorage.getItem("token");
+        if (!token) {
+          console.error("Token not found in local storage");
+          return;
+        }
+
+        const forumResponse = await fetchForum(token);
+        console.log("Forum Response:", forumResponse); // Log the response
+        setForumData(forumResponse);
       } catch (error) {
-        setError(error.message);
-      } finally {
-        setLoading(false);
+        console.error("Error fetching forum data:", error.message);
+        // Handle error as needed
       }
     };
 
-    if (isLoggedIn) {
-      fetchData();
-    }
-  }, [isLoggedIn, currentUser]);
-
-  const createDiscussion = async (discussion) => {
-    try {
-      const data = await postDiscussion(discussion);
-      setForumData((prevData) => [data, ...prevData]);
-    } catch (error) {
-      console.error("Failed to create discussion:", error);
-    }
-  };
-
-  const addComment = async (discussionId, comment) => {
-    try {
-      const data = await postComment(discussionId, comment);
-      setForumData((prevData) =>
-        prevData.map((discussion) =>
-          discussion._id === discussionId
-            ? { ...discussion, comments: [...discussion.comments, data] }
-            : discussion,
-        ),
-      );
-    } catch (error) {
-      console.error("Failed to add comment:", error);
-    }
-  };
+    fetchData();
+  }, []);
 
   return (
-    <ForumContext.Provider
-      value={{ forumData, loading, error, createDiscussion, addComment }}
-    >
+    <ForumContext.Provider value={{ forumData, setForumData }}>
       {children}
     </ForumContext.Provider>
   );

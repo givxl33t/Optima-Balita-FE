@@ -128,15 +128,21 @@ export async function fetchArticlesId(articleId) {
 
 const BASE_URL = "https://www.givxl33t.site/api/forum";
 
-export const fetchForum = async () => {
+export const fetchForum = async (token) => {
   try {
-    const token = localStorage.getItem("token");
     const response = await axios.get(`${BASE_URL}?option=WITHCOMMENT`, {
       headers: {
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${JSON.parse(token).accessToken}`,
       },
     });
-    return response.data;
+
+    // Log the raw response for debugging
+    console.log("Raw API Response:", response.data);
+
+    // Check if the response data is an array or has a property containing the array
+    const forumData = response.data;
+
+    return forumData; // Return the forumData directly
   } catch (error) {
     console.error("Failed to fetch forum discussions:", error);
     throw new Error(
@@ -144,6 +150,8 @@ export const fetchForum = async () => {
     );
   }
 };
+
+
 
 export const postDiscussion = async (discussion) => {
   try {
