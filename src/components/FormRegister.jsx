@@ -14,31 +14,32 @@ const RegisterForm = () => {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleRegisterSuccess = () => {
-    navigate("/login");
+    Swal.fire({
+      icon: "success",
+      title: "Akun Berhasil Dibuat",
+      text: "Silahkan login untuk melanjutkan",
+    }).then(() => {
+      navigate("/login"); // Navigasi ke halaman login setelah pendaftaran berhasil
+    });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
+      setLoading(true);
+
       const success = await register(username, email, password);
 
       if (success) {
-        // Redirect to login page
-        Swal.fire({
-          icon: "success",
-          title: "Akun Berhasil Dibuat",
-          text: "Login untuk melanjutkan",
-        }).then(() => {
-          handleRegisterSuccess();
-        });
         console.log("Registration successful");
+        handleRegisterSuccess();
       } else {
         setErrorMessage("");
-
         Swal.fire({
           icon: "error",
           title: "Akun Gagal Dibuat",
@@ -47,9 +48,21 @@ const RegisterForm = () => {
         console.log("Registration failed");
       }
     } catch (error) {
-      console.error("Registration failed with error:", error);
+      console.error("Error during registration:", error);
 
-      setErrorMessage(error.message || "Gagal mendaftar. Coba lagi nanti.");
+      if (
+        error.response &&
+        error.response.data &&
+        error.response.data.message
+      ) {
+        console.error("Server response:", error.response.data);
+        throw new Error(error.response.data.message);
+      } else {
+        console.error("Unexpected error:", error);
+        throw new Error(
+          error.message || "An unexpected error occurred during registration.",
+        );
+      }
     }
   };
   const togglePasswordVisibility = () => {

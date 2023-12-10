@@ -1,10 +1,10 @@
+// BMIContext.jsx
 import { createContext, useEffect, useState, useContext } from "react";
 import axios from "axios";
 import { AuthContext } from "../contexts/AuthContext";
 
 export const BMIContext = createContext();
 
-// eslint-disable-next-line react/prop-types
 export const BMIProvider = ({ children }) => {
   const [bmiList, setBMIList] = useState([]);
   const { currentUser } = useContext(AuthContext);
@@ -12,13 +12,30 @@ export const BMIProvider = ({ children }) => {
   useEffect(() => {
     const fetchBMIList = async () => {
       try {
+        const token = localStorage.getItem("token");
+
+        if (!token) {
+          console.error("Token not found");
+          return;
+        }
+
+        const { accessToken } = JSON.parse(token);
+
         const response = await axios.get(
-          "https://6450b0c5a3221969114f68c0.mockapi.io/api/loginRegister/bmi",
+          "https://www.givxl33t.site/api/bmi/me",
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+            params: {
+              userId: currentUser.username,
+            },
+          },
         );
-        const filteredBMIList = response.data.filter(
-          (data) => data.userId === currentUser.id,
-        );
-        setBMIList(filteredBMIList);
+
+        console.log("BMI List Response:", response.data);
+
+        setBMIList(response.data.data);
       } catch (error) {
         console.error(error);
       }
@@ -31,14 +48,32 @@ export const BMIProvider = ({ children }) => {
 
   const addBMIEntry = async (newBMIEntry) => {
     try {
+      const tokenData = JSON.parse(localStorage.getItem("token"));
+
+      if (!tokenData || !tokenData.accessToken) {
+        console.error("Token not found or invalid");
+        return;
+      }
+
       const response = await axios.post(
-        "https://6450b0c5a3221969114f68c0.mockapi.io/api/loginRegister/bmi",
+        "https://www.givxl33t.site/api/bmi",
         newBMIEntry,
+        {
+          headers: {
+            Authorization: `Bearer ${tokenData.accessToken}`,
+          },
+        },
       );
 
-      setBMIList([...bmiList, response.data]);
+      console.log("API Response:", response.data);
+
+      setBMIList((prevBMIList) => [...prevBMIList, response.data]);
     } catch (error) {
-      console.error(error);
+      console.error("Error while sending BMI data to API:", error);
+
+      if (error.response) {
+        console.error("API Error:", error.response.data);
+      }
     }
   };
 

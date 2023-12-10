@@ -9,15 +9,15 @@ export const BmiCalculator = () => {
   const { bmiList, addBMIEntry } = useContext(BMIContext);
 
   const [formBmiState, setFormBmiState] = useState({
-    name: "",
-    age: "",
+    child_name: "",
+    age_text: "",
     height: "",
     weight: "",
-    bmiCategory: "",
+    weight_category: "",
     gender: "",
   });
   const [selectedDate, setSelectedDate] = useState(null);
-  const [result, setResult] = useState();
+  const [bmi, setbmi] = useState();
   const [tinggiError, setTinggiError] = useState("");
   const [beratError, setBeratError] = useState("");
 
@@ -32,12 +32,13 @@ export const BmiCalculator = () => {
     const months = ageDiff % 12;
     const ageBabyText =
       years !== 0 ? `${years} tahun ${months} bulan` : `${months} bulan`;
-    setFormBmiState({ ...formBmiState, age: ageBabyText });
+    setFormBmiState({ ...formBmiState, age_text: ageBabyText });
   };
 
   const calculateBMI = (event) => {
     event.preventDefault();
-    const { name, age, height, weight, bmiCategory, gender } = formBmiState;
+    const { child_name, age_text, height, weight, weight_category, gender } =
+      formBmiState;
     const tinggiNum = parseInt(height);
     const beratNum = parseInt(weight);
 
@@ -54,50 +55,49 @@ export const BmiCalculator = () => {
     }
 
     if (tinggiNum > 0 && beratNum > 0) {
-      const result = (
-        beratNum /
-        (((tinggiNum / 100) * tinggiNum) / 100)
-      ).toFixed(2);
+      const bmi = (beratNum / (((tinggiNum / 100) * tinggiNum) / 100)).toFixed(
+        2,
+      );
 
-      let bmiCategory = "";
-      if (result <= 18.4) {
-        bmiCategory = "Underweight";
-      } else if (result >= 18.6 && result < 24.9) {
-        bmiCategory = "Normal";
-      } else if (result >= 25 && result < 29.9) {
-        bmiCategory = "Overweight";
+      let weight_category = "";
+      if (bmi <= 18.4) {
+        weight_category = "Underweight";
+      } else if (bmi >= 18.6 && bmi < 24.9) {
+        weight_category = "Normal";
+      } else if (bmi >= 25 && bmi < 29.9) {
+        weight_category = "Overweight";
       } else {
-        bmiCategory = "Obesity";
+        weight_category = "Obesity";
       }
 
-      let bmiCategoryWomen = "";
+      let weight_categoryWomen = "";
       if (gender === "Perempuan") {
-        if (result <= 18.4) {
-          bmiCategoryWomen = "Underweight";
-        } else if (result >= 18.5 && result < 23.9) {
-          bmiCategoryWomen = "Normal";
-        } else if (result >= 24 && result < 28.9) {
-          bmiCategoryWomen = "Overweight";
+        if (bmi <= 18.4) {
+          weight_categoryWomen = "Underweight";
+        } else if (bmi >= 18.5 && bmi < 23.9) {
+          weight_categoryWomen = "Normal";
+        } else if (bmi >= 24 && bmi < 28.9) {
+          weight_categoryWomen = "Overweight";
         } else {
-          bmiCategoryWomen = "Obesity";
+          weight_categoryWomen = "Obesity";
         }
       }
 
       const finalCategory =
-        gender === "Perempuan" ? bmiCategoryWomen : bmiCategory;
+        gender === "Perempuan" ? weight_categoryWomen : weight_category;
 
-      setFormBmiState({ ...formBmiState, bmiCategory: finalCategory });
-      setResult(result);
+      setFormBmiState({ ...formBmiState, weight_category: finalCategory });
+      setbmi(bmi);
 
       const newBMIEntry = {
-        userId: currentUser.id,
-        name,
-        age,
-        gender,
-        height,
-        result,
-        category: finalCategory,
-        createdAt: Date.now(),
+        // id: currentUser.username,
+        child_name: formBmiState.child_name,
+        age_text: formBmiState.age_text,
+        gender: formBmiState.gender,
+        height: formBmiState.height,
+        weight: formBmiState.weight,
+        bmi,
+        weight_category: finalCategory,
       };
 
       addBMIEntry(newBMIEntry);
@@ -125,9 +125,12 @@ export const BmiCalculator = () => {
                     className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
                     type="text"
                     placeholder="Andi Law"
-                    value={formBmiState.name}
+                    value={formBmiState.child_name}
                     onChange={(e) =>
-                      setFormBmiState({ ...formBmiState, name: e.target.value })
+                      setFormBmiState({
+                        ...formBmiState,
+                        child_name: e.target.value,
+                      })
                     }
                   />
                 </div>
@@ -146,7 +149,7 @@ export const BmiCalculator = () => {
                       className="p-2 rounded-md"
                     />
                     <span className="text-md pt-1 font-medium">
-                      {formBmiState.age}
+                      {formBmiState.age_text}
                     </span>
                   </div>
                 </div>
@@ -256,17 +259,17 @@ export const BmiCalculator = () => {
               </form>
             </div>
             <div>
-              {result && (
+              {bmi && (
                 <div className="p-4 bg-slate-300 my-6 rounded-xl">
                   <p className="mb-2 text-sm font-medium text-gray-700">
                     Hasil:
                   </p>
                   <ul className="list-disc pl-6">
-                    <li>Nama: {formBmiState.name}</li>
-                    <li>Usia: {formBmiState.age}</li>
+                    <li>Nama: {formBmiState.child_name}</li>
+                    <li>Usia: {formBmiState.age_text}</li>
                     <li>Jenis Kelamin: {formBmiState.gender}</li>
-                    <li>Hasil: {result}</li>
-                    <li>Kategori: {formBmiState.bmiCategory}</li>
+                    <li>Hasil: {bmi}</li>
+                    <li>Kategori: {formBmiState.weight_category}</li>
                   </ul>
                 </div>
               )}
@@ -306,10 +309,10 @@ export const BmiCalculator = () => {
                       {bmiList.map((bmi) => (
                         <tr key={bmi.id} className="text-sm text-gray-900">
                           <td className="border-b border-gray-500 md:px-4 px-1 py-2 ">
-                            {bmi.name}
+                            {bmi.child_name}
                           </td>
                           <td className="border-b border-gray-500 md:px-4 px-1 py-2">
-                            {bmi.age}
+                            {bmi.age_text}
                           </td>
                           <td className="border-b border-gray-500 md:px-4 px-1 py-2">
                             {bmi.height}
@@ -318,10 +321,10 @@ export const BmiCalculator = () => {
                             {bmi.weight}
                           </td>
                           <td className="border-b border-gray-500 md:px-4 px-1 py-2">
-                            {bmi.result}
+                            {bmi.bmi}
                           </td>
                           <td className="border-b border-gray-500 md:px-4 px-1 py-2">
-                            {bmi.category}
+                            {bmi.weight_category}
                           </td>
                         </tr>
                       ))}
