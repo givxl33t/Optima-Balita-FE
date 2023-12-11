@@ -48,16 +48,27 @@ export const AuthProvider = ({ children }) => {
         password,
       });
 
-      if (response.data.accessToken) {
+      console.log("Registration Response:", response);
+
+      if (response.data && response.data.accessToken) {
         localStorage.setItem("token", JSON.stringify(response.data));
         const { email, username, profile } = response.data;
         setCurrentUser({ email, username, profile });
         await getUserProfile(); // Fetch user profile after successful registration
         return true;
       } else {
-        return false;
+        console.error("Invalid registration response:", response.data);
+
+        if (response.data && response.data.message) {
+          throw new Error(response.data.message);
+        } else {
+          console.error("Unexpected response format:", response);
+          throw new Error("Registrasi Gagal. Format respons tidak sesuai.");
+        }
       }
     } catch (error) {
+      console.error("Error during registration:", error);
+
       if (
         error.response &&
         error.response.data &&
@@ -66,7 +77,7 @@ export const AuthProvider = ({ children }) => {
         throw new Error(error.response.data.message);
       } else {
         console.error(error);
-        throw new Error("Registrasi Gagal. Terjadi kesalahan.");
+        throw new Error(error.message);
       }
     }
   };
