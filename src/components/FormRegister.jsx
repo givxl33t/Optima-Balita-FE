@@ -18,13 +18,7 @@ const RegisterForm = () => {
   const navigate = useNavigate();
 
   const handleRegisterSuccess = () => {
-    Swal.fire({
-      icon: "success",
-      title: "Akun Berhasil Dibuat",
-      text: "Silahkan login untuk melanjutkan",
-    }).then(() => {
-      navigate("/login"); // Navigasi ke halaman login setelah pendaftaran berhasil
-    });
+    navigate("/login");
   };
 
   const handleSubmit = async (e) => {
@@ -36,35 +30,37 @@ const RegisterForm = () => {
       const success = await register(username, email, password);
 
       if (success) {
-        console.log("Registration successful");
-        handleRegisterSuccess();
-      } else {
-        setErrorMessage("");
+        // Redirect to login page
         Swal.fire({
-          icon: "error",
-          title: "Akun Gagal Dibuat",
-          text: "Gagal mendaftar. Coba lagi nanti.",
+          icon: "success",
+          title: "Akun Berhasil Dibuat",
+          text: "Login untuk melanjutkan",
+        }).then(() => {
+          handleRegisterSuccess();
         });
+        console.log("Registration successful");
+      } else {
+        setErrorMessage("Gagal mendaftar. Coba lagi nanti.");
         console.log("Registration failed");
       }
     } catch (error) {
-      console.error("Error during registration:", error);
-
-      if (
+      if (error.message) {
+        setErrorMessage(error.message);
+      } else if (
         error.response &&
         error.response.data &&
         error.response.data.message
       ) {
-        console.error("Server response:", error.response.data);
-        throw new Error(error.response.data.message);
+        setErrorMessage(error.response.data.message);
       } else {
-        console.error("Unexpected error:", error);
-        throw new Error(
-          error.message || "An unexpected error occurred during registration.",
-        );
+        setErrorMessage("Terjadi kesalahan. Coba lagi nanti.");
       }
+      console.error("Error during registration:", error.message);
+    } finally {
+      setLoading(false);
     }
   };
+
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };

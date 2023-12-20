@@ -1,5 +1,6 @@
 import axios from "axios";
 import { createContext, useEffect, useState } from "react";
+import { updateUser } from "../utils/api";
 
 const API_URL = "https://www.givxl33t.site/api/auth";
 
@@ -58,13 +59,7 @@ export const AuthProvider = ({ children }) => {
         return true;
       } else {
         console.error("Invalid registration response:", response.data);
-
-        if (response.data && response.data.message) {
-          throw new Error(response.data.message);
-        } else {
-          console.error("Unexpected response format:", response);
-          throw new Error("Registrasi Gagal. Format respons tidak sesuai.");
-        }
+        throw new Error("Registrasi Gagal. Format respons tidak sesuai.");
       }
     } catch (error) {
       console.error("Error during registration:", error);
@@ -79,6 +74,31 @@ export const AuthProvider = ({ children }) => {
         console.error(error);
         throw new Error(error.message);
       }
+    }
+  };
+
+  const updateProfile = async (updateData) => {
+    try {
+      const accessToken = currentUser ? currentUser.accessToken : null;
+      const formData = new FormData();
+
+      // Append each key-value pair in updateData to the FormData
+      Object.entries(updateData).forEach(([key, value]) => {
+        formData.append(key, value);
+      });
+
+      // Call the updateUser function from api.js
+      await updateUser(currentUser.userId, formData, { accessToken });
+
+      // Fetch the updated user profile after the update
+      await getUserProfile();
+
+      console.log("Profile updated successfully");
+    } catch (error) {
+      console.error("Error updating profile", error);
+
+      // Handle error as needed (e.g., show an error message to the user)
+      throw error;
     }
   };
 
@@ -109,29 +129,35 @@ export const AuthProvider = ({ children }) => {
     } catch (error) {
       console.error("Error fetching user profile:", error);
 
-      if (error.response && error.response.status === 401) {
-        try {
-          const newAccessToken = await refreshAccessToken();
+      if (error.response) {
+        if (error.response.status === 401) {
+          try {
+            const newAccessToken = await refreshAccessToken();
 
-          if (newAccessToken) {
-            const retryResponse = await axios.get(`${API_URL}/me`, {
-              headers: {
-                Authorization: `Bearer ${newAccessToken}`,
-              },
-            });
+            if (newAccessToken) {
+              const retryResponse = await axios.get(`${API_URL}/me`, {
+                headers: {
+                  Authorization: `Bearer ${newAccessToken}`,
+                },
+              });
 
-            if (retryResponse.data) {
-              const { email, username, profile } = retryResponse.data.data;
-              setCurrentUser({ email, username, profile });
-              console.log("Token refresh successful!");
+              if (retryResponse.data) {
+                const { email, username, profile } = retryResponse.data.data;
+                setCurrentUser({ email, username, profile });
+                console.log("Token refresh successful!");
+              }
             }
+          } catch (refreshError) {
+            console.error("Error refreshing token:", refreshError);
+            logout();
           }
-        } catch (refreshError) {
-          console.error("Error refreshing token:", refreshError);
-          logout();
+        } else {
+          console.error("Server error:", error.response.data);
+          // Handle other server errors as needed
         }
       } else {
-        console.error("Server error:", error.response?.data);
+        // Handle non-response errors
+        console.error("Non-response error:", error.message);
       }
     }
   };
@@ -228,6 +254,7 @@ export const AuthProvider = ({ children }) => {
         logout,
         getUserProfile,
         refreshAccessToken,
+        updateProfile,
       }}
     >
       {!checkingUser && children}
