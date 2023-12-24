@@ -1,14 +1,37 @@
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { FaStar, FaStarHalfAlt } from "react-icons/fa";
 import { NavLink } from "react-router-dom";
 import { ForumContext } from "../../contexts/ForumContext";
-// import { Loader } from "../../components/Loader";
+import { fetchForum } from "../../utils/api";
 
 const Forum = () => {
-  const { forumData, loading } = useContext(ForumContext);
+  const { forumData, loading, setForumData } = useContext(ForumContext);
 
-  // Hanya ambil 3 data pertama
-  const limitedForumData = Array.isArray(forumData.data)
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        if (!token) {
+          console.error("Token not found in local storage");
+          return;
+        }
+
+        const forumResponse = await fetchForum(token);
+        console.log("Forum Response:", forumResponse);
+        setForumData(forumResponse);
+      } catch (error) {
+        console.error("Error fetching forum data:", error.message);
+      }
+    };
+
+    fetchData();
+  }, [setForumData]);
+
+  if (loading) {
+    return <p>Loading...</p>;
+  }
+
+  const limitedForumData = Array.isArray(forumData?.data)
     ? forumData.data.slice(0, 3)
     : [];
 
@@ -42,16 +65,6 @@ const Forum = () => {
                   {discussion.poster_username}
                 </h3>
               </div>
-              {/* <div className="flex items-center justify-center gap-1 py-2">
-                {[
-                  ...Array(Math.min(Math.floor(discussion.comment.length), 4)),
-                ].map((_, index) => (
-                  <FaStar key={index} className="mr-1" />
-                ))}
-                {discussion.comment % 1 !== 0 && (
-                  <FaStarHalfAlt className="mr-1" />
-                )}
-              </div> */}
               <div className="text-center">{discussion.post_content}</div>
             </div>
           </div>

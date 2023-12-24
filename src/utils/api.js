@@ -15,7 +15,7 @@ export const getUsers = async () => {
 export const registerUser = async (user) => {
   try {
     const response = await axios.post(`${apiUrl}/register`, user);
-    return response.data; // Pastikan respons memiliki properti 'success'
+    return response.data;
   } catch (error) {
     console.error("Error during registration:", error);
     throw error;
@@ -150,21 +150,26 @@ export const fetchForum = async (token) => {
   try {
     const response = await axios.get(`${BASE_URL}?option=WITHCOMMENT`, {
       headers: {
-        Authorization: `Bearer ${JSON.parse(token).accessToken}`,
+        Authorization: `Bearer ${JSON.parse(token)?.accessToken}`,
       },
     });
+
     console.log("Raw API Response:", response.data);
-    const forumData = response.data;
-    return forumData;
+    return response.data;
   } catch (error) {
     console.error("Failed to fetch forum discussions:", error);
-    throw new Error(
-      `Failed to fetch forum discussions. Error: ${error.message}`,
-    );
+
+    if (axios.isAxiosError(error)) {
+      throw new Error(`HTTP error! Status: ${error.response?.status}`);
+    } else {
+      throw new Error(
+        `Failed to fetch forum discussions. Error: ${error.message}`,
+      );
+    }
   }
 };
 
-export const postDiscussion = async (discussion, currentUser) => {
+export const postDiscussion = async (discussion, currentUser, setForumData) => {
   try {
     const token = JSON.parse(localStorage.getItem("token"));
     const response = await axios.post(
@@ -180,7 +185,14 @@ export const postDiscussion = async (discussion, currentUser) => {
         },
       },
     );
-    return response.data;
+
+    setForumData((prevData) => ({
+      ...prevData,
+      data: [response.data, ...prevData.data],
+      error: false,
+    }));
+
+    return response.data; // Mengembalikan data diskusi yang baru ditambahkan
   } catch (error) {
     console.error("Failed to post discussion:", error.message);
     if (error.response) {

@@ -25,7 +25,7 @@ export const AuthProvider = ({ children }) => {
           "token",
           JSON.stringify({ accessToken, refreshToken }),
         );
-        await getUserProfile(); // Fetch user profile after successful login
+        await getUserProfile();
         return true;
       } else {
         return false;
@@ -38,7 +38,7 @@ export const AuthProvider = ({ children }) => {
   const logout = () => {
     localStorage.removeItem("token");
     setCurrentUser(null);
-    setRefreshToken(null); // Clear refreshToken state on logout
+    setRefreshToken(null);
   };
 
   const register = async (username, email, password) => {
@@ -55,7 +55,7 @@ export const AuthProvider = ({ children }) => {
         localStorage.setItem("token", JSON.stringify(response.data));
         const { email, username, profile } = response.data;
         setCurrentUser({ email, username, profile });
-        await getUserProfile(); // Fetch user profile after successful registration
+        await getUserProfile();
         return true;
       } else {
         console.error("Invalid registration response:", response.data);
@@ -82,22 +82,15 @@ export const AuthProvider = ({ children }) => {
       const accessToken = currentUser ? currentUser.accessToken : null;
       const formData = new FormData();
 
-      // Append each key-value pair in updateData to the FormData
       Object.entries(updateData).forEach(([key, value]) => {
         formData.append(key, value);
       });
-
-      // Call the updateUser function from api.js
       await updateUser(currentUser.userId, formData, { accessToken });
-
-      // Fetch the updated user profile after the update
       await getUserProfile();
 
       console.log("Profile updated successfully");
     } catch (error) {
       console.error("Error updating profile", error);
-
-      // Handle error as needed (e.g., show an error message to the user)
       throw error;
     }
   };
@@ -153,10 +146,8 @@ export const AuthProvider = ({ children }) => {
           }
         } else {
           console.error("Server error:", error.response.data);
-          // Handle other server errors as needed
         }
       } else {
-        // Handle non-response errors
         console.error("Non-response error:", error.message);
       }
     }
@@ -208,9 +199,8 @@ export const AuthProvider = ({ children }) => {
         const { email, username, profile } = JSON.parse(token);
         setCurrentUser({ email, username, profile });
         try {
-          await getUserProfile(); // Fetch user profile when the component mounts
+          await getUserProfile();
         } catch (error) {
-          // Handle error during initial fetch or token refresh
           console.error("Error fetching user profile:", error);
           logout();
         }
@@ -220,23 +210,18 @@ export const AuthProvider = ({ children }) => {
 
     if (token) {
       const { refreshToken } = JSON.parse(token);
-      // Set a timer for token refresh just before it expires
-      const refreshTimer = setTimeout(
-        async () => {
-          try {
-            await refreshAccessToken();
-            await fetchUserProfile();
-          } catch (refreshError) {
-            // Handle error during token refresh
-            console.error("Error during token refresh:", refreshError);
-            logout();
-          }
-        } /* Set the timer duration based on token expiry time */,
-      );
+      const refreshTimer = setTimeout(async () => {
+        try {
+          await refreshAccessToken();
+          await fetchUserProfile();
+        } catch (refreshError) {
+          console.error("Error during token refresh:", refreshError);
+          logout();
+        }
+      });
 
       fetchUserProfile();
 
-      // Clear the timer on component unmount
       return () => clearTimeout(refreshTimer);
     } else {
       setCheckingUser(false);

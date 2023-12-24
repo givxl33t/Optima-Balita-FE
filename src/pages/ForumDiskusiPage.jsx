@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState, useRef } from "react";
 import { ForumContext } from "../contexts/ForumContext";
 import { AuthContext } from "../contexts/AuthContext";
 import {
@@ -7,6 +7,7 @@ import {
   handleUnlikeDiscussion,
   handleDeleteDiscussion,
   handleUpdateDiscussion as apiHandleUpdateDiscussion,
+  fetchForum,
 } from "../utils/api";
 import dayjs from "dayjs";
 import "dayjs/locale/id";
@@ -16,6 +17,7 @@ import Footer from "../components/Footer";
 import { BiComment, BiLike } from "react-icons/bi";
 import { Link } from "react-router-dom";
 import Loader from "../components/Loader";
+import useInterval from "use-interval";
 
 const ForumDiskusiPage = () => {
   const { isLoading, forumData, setForumData } = useContext(ForumContext);
@@ -31,6 +33,8 @@ const ForumDiskusiPage = () => {
   dayjs.extend(relativeTime);
   dayjs.locale("id");
 
+  const lastDiscussionRef = useRef(null);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -42,8 +46,7 @@ const ForumDiskusiPage = () => {
 
         const forumResponse = await fetchForum(token);
         console.log("Forum Response:", forumResponse);
-
-        setForumData({ data: forumResponse, isLoading: false });
+        setForumData(forumResponse);
       } catch (error) {
         console.error("Error fetching forum data:", error.message);
       }
@@ -51,23 +54,49 @@ const ForumDiskusiPage = () => {
 
     fetchData();
   }, [setForumData]);
+
+  useInterval(() => {
+    fetchData();
+  }, 30000);
+
   const handlePostDiscussion = async (e) => {
     e.preventDefault();
     try {
-      // Set properti created_at ke undefined
       newDiscussion.created_at = undefined;
 
-      const response = await postDiscussion(newDiscussion, currentUser);
-      console.log("Response after posting discussion:", response);
+      const newDiscussionData = await postDiscussion(
+        newDiscussion,
+        currentUser,
+        setForumData,
+      );
 
-      setForumData({ ...prevData, data: [response, ...prevData.data] });
-
-      console.log("Updated forumData:", forumData);
+      console.log("Updated forumData:", newDiscussionData);
       setNewDiscussion({ title: "", post_content: "" });
+
+      // Ambil kembali data forum terbaru dan atur ulang forumData
+      const token = localStorage.getItem("token");
+      if (!token) {
+        console.error("Token not found in local storage");
+        return;
+      }
+
+      const forumResponse = await fetchForum(token);
+      setForumData(forumResponse);
+
+      // Lakukan penelusuran ke postingan terakhir
+      if (lastDiscussionRef.current) {
+        lastDiscussionRef.current.scrollIntoView({ behavior: "smooth" });
+      }
     } catch (error) {
       console.error("Failed to post discussion:", error.message);
     }
   };
+
+  useEffect(() => {
+    // Ini akan dipanggil setiap kali forumData berubah
+    // Gunakan ini untuk melakukan tindakan apa pun yang diperlukan setelah perubahan forumData
+    console.log("ForumData updated:", forumData);
+  }, [forumData]);
 
   const handleDelete = async (discussionId) => {
     try {
@@ -113,7 +142,12 @@ const ForumDiskusiPage = () => {
     }
   };
 
-  if (isLoading) {
+  if (
+    isLoading ||
+    forumData.isLoading ||
+    forumData === null ||
+    forumData.error
+  ) {
     return <Loader />;
   }
 
@@ -171,8 +205,16 @@ const ForumDiskusiPage = () => {
             </form>
             <div className="forumDetail overflow-y-auto overflow-x-hidden mt-8">
               {Array.isArray(forumData?.data) ? (
-                forumData.data.map((discussion) => (
-                  <div key={discussion.id} className="mb-8">
+                forumData.data.map((discussion, index) => (
+                  <div
+                    key={discussion.id}
+                    className="mb-8"
+                    ref={
+                      index === forumData.data.length - 1
+                        ? lastDiscussionRef
+                        : null
+                    }
+                  >
                     <div className="max-w-2xl border-2 border-slate-200 rounded-lg shadow-lg p-4 space-y-4">
                       <div className="flex gap-4 items-center">
                         <img
@@ -252,7 +294,9 @@ const ForumDiskusiPage = () => {
                   </div>
                 ))
               ) : (
-                <p>Loading or no data available.</p>
+                <p>
+                  <Loader />
+                </p>
               )}
             </div>
           </div>
