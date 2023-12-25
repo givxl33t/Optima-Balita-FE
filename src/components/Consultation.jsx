@@ -13,8 +13,8 @@ const Consultation = () => {
               alt="Foto Dokter"
               className="w-32 h-32 mx-auto rounded-full"
             />
-            <h1 className="text-2xl font-bold mt-4">Nama Doktor</h1>
-            <p className="text-gray-500">Ahli Gizi </p>
+            <h1 className="text-2xl font-bold mt-4">Dewi Setyasari,A.Md.Gz</h1>
+            <p className="text-gray-500">Ahli Gizi Puskesmas Dukuhseti</p>
           </div>
           <div className="mt-6">
             <div className="flex items-center">
