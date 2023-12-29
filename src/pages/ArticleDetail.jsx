@@ -14,6 +14,7 @@ import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import Breadcrumb from "../components/Breadcrumb";
 import { useParams } from "react-router-dom";
+import DOMPurify from "dompurify";
 
 const ArticleDetail = () => {
   const { getArticles } = useContext(ArticleContext);
@@ -85,7 +86,12 @@ const ArticleDetail = () => {
                 />
                 <h1 className="text-2xl font-bold">{article.title}</h1>
                 <p className="text-slate-500">{article.created_at}</p>
-                <p>{article.content}</p>
+                <div
+                  className="prose prose-slate"
+                  dangerouslySetInnerHTML={{
+                    __html: DOMPurify.sanitize(article.content),
+                  }}
+                />
               </div>
             ) : (
               <div className="flex items-center justify-center h-screen">

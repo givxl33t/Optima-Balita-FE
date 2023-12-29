@@ -22,7 +22,7 @@ export const BMIProvider = ({ children }) => {
         const { accessToken } = JSON.parse(token);
 
         const response = await axios.get(
-          "https://www.givxl33t.site/api/bmi/me",
+          `${import.meta.env.VITE_API_URL}/me`,
           {
             headers: {
               Authorization: `Bearer ${accessToken}`,
@@ -56,7 +56,7 @@ export const BMIProvider = ({ children }) => {
       }
 
       const response = await axios.post(
-        "https://www.givxl33t.site/api/bmi",
+        `${import.meta.env.VITE_API_URL}/bmi`,
         newBMIEntry,
         {
           headers: {

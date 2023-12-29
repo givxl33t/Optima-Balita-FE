@@ -1,7 +1,7 @@
 import axios from "axios";
 import { createContext, useEffect, useState } from "react";
 
-const API_URL = "https://www.givxl33t.site/api/auth";
+const API_URL = `${import.meta.env.VITE_API_URL}/auth`;
 
 export const AuthContext = createContext();
 

@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const apiUrl = "https://www.givxl33t.site/api/auth";
+const apiUrl = `${import.meta.env.VITE_API_URL}/auth`;
 
 
 export const getUsers = async () => {
@@ -50,7 +50,7 @@ export const saveUserToApi = async (user) => {
 };
 
 export const getUserFromApi = (email, password) => {
-  const url = "https://www.givxl33t.site/api/auth";
+  const url = `${import.meta.env.VITE_API_URL}/auth`;
   return axios.get(url).then((response) => {
     const users = response.data;
 
@@ -87,7 +87,7 @@ export const updateUserInApi = async (userId, updatedUser) => {
 };
 
 export async function fetchArticles() {
-  const response = await fetch("https://www.givxl33t.site/api/article");
+  const response = await fetch(`${import.meta.env.VITE_API_URL}/article`);
   if (!response.ok) {
     throw new Error("Failed to fetch articles");
   }
@@ -96,7 +96,7 @@ export async function fetchArticles() {
 }
 export async function fetchArticlesRandom() {
   const response = await fetch(
-    "https://www.givxl33t.site/api/article?limit=3&page=1&sort=RANDOM",
+    `${import.meta.env.VITE_API_URL}/article?limit=3&page=1&sort=RANDOM`,
   );
   if (!response.ok) {
     throw new Error("Failed to fetch articles");
@@ -108,7 +108,7 @@ export async function fetchArticlesRandom() {
 export async function fetchArticlesId(articleId) {
   try {
     const response = await fetch(
-      `https://www.givxl33t.site/api/article/${articleId}`,
+      `${import.meta.env.VITE_API_URL}/article/${articleId}`,
     );
 
     if (!response.ok) {
@@ -126,7 +126,7 @@ export async function fetchArticlesId(articleId) {
   }
 }
 
-const BASE_URL = "https://www.givxl33t.site/api/forum";
+const BASE_URL = `${import.meta.env.VITE_API_URL}/forum`;
 
 export const fetchForum = async (token) => {
   try {
