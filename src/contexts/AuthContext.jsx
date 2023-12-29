@@ -1,5 +1,6 @@
 import axios from "axios";
 import { createContext, useEffect, useState } from "react";
+import { updateUser } from "../utils/api";
 
 const API_URL = `${import.meta.env.VITE_API_URL}/auth`;
 
@@ -24,7 +25,7 @@ export const AuthProvider = ({ children }) => {
           "token",
           JSON.stringify({ accessToken, refreshToken }),
         );
-        await getUserProfile(); // Fetch user profile after successful login
+        await getUserProfile();
         return true;
       } else {
         return false;
@@ -37,7 +38,7 @@ export const AuthProvider = ({ children }) => {
   const logout = () => {
     localStorage.removeItem("token");
     setCurrentUser(null);
-    setRefreshToken(null); // Clear refreshToken state on logout
+    setRefreshToken(null);
   };
 
   const register = async (username, email, password) => {
@@ -54,17 +55,11 @@ export const AuthProvider = ({ children }) => {
         localStorage.setItem("token", JSON.stringify(response.data));
         const { email, username, profile } = response.data;
         setCurrentUser({ email, username, profile });
-        await getUserProfile(); // Fetch user profile after successful registration
+        await getUserProfile();
         return true;
       } else {
         console.error("Invalid registration response:", response.data);
-
-        if (response.data && response.data.message) {
-          throw new Error(response.data.message);
-        } else {
-          console.error("Unexpected response format:", response);
-          throw new Error("Registrasi Gagal. Format respons tidak sesuai.");
-        }
+        throw new Error("Registrasi Gagal. Format respons tidak sesuai.");
       }
     } catch (error) {
       console.error("Error during registration:", error);
@@ -79,6 +74,24 @@ export const AuthProvider = ({ children }) => {
         console.error(error);
         throw new Error(error.message);
       }
+    }
+  };
+
+  const updateProfile = async (updateData) => {
+    try {
+      const accessToken = currentUser ? currentUser.accessToken : null;
+      const formData = new FormData();
+
+      Object.entries(updateData).forEach(([key, value]) => {
+        formData.append(key, value);
+      });
+      await updateUser(currentUser.userId, formData, { accessToken });
+      await getUserProfile();
+
+      console.log("Profile updated successfully");
+    } catch (error) {
+      console.error("Error updating profile", error);
+      throw error;
     }
   };
 
@@ -109,29 +122,33 @@ export const AuthProvider = ({ children }) => {
     } catch (error) {
       console.error("Error fetching user profile:", error);
 
-      if (error.response && error.response.status === 401) {
-        try {
-          const newAccessToken = await refreshAccessToken();
+      if (error.response) {
+        if (error.response.status === 401) {
+          try {
+            const newAccessToken = await refreshAccessToken();
 
-          if (newAccessToken) {
-            const retryResponse = await axios.get(`${API_URL}/me`, {
-              headers: {
-                Authorization: `Bearer ${newAccessToken}`,
-              },
-            });
+            if (newAccessToken) {
+              const retryResponse = await axios.get(`${API_URL}/me`, {
+                headers: {
+                  Authorization: `Bearer ${newAccessToken}`,
+                },
+              });
 
-            if (retryResponse.data) {
-              const { email, username, profile } = retryResponse.data.data;
-              setCurrentUser({ email, username, profile });
-              console.log("Token refresh successful!");
+              if (retryResponse.data) {
+                const { email, username, profile } = retryResponse.data.data;
+                setCurrentUser({ email, username, profile });
+                console.log("Token refresh successful!");
+              }
             }
+          } catch (refreshError) {
+            console.error("Error refreshing token:", refreshError);
+            logout();
           }
-        } catch (refreshError) {
-          console.error("Error refreshing token:", refreshError);
-          logout();
+        } else {
+          console.error("Server error:", error.response.data);
         }
       } else {
-        console.error("Server error:", error.response?.data);
+        console.error("Non-response error:", error.message);
       }
     }
   };
@@ -182,9 +199,8 @@ export const AuthProvider = ({ children }) => {
         const { email, username, profile } = JSON.parse(token);
         setCurrentUser({ email, username, profile });
         try {
-          await getUserProfile(); // Fetch user profile when the component mounts
+          await getUserProfile();
         } catch (error) {
-          // Handle error during initial fetch or token refresh
           console.error("Error fetching user profile:", error);
           logout();
         }
@@ -194,23 +210,18 @@ export const AuthProvider = ({ children }) => {
 
     if (token) {
       const { refreshToken } = JSON.parse(token);
-      // Set a timer for token refresh just before it expires
-      const refreshTimer = setTimeout(
-        async () => {
-          try {
-            await refreshAccessToken();
-            await fetchUserProfile();
-          } catch (refreshError) {
-            // Handle error during token refresh
-            console.error("Error during token refresh:", refreshError);
-            logout();
-          }
-        } /* Set the timer duration based on token expiry time */,
-      );
+      const refreshTimer = setTimeout(async () => {
+        try {
+          await refreshAccessToken();
+          await fetchUserProfile();
+        } catch (refreshError) {
+          console.error("Error during token refresh:", refreshError);
+          logout();
+        }
+      });
 
       fetchUserProfile();
 
-      // Clear the timer on component unmount
       return () => clearTimeout(refreshTimer);
     } else {
       setCheckingUser(false);
@@ -228,6 +239,7 @@ export const AuthProvider = ({ children }) => {
         logout,
         getUserProfile,
         refreshAccessToken,
+        updateProfile,
       }}
     >
       {!checkingUser && children}

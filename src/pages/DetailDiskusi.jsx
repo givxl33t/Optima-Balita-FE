@@ -1,4 +1,4 @@
-import { useContext, useState, useEffect } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { ForumContext } from "../contexts/ForumContext";
 import { BiComment, BiLike } from "react-icons/bi";
 import CommentForm from "../components/CommentForm";
@@ -6,26 +6,39 @@ import { useParams } from "react-router-dom";
 import { AiOutlineWechat } from "react-icons/ai";
 import { BsChevronLeft } from "react-icons/bs";
 import { IoShareSocialOutline } from "react-icons/io5";
+import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
 import dayjs from "dayjs";
 import "dayjs/locale/id";
 import relativeTime from "dayjs/plugin/relativeTime";
-import Navbar from "../components/Navbar";
-import Footer from "../components/Footer";
+import {
+  handlePostComment,
+  handleLikeDiscussion,
+  handleUnlikeDiscussion,
+  handleUpdateComment,
+  handleDeleteComment, // Tambahkan ini
+  handleDeleteDiscussion, // Tambahkan ini
+} from "../utils/api";
 
 function DetailDiskusi() {
   const { id } = useParams();
-
   const [newComment, setNewComment] = useState("");
+  const [discussion, setDiscussion] = useState(null);
+  const [editingCommentId, setEditingCommentId] = useState(null);
+  const [deletingCommentId, setDeletingCommentId] = useState(null);
 
-  const { isLoading, forums, handleReplyPost } = useContext(ForumContext);
-  const forum = forums?.find((forum) => forum.id === id);
+  const { isLoading, forumData } = useContext(ForumContext);
 
-  dayjs.extend(relativeTime);
-  dayjs.locale("id");
-
+  useEffect(() => {
+    if (forumData) {
+      const foundDiscussion = forumData.data.find((item) => item.id === id);
+      setDiscussion(foundDiscussion);
+    }
+  }, [forumData, id]);
   const goBack = () => {
     window.history.back();
   };
+
   const sharePost = () => {
     const url = window.location.href;
     navigator.share({
@@ -34,12 +47,41 @@ function DetailDiskusi() {
     });
   };
 
-  const handleSubmitComment = (forumId) => {
-    if (newComment.trim() === "") return;
+  const handleLike = () => {
+    handleLikeDiscussion(id);
+  };
 
-    handleReplyPost(forumId, newComment);
+  const handleSubmitComment = () => {
+    if (editingCommentId) {
+      // Mengedit komentar
+      handleUpdateComment(id, editingCommentId, { text: newComment });
+      setEditingCommentId(null);
+    } else {
+      // Menambahkan komentar baru
+      handlePostComment(id, newComment);
+    }
     setNewComment("");
   };
+
+  const handleDelete = () => {
+    if (deletingCommentId) {
+      // Menghapus komentar
+      handleDeleteComment(id, deletingCommentId);
+      setDeletingCommentId(null);
+    } else {
+      // Menghapus diskusi
+      // Implement a confirmation dialog if needed
+      handleDeleteDiscussion(id, setForumData);
+    }
+  };
+
+  const handleEdit = () => {
+    // Implement navigation to the edit page or a modal for editing
+    console.log("Editing discussion:", discussion);
+  };
+
+  dayjs.extend(relativeTime);
+  dayjs.locale("id");
 
   return (
     <>
@@ -50,68 +92,110 @@ function DetailDiskusi() {
             <button>
               <BsChevronLeft className="text-xl" onClick={goBack} />
             </button>
-            <p className="font-semibold text-lg">
-              Postingan {isLoading ? "Loading..." : forum?.username}
-            </p>
+            {isLoading ? (
+              <p>Loading...</p>
+            ) : forumData ? (
+              <p className="font-semibold text-lg">
+                Postingan dari{" "}
+                {discussion?.poster_username || "poster_username is undefined"}
+              </p>
+            ) : (
+              <div>Discussion not found</div>
+            )}
+
             <button>
               <IoShareSocialOutline className="text-xl" onClick={sharePost} />
             </button>
           </div>
-          {forum ? (
-            <div key={forum.id} className="mb-8">
+          {isLoading ? (
+            <p>Loading...</p>
+          ) : forumData ? (
+            <div key={id} className="mb-8">
               <div className="max-w-2xl border-2 border-slate-200 rounded-lg shadow-lg p-4 space-y-4">
                 <div className="flex gap-4 items-center">
                   <img
-                    src={forum.userProfile}
-                    alt={`user profile ${forum.id}`}
+                    src={discussion?.poster_profile}
+                    alt={`user profile ${id}`}
                     className="rounded-full w-16"
                   />
                   <div>
-                    <p className="font-semibold text-lg">{forum.username}</p>
+                    <p className="font-semibold text-lg">
+                      {discussion?.poster_username}
+                    </p>
                     <span className="text-sm text-slate-600">
-                      {dayjs(forum.createdAt).fromNow()}
+                      {dayjs(discussion?.created_at).fromNow()}
                     </span>
                   </div>
                 </div>
 
                 <div>
-                  <h1 className="font-semibold text-xl">{forum.title}</h1>
-                  <p className="text-lg">{forum.postContent}</p>
+                  <h1 className="font-semibold text-xl">{discussion?.title}</h1>
+                  <p className="text-lg">{discussion?.post_content}</p>
                 </div>
                 <div className="flex gap-4">
-                  <button className="bg-gray-300 py-1 px-4 rounded-full flex items-center gap-1">
-                    <BiLike /> like
+                  <button
+                    onClick={handleLike}
+                    className="text-teal-500 hover:underline mr-2"
+                  >
+                    <BiLike /> Like (
+                    {discussion?.likes ? discussion.likes.length : 0})
                   </button>
-                  <button className="bg-gray-300 py-1 px-4 rounded-full flex items-center gap-1">
+                  <button
+                    onClick={handleSubmitComment}
+                    className="text-red-500 hover:underline"
+                  >
                     <BiComment />{" "}
-                    {forum.replies.length > 0 ? forum.replies.length : ""}
+                    {forumData.comments && forumData.comments.length > 0
+                      ? forumData.comments.length
+                      : ""}
                   </button>
                 </div>
+
                 <div>
-                  {forum.replies.length > 0 ? (
+                  {forumData.comments && forumData.comments.length > 0 ? (
                     <ul className="space-y-4">
                       <h2 className="font-medium text-md">
-                        Semua komentar({forum.replies.length})
+                        Semua komentar({forumData.comments.length})
                       </h2>
-                      {forum.replies.map((reply) => (
+                      {forumData.comments.map((comment) => (
                         <li
-                          key={reply.id}
+                          key={comment.id}
                           className="border-t border-slate-200 pt-4"
                         >
                           <div className="flex gap-4 items-center">
                             <img
-                              src={reply.userProfile}
-                              alt={`user profile ${reply.id}`}
+                              src={comment.userProfile}
+                              alt={`user profile ${comment.id}`}
                               className="rounded-full w-12"
                             />
                             <div>
                               <p className="font-semibold text-md">
-                                {reply.username}
+                                {comment.username}
                               </p>
                               <span className="text-sm text-slate-600">
-                                {dayjs(reply.createdAt).fromNow()}
+                                {dayjs(comment.createdAt).fromNow()}
                               </span>
-                              <p className="text-lg">{reply.contentReply}</p>
+                              <p className="text-lg">{comment.text}</p>
+                              {comment.userId === token.userId && (
+                                <div className="flex gap-2">
+                                  <button
+                                    onClick={() =>
+                                      setEditingCommentId(comment.id)
+                                    }
+                                    className="text-blue-500 hover:underline"
+                                  >
+                                    Edit
+                                  </button>
+                                  <button
+                                    onClick={() =>
+                                      setDeletingCommentId(comment.id)
+                                    }
+                                    className="text-red-500 hover:underline"
+                                  >
+                                    Delete
+                                  </button>
+                                </div>
+                              )}
                             </div>
                           </div>
                         </li>
@@ -128,11 +212,20 @@ function DetailDiskusi() {
                   )}
                 </div>
                 <div className="mt-4">
-                  <CommentForm
-                    onSubmit={() => handleSubmitComment(forum.id)}
-                    value={newComment}
-                    onChange={(e) => setNewComment(e.target.value)}
-                  />
+                  {editingCommentId ? (
+                    // Form untuk mengedit komentar
+                    <CommentForm
+                      onSubmit={handleSubmitComment}
+                      value={newComment}
+                      onChange={(e) => setNewComment(e.target.value)}
+                    />
+                  ) : (
+                    <CommentForm
+                      onSubmit={handleSubmitComment}
+                      value={newComment}
+                      onChange={(e) => setNewComment(e.target.value)}
+                    />
+                  )}
                 </div>
               </div>
             </div>

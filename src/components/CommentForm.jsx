@@ -24,7 +24,7 @@ function CommentForm({ onSubmit, value, onChange }) {
         type="text"
         value={value}
         onChange={onChange}
-        placeholder="Write a comment..."
+        placeholder="Tulis Komentar..."
         className="bg-slate-300 py-2 px-4 rounded-full text-lg w-full"
       />
       <button type="submit">
