@@ -22,7 +22,7 @@ export const BMIProvider = ({ children }) => {
         const { accessToken } = JSON.parse(token);
 
         const response = await axios.get(
-          `${import.meta.env.VITE_API_URL}/me`,
+          `${import.meta.env.VITE_API_URL}/bmi/me`,
           {
             headers: {
               Authorization: `Bearer ${accessToken}`,
