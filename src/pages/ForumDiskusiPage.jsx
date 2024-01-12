@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState, useRef } from "react";
+import { useContext, useEffect, useState, useRef } from "react";
 import { ForumContext } from "../contexts/ForumContext";
 import { AuthContext } from "../contexts/AuthContext";
 import {
@@ -17,7 +17,6 @@ import Footer from "../components/Footer";
 import { BiComment, BiLike } from "react-icons/bi";
 import { Link } from "react-router-dom";
 import Loader from "../components/Loader";
-import useInterval from "use-interval";
 
 const ForumDiskusiPage = () => {
   const { isLoading, forumData, setForumData } = useContext(ForumContext);
@@ -54,10 +53,6 @@ const ForumDiskusiPage = () => {
 
     fetchData();
   }, [setForumData]);
-
-  useInterval(() => {
-    fetchData();
-  }, 30000);
 
   const handlePostDiscussion = async (e) => {
     e.preventDefault();

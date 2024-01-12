@@ -105,17 +105,18 @@ export const updateUser = async (userId, updateData, token) => {
     throw error;
   }
 };
-export async function fetchArticles() {
-  const response = await fetch(`${import.meta.env.VITE_API_URL}/article`);
+export async function fetchArticles(page = 1, limit = 4) {
+  const response = await fetch(`${import.meta.env.VITE_API_URL}/article?limit=${limit}&page=${page}`);
   if (!response.ok) {
     throw new Error("Failed to fetch articles");
   }
   const data = await response.json();
   return data;
 }
+
 export async function fetchArticlesRandom() {
   const response = await fetch(
-    `${import.meta.env.VITE_API_URL}/article?limit=3&page=1&sort=RANDOM`,
+    `${import.meta.env.VITE_API_URL}/article?limit=5&page=1&sort=RANDOM`,
   );
   if (!response.ok) {
     throw new Error("Failed to fetch articles");
@@ -124,15 +125,15 @@ export async function fetchArticlesRandom() {
   return data;
 }
 
-export async function fetchArticlesId(articleId) {
+export async function fetchArticlesSlug(articleSlug) {
   try {
     const response = await fetch(
-      `${import.meta.env.VITE_API_URL}/article/${articleId}`,
+      `${import.meta.env.VITE_API_URL}/article/slug/${articleSlug}`,
     );
 
     if (!response.ok) {
       throw new Error(
-        `Failed to fetch article with ID ${articleId}. Status: ${response.status}`,
+        `Failed to fetch article with slug ${articleSlug}. Status: ${response.status}`,
       );
     }
 
@@ -146,13 +147,28 @@ export async function fetchArticlesId(articleId) {
 
 const BASE_URL = `${import.meta.env.VITE_API_URL}/forum`;
 
-export const fetchForum = async (token) => {
+export const fetchForum = async () => {
   try {
-    const response = await axios.get(`${BASE_URL}?option=WITHCOMMENT`, {
-      headers: {
-        Authorization: `Bearer ${JSON.parse(token)?.accessToken}`,
-      },
-    });
+    const response = await axios.get(`${BASE_URL}?option=WITHCOMMENT`);
+
+    console.log("Raw API Response:", response.data);
+    return response.data;
+  } catch (error) {
+    console.error("Failed to fetch forum discussions:", error);
+
+    if (axios.isAxiosError(error)) {
+      throw new Error(`HTTP error! Status: ${error.response?.status}`);
+    } else {
+      throw new Error(
+        `Failed to fetch forum discussions. Error: ${error.message}`,
+      );
+    }
+  }
+};
+
+export const fetchLandingPageForum = async () => {
+  try {
+    const response = await axios.get(`${BASE_URL}?page=1&limit=3`);
 
     console.log("Raw API Response:", response.data);
     return response.data;

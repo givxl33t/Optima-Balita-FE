@@ -1,11 +1,9 @@
 import { useContext, useState } from "react";
-import { AuthContext } from "../contexts/AuthContext";
 import { BMIContext } from "../contexts/BmiContext";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
 export const BmiCalculator = () => {
-  const { currentUser } = useContext(AuthContext);
   const { bmiList, addBMIEntry } = useContext(BMIContext);
 
   const [formBmiState, setFormBmiState] = useState({
@@ -16,8 +14,11 @@ export const BmiCalculator = () => {
     weight_category: "",
     gender: "",
   });
+
   const [selectedDate, setSelectedDate] = useState(null);
-  const [bmi, setbmi] = useState();
+  const [namaError, setNamaError] = useState("");
+  const [ageError, setAgeError] = useState("");
+  const [genderError, setGenderError] = useState("");
   const [tinggiError, setTinggiError] = useState("");
   const [beratError, setBeratError] = useState("");
 
@@ -37,10 +38,28 @@ export const BmiCalculator = () => {
 
   const calculateBMI = (event) => {
     event.preventDefault();
-    const { child_name, age_text, height, weight, weight_category, gender } =
+    const { child_name, age_text, height, weight, gender } =
       formBmiState;
     const tinggiNum = parseInt(height);
     const beratNum = parseInt(weight);
+
+    if (child_name === "") {
+      setNamaError("Mohon isi data dengan nama");
+    } else {
+      setNamaError("");
+    }
+
+    if (age_text === "") {
+      setAgeError("Mohon pilih tanggal lahir");
+    } else {
+      setAgeError("");
+    }
+
+    if (gender === "") {
+      setGenderError("Mohon pilih jenis kelamin");
+    } else {
+      setGenderError("");
+    }
 
     if (isNaN(tinggiNum) || tinggiNum <= 0) {
       setTinggiError("Mohon isi data dengan angka");
@@ -54,41 +73,7 @@ export const BmiCalculator = () => {
       setBeratError("");
     }
 
-    if (tinggiNum > 0 && beratNum > 0) {
-      const bmi = (beratNum / (((tinggiNum / 100) * tinggiNum) / 100)).toFixed(
-        2,
-      );
-
-      let weight_category = "";
-      if (bmi <= 18.4) {
-        weight_category = "Underweight";
-      } else if (bmi >= 18.6 && bmi < 24.9) {
-        weight_category = "Normal";
-      } else if (bmi >= 25 && bmi < 29.9) {
-        weight_category = "Overweight";
-      } else {
-        weight_category = "Obesity";
-      }
-
-      let weight_categoryWomen = "";
-      if (gender === "Perempuan") {
-        if (bmi <= 18.4) {
-          weight_categoryWomen = "Underweight";
-        } else if (bmi >= 18.5 && bmi < 23.9) {
-          weight_categoryWomen = "Normal";
-        } else if (bmi >= 24 && bmi < 28.9) {
-          weight_categoryWomen = "Overweight";
-        } else {
-          weight_categoryWomen = "Obesity";
-        }
-      }
-
-      const finalCategory =
-        gender === "Perempuan" ? weight_categoryWomen : weight_category;
-
-      setFormBmiState({ ...formBmiState, weight_category: finalCategory });
-      setbmi(bmi);
-
+    if (tinggiNum > 0 && beratNum > 0 && child_name != "" && age_text != "" && gender != "") {
       const newBMIEntry = {
         // id: currentUser.username,
         child_name: formBmiState.child_name,
@@ -96,13 +81,14 @@ export const BmiCalculator = () => {
         gender: formBmiState.gender,
         height: formBmiState.height,
         weight: formBmiState.weight,
-        bmi,
-        weight_category: finalCategory,
       };
 
       addBMIEntry(newBMIEntry);
     }
   };
+
+  const minDate = new Date();
+  minDate.setFullYear(minDate.getFullYear() - 5);
 
   return (
     <>
@@ -117,6 +103,44 @@ export const BmiCalculator = () => {
                 <div>
                   <p
                     className="block mb-2 text-sm font-medium text-gray-900"
+                    id="pilihBalita"
+                  >
+                    Pilih Balita Anda (Jika Ada)
+                  </p>
+                  <select
+                    id="selectChild"
+                    className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+                    value={formBmiState.child_name}
+                    onChange={(e) => {
+                      const selectedValue = e.target.value;
+                      if (selectedValue === "") {
+                        setFormBmiState({
+                          ...formBmiState,
+                          gender: "",
+                          child_name: "",
+                        });
+                      } else {
+                        const selectedBmi = bmiList.find((bmi) => bmi.child_name === selectedValue);
+                        setFormBmiState({
+                          ...formBmiState,
+                          gender: selectedBmi.gender,
+                          child_name: selectedBmi.child_name,
+                        });
+                      }
+                    }}
+                    disabled={bmiList.length === 0}
+                  >
+                    <option value="">Pilih Balita</option>
+                    {[...new Set(bmiList.map((bmi) => bmi.child_name))].map((uniqueChildName) => (
+                      <option key={uniqueChildName} value={uniqueChildName}>
+                        {uniqueChildName}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div>
+                  <p
+                    className="block mb-2 text-sm font-medium text-gray-900"
                     id="masukanNama"
                   >
                     Nama Balita
@@ -126,13 +150,22 @@ export const BmiCalculator = () => {
                     type="text"
                     placeholder="Andi Law"
                     value={formBmiState.child_name}
-                    onChange={(e) =>
-                      setFormBmiState({
-                        ...formBmiState,
-                        child_name: e.target.value,
-                      })
+                    onChange={(e) => {
+                        setFormBmiState({
+                          ...formBmiState,
+                          child_name: e.target.value,
+                        })
+                        const selectedBmi = bmiList.find((bmi) => bmi.child_name === formBmiState.child_name);
+                        setFormBmiState({
+                          ...formBmiState,
+                          gender: selectedBmi.gender,
+                        });
+                      }
                     }
                   />
+                  <span id="namaError" style={{ color: "red" }}>
+                    {namaError}
+                  </span>
                 </div>
                 <div>
                   <h2>Tanggal Lahir:</h2>
@@ -147,13 +180,17 @@ export const BmiCalculator = () => {
                       dropdownMode="select"
                       placeholderText="Pilih Tanggal"
                       className="p-2 rounded-md"
+                      minDate={minDate}
+                      maxDate={new Date()}
                     />
                     <span className="text-md pt-1 font-medium">
                       {formBmiState.age_text}
                     </span>
                   </div>
                 </div>
-
+                <span id="ageError" style={{ color: "red" }}>
+                    {ageError}
+                </span>
                 <div>
                   <p
                     className="block mb-2 text-sm font-medium text-gray-900"
@@ -168,12 +205,14 @@ export const BmiCalculator = () => {
                         name="jenisKelamin"
                         value="Laki-laki"
                         checked={formBmiState.gender === "Laki-laki"}
-                        onChange={() =>
+                        onChange={() => {
+                          const selectedBmi = bmiList.find((bmi) => bmi.child_name === formBmiState.child_name);
                           setFormBmiState({
                             ...formBmiState,
-                            gender: "Laki-laki",
+                            gender: selectedBmi ? selectedBmi.gender : "Laki-laki",
                           })
                         }
+                      }
                       />
                       <span className="ml-2">Laki-laki</span>
                     </label>
@@ -183,16 +222,21 @@ export const BmiCalculator = () => {
                         name="jenisKelamin"
                         value="Perempuan"
                         checked={formBmiState.gender === "Perempuan"}
-                        onChange={() =>
-                          setFormBmiState({
-                            ...formBmiState,
-                            gender: "Perempuan",
-                          })
+                        onChange={() => {
+                            const selectedBmi = bmiList.find((bmi) => bmi.child_name === formBmiState.child_name);
+                            setFormBmiState({
+                              ...formBmiState,
+                              gender: selectedBmi ? selectedBmi.gender : "Perempuan",
+                            })
+                          }
                         }
                       />
                       <span className="ml-2">Perempuan</span>
                     </label>
                   </div>
+                  <span id="genderError" style={{ color: "red" }}>
+                    {genderError}
+                  </span>
                 </div>
                 <div>
                   <p
@@ -216,14 +260,16 @@ export const BmiCalculator = () => {
                   <span id="tinggiError" style={{ color: "red" }}>
                     {tinggiError}
                   </span>
-                  <p className="text-gray-900">keterangan :</p>
-                  <li>
-                    untuk balita usia 0-23 bulan , hitung dengan posisi
-                    terlentang
-                  </li>
-                  <li>
-                    untuk balita usia 24-59 bulan , hitung dengan posisi berdiri
-                  </li>
+                  <div className="p-4 bg-slate-300 rounded-xl mt-2">
+                    <p className="text-slate-500">Keterangan Pengukuran Tinggi</p>
+                    <li className="text-slate-500">
+                      Balita usia 0-23 bulan dihitung dengan posisi
+                      terlentang
+                    </li>
+                    <li className="text-slate-500">
+                      Balita usia 24-59 bulan dihitung dengan posisi berdiri
+                    </li>
+                  </div>
                 </div>
                 <div>
                   <p
@@ -258,22 +304,6 @@ export const BmiCalculator = () => {
                 </div>
               </form>
             </div>
-            <div>
-              {bmi && (
-                <div className="p-4 bg-slate-300 my-6 rounded-xl">
-                  <p className="mb-2 text-sm font-medium text-gray-700">
-                    Hasil:
-                  </p>
-                  <ul className="list-disc pl-6">
-                    <li>Nama: {formBmiState.child_name}</li>
-                    <li>Usia: {formBmiState.age_text}</li>
-                    <li>Jenis Kelamin: {formBmiState.gender}</li>
-                    <li>Hasil: {bmi}</li>
-                    <li>Kategori: {formBmiState.weight_category}</li>
-                  </ul>
-                </div>
-              )}
-            </div>
           </div>
           <div className="flex flex-col max-w-md md:max-w-full">
             <div className="space-y-4 bg-white p-4 rounded-lg">
@@ -298,10 +328,10 @@ export const BmiCalculator = () => {
                           BB
                         </th>
                         <th className="border-b border-gray-500 md:px-4 px-1">
-                          Hasil
+                          IMT
                         </th>
                         <th className="border-b border-gray-500 md:px-4 px-1">
-                          Kategori
+                          Kategori IMT/U
                         </th>
                       </tr>
                     </thead>

@@ -35,10 +35,20 @@ export const AuthProvider = ({ children }) => {
       return false;
     }
   };
-  const logout = () => {
-    localStorage.removeItem("token");
-    setCurrentUser(null);
-    setRefreshToken(null);
+  const logout = async () => {
+    try {
+      await axios.delete(`${API_URL}/logout`, {
+        data: {
+          refreshToken,
+        },
+      });
+
+      localStorage.removeItem("token");
+      setCurrentUser(null);
+      setRefreshToken(null);
+    } catch (error) {
+      console.error("Error during logout:", error);
+    }
   };
 
   const register = async (username, email, password) => {

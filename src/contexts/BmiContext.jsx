@@ -2,6 +2,7 @@
 import { createContext, useEffect, useState, useContext } from "react";
 import axios from "axios";
 import { AuthContext } from "../contexts/AuthContext";
+import Swal from "sweetalert2";
 
 export const BMIContext = createContext();
 
@@ -55,7 +56,7 @@ export const BMIProvider = ({ children }) => {
         return;
       }
 
-      const response = await axios.post(
+      await axios.post(
         `${import.meta.env.VITE_API_URL}/bmi`,
         newBMIEntry,
         {
@@ -63,16 +64,29 @@ export const BMIProvider = ({ children }) => {
             Authorization: `Bearer ${tokenData.accessToken}`,
           },
         },
-      );
+      ).then((res) => {
+        Swal.fire({
+          icon: "success",
+          title: "Kalkulasi Berhasil",
+          showConfirmButton: false,
+          timer: 1500,
+        })
 
-      console.log("API Response:", response.data);
+        setBMIList((prevBMIList) => [...prevBMIList, res.data.data]);
+      });
 
-      setBMIList((prevBMIList) => [...prevBMIList, response.data]);
+
     } catch (error) {
       console.error("Error while sending BMI data to API:", error);
 
       if (error.response) {
         console.error("API Error:", error.response.data);
+
+        Swal.fire({
+          icon: "error",
+          title: "Kalkulasi Gagal",
+          text: error.response.data.message,
+        });
       }
     }
   };

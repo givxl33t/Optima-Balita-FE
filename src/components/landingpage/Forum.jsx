@@ -10,13 +10,7 @@ const Forum = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const token = localStorage.getItem("token");
-        if (!token) {
-          console.error("Token not found in local storage");
-          return;
-        }
-
-        const forumResponse = await fetchForum(token);
+        const forumResponse = await fetchForum();
         console.log("Forum Response:", forumResponse);
         setForumData(forumResponse);
       } catch (error) {

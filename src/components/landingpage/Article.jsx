@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { useContext, useRef } from "react";
 import { NavLink } from "react-router-dom";
 import Slider from "react-slick";
@@ -9,10 +10,10 @@ import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 const ArticleCard = ({ article }) => (
   <div key={article.id} className="p-3">
     <div className="max-w-md mx-auto bg-white rounded-lg shadow-md overflow-hidden">
-      <a href={`/article/${article.id}`}>
+      <a href={`/article/${article.slug}`}>
         <img
           src={article.image}
-          alt={`article pilihan ${article.id}`}
+          alt={`article pilihan ${article.slug}`}
           className="max-w-full h-auto rounded-t-md"
         />
         <div className="p-4">

@@ -5,7 +5,7 @@ const HeroBanner = () => {
   return (
     <>
       <main>
-        <div className="pt-40 pb-60 flex content-center items-center justify-center">
+        <div className="pt-40 pb-40 flex content-center items-center justify-center">
           <div
             className="absolute top-0 w-full h-full bg-center bg-cover"
             style={{

@@ -51,7 +51,7 @@ const LoginForm = () => {
       <div className="w-full max-w-md flex overflow-hidden">
         <div className="w-full p-8">
           <h1 className=" text-center pb-16 text-2xl font-bold text-black">
-            Silahkan login untuk melanjutkan!!!!!
+            Silahkan login untuk melanjutkan!
           </h1>
           <div className="text-center mb-8"></div>
           <div className="flex pb-8">

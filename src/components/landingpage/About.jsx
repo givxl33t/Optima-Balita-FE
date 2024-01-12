@@ -1,9 +1,9 @@
 const About = () => {
   return (
     <>
-      <section className="bg-white py-5" id="about">
+      <section className="bg-white pt-5" id="about">
         <div className="container py-lg-5">
-          <div className="flex flex-col md:flex-row justify-center items-center mb-5">
+          <div className="flex flex-col md:flex-row justify-center items-center mt-3">
             <div className="md:w-1/2 mb-4 md:mb-0">
               <img
                 src="https://i.postimg.cc/66HgKtmK/tentang-kami.jpg"
@@ -14,7 +14,7 @@ const About = () => {
             <div className="md:w-1/2 p-4">
               <div data-aos="fade-up">
                 <h4 className="font-bold mb-3 text-2xl sm:text-3xl">
-                  Tentang Optima Balitaaaa
+                  Tentang Optima Balita
                 </h4>
                 <p className="font-normal mb-3 text-md sm:text-lg text-gray-800">
                   Optima Balita merupakan sebuah website yang bergerak di bidang

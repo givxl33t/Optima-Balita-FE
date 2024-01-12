@@ -20,7 +20,7 @@ import { createContext } from "react";
 import {
   fetchArticles,
   fetchArticlesRandom,
-  fetchArticlesId,
+  fetchArticlesSlug,
 } from "../utils/api";
 import { useQuery } from "react-query";
 
@@ -28,17 +28,20 @@ export const ArticleContext = createContext();
 
 // eslint-disable-next-line react/prop-types
 export const ArticleProvider = ({ children }) => {
-  const { data: articles, isLoading } = useQuery("articles", fetchArticles);
+  const { data: articles, isLoading } = useQuery(["articles", 1, 4], () => fetchArticles(1, 4));
   const { data: randomArticles } = useQuery(
     "randomArticles",
     fetchArticlesRandom,
+    {
+      staleTime: 60000,
+    }
   );
 
   const value = {
     articles,
     isLoading,
     randomArticles,
-    getArticles: fetchArticlesId, // Use the correct function for fetching a single article
+    getArticles: fetchArticlesSlug, // Use the correct function for fetching a single article
   };
 
   return (

@@ -1,6 +1,6 @@
 // ArticleDetail.jsx
 
-import React, { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import {
   FacebookIcon,
   FacebookShareButton,
@@ -15,16 +15,17 @@ import Footer from "../components/Footer";
 import Breadcrumb from "../components/Breadcrumb";
 import { useParams } from "react-router-dom";
 import DOMPurify from "dompurify";
+import dayjs from "dayjs";
 
 const ArticleDetail = () => {
   const { getArticles } = useContext(ArticleContext);
-  const { articleId } = useParams();
+  const { articleSlug } = useParams();
   const [article, setArticle] = useState(null);
 
   useEffect(() => {
     const fetchArticleDetail = async () => {
       try {
-        const response = await getArticles(articleId);
+        const response = await getArticles(articleSlug);
         setArticle(response.data);
       } catch (error) {
         console.error("Error fetching article detail:", error);
@@ -33,7 +34,7 @@ const ArticleDetail = () => {
     };
 
     fetchArticleDetail();
-  }, [getArticles, articleId]);
+  }, [getArticles, articleSlug]);
 
   const breadcrumbItems = [
     {
@@ -69,7 +70,7 @@ const ArticleDetail = () => {
               <WhatsappShareButton
                 url={window.location.href}
                 quote={"Dapatkan informasi lengkap stunting"}
-                hashtag="#StuntingCenter"
+                hashtag="#OptimaBalita"
               >
                 <WhatsappIcon size={36} round />
               </WhatsappShareButton>
@@ -79,13 +80,13 @@ const ArticleDetail = () => {
             <Breadcrumb items={breadcrumbItems} />
             {article ? (
               <div className="max-w-3xl space-y-4 mt-4">
+                <h1 className="text-4xl font-semibold">{article.title}</h1>
+                <p className="text-slate-500">5 menit &#10242;Ditinjau oleh {article?.author} {dayjs(article?.created_at).locale("Id").format("DD MMMM YYYY")}</p>
                 <img
                   src={article.image}
                   alt={`article ${article.id}`}
                   className="rounded-lg"
                 />
-                <h1 className="text-2xl font-bold">{article.title}</h1>
-                <p className="text-slate-500">{article.created_at}</p>
                 <div
                   className="prose prose-slate"
                   dangerouslySetInnerHTML={{
