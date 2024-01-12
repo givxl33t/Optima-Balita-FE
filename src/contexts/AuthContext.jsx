@@ -59,18 +59,7 @@ export const AuthProvider = ({ children }) => {
         password,
       });
 
-      console.log("Registration Response:", response);
-
-      if (response.data && response.data.accessToken) {
-        localStorage.setItem("token", JSON.stringify(response.data));
-        const { email, username, profile } = response.data;
-        setCurrentUser({ email, username, profile });
-        await getUserProfile();
-        return true;
-      } else {
-        console.error("Invalid registration response:", response.data);
-        throw new Error("Registrasi Gagal. Format respons tidak sesuai.");
-      }
+      return response;
     } catch (error) {
       console.error("Error during registration:", error);
 
