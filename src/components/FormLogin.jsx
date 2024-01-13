@@ -136,6 +136,10 @@ const LoginForm = () => {
                 type="submit"
                 className="w-full text-white font-bold py-1 px-3 rounded-full flex-1"
                 style={{ backgroundColor: "rgba(17, 118, 143, 255)" }}
+                onMouseOver={(e) => { e.target.style.backgroundColor = "rgba(86, 118, 143, 255)"}}
+                onMouseOut={(e) => {
+                  e.target.style.backgroundColor = "rgba(17, 118, 143, 255)";
+                }}
               >
                 Masuk
               </button>

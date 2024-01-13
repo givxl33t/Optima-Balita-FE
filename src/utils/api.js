@@ -85,14 +85,14 @@ export const updateUserInApi = async (userId, updatedUser) => {
   }
 };
 
-export const updateUser = async (userId, updateData, token) => {
+export const updateUser = async (updateData, accessToken) => {
   try {
     const response = await axios.put(
-      `${apiUrl}/profile/${userId}`,
+      `${apiUrl}/profile`,
       updateData,
       {
         headers: {
-          Authorization: `Bearer ${token.accessToken}`,
+          Authorization: `Bearer ${accessToken}`,
           "Content-Type": "multipart/form-data",
         },
       },

@@ -78,16 +78,32 @@ export const AuthProvider = ({ children }) => {
 
   const updateProfile = async (updateData) => {
     try {
-      const accessToken = currentUser ? currentUser.accessToken : null;
+      const storedToken = localStorage.getItem("token");
+
+      if (!storedToken) {
+        throw new Error("No token found");
+      }
+
+      const { accessToken: storedAccessToken } = JSON.parse(storedToken);
+
+      if (updateData.profile === null) {
+        delete updateData.profile;
+      }
+
+      if (updateData.password === "" || updateData.current_password === "") {
+        delete updateData.password;
+        delete updateData.current_password;
+      }
+
       const formData = new FormData();
 
       Object.entries(updateData).forEach(([key, value]) => {
         formData.append(key, value);
       });
-      await updateUser(currentUser.userId, formData, { accessToken });
+      const response = await updateUser(formData, storedAccessToken);
       await getUserProfile();
 
-      console.log("Profile updated successfully");
+      return response;
     } catch (error) {
       console.error("Error updating profile", error);
       throw error;
