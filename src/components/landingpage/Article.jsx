@@ -8,7 +8,7 @@ import { ArticleContext } from "../../contexts/ArticleContext";
 
 const ArticleCard = ({ article }) => (
   <div key={article.id} className="p-3">
-    <div className="max-w-md mx-auto bg-white rounded-lg shadow-md overflow-hidden">
+    <div className="max-w-md mx-auto bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition duration-300">
       <a href={`/article/${article.slug}`}>
         <img
           src={article.image}
@@ -74,7 +74,7 @@ const Article = () => {
         </Slider>
       </div>
       <div className="flex justify-center mt-8">
-        <button className="py-3 px-5 text-lg bg-gradient-to-r from-teal-600 to-teal-300 rounded-full font-semibold text-white">
+        <button className="py-3 px-5 text-lg bg-gradient-to-r from-teal-600 to-teal-300 rounded-full font-semibold text-white hover:shadow-xl transition duration-300">
           <NavLink to="/article">Baca Selengkapnya</NavLink>
         </button>
       </div>

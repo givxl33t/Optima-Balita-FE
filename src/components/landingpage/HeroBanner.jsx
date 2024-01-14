@@ -36,7 +36,7 @@ const HeroBanner = () => {
                   {!currentUser && (
                     <NavLink
                     to="/login"
-                    className="py-3 px-7 font-medium rounded-full text-md bg-gradient-to-r from-teal-600 to-teal-400 text-white hover:bg-teal-700 transition duration-300"
+                    className="py-3 px-7 font-medium rounded-full text-md bg-gradient-to-r from-teal-600 to-teal-400 text-white hover:shadow-xl transition duration-300"
                   >
                     Get Started
                   </NavLink>

@@ -89,7 +89,7 @@ const ArticlePage = () => {
                         <img
                           src={article.image}
                           alt={`article pilihan ${article.slug}`}
-                          className="rounded-lg max-h-96"
+                          className="rounded-lg max-h-96 hover:shadow-xl transition duration-300"
                         />
                         <h2 className="absolute bottom-0 rounded-b-lg bg-gradient-to-t from-black bg-opacity-40 left-0 w-full px-4 py-4 text-white text-lg font-semibold sm:text-2xl">
                           {article.title}
@@ -133,7 +133,7 @@ const ArticlePage = () => {
               {fetchArticlesForCurrentPage.data.data.map((article) => (
                 <div
                   key={article.id}
-                  className="w-72 border-slate-300 border-2 rounded-lg gap-3 shadow-lg"
+                  className="w-72 border-slate-300 border-2 rounded-lg gap-3 shadow-lg hover:shadow-xl transition duration-300"
                 >
                   <Link to={`/article/${article.slug}`}>
                     <img

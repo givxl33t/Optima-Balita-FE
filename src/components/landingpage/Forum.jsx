@@ -48,7 +48,7 @@ const Forum = () => {
             key={discussion.id}
             className="w-full mb-4 md:w-1/3 md:ml-2 md:mr-2 lg:w-1/3"
           >
-            <div className="box-lg bg-white m-2 p-2 md:m-4 md:p-4 w-auto text-center relative border-2 border-slate-400 shadow-md rounded-xl">
+            <div className="box-lg bg-white m-2 p-2 md:m-4 md:p-4 w-auto text-center relative border-2 border-slate-400 shadow-md rounded-xl hover:shadow-xl transition duration-300">
               <div className="user flex-col">
                 <img
                   src={discussion.poster_profile}
@@ -77,7 +77,7 @@ const Forum = () => {
       </div>
 
       <div className="flex justify-center">
-        <button className="py-3 px-5 text-lg bg-gradient-to-r from-teal-600 to-teal-300 rounded-full font-semibold text-white">
+        <button className="py-3 px-5 text-lg bg-gradient-to-r from-teal-600 to-teal-300 rounded-full font-semibold text-white hover:shadow-xl transition duration-300">
           <NavLink to="/forum">Bergabung</NavLink>
         </button>
       </div>
