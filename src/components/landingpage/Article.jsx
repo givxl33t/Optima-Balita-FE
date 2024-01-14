@@ -49,7 +49,7 @@ const Article = () => {
     dots: true,
     infinite: true,
     speed: 500,
-    slidesToShow: 2,
+    slidesToShow: 3,
     slidesToScroll: 1,
     responsive: [
       {
@@ -76,7 +76,7 @@ const Article = () => {
         <p className="text-lg text-slate-800 mb-4">
           Temukan berbagai informasi menarik tentang stunting
         </p>
-        <Slider {...settings} className="mx-auto max-w-2xl p-1" ref={sliderRef}>
+        <Slider {...settings} className="mx-auto max-w-4xl p-1" ref={sliderRef}>
           {articles.data.map((article) => (
             <ArticleCard key={article.id} article={article} />
           ))}

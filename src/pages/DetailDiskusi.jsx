@@ -1,9 +1,9 @@
-import React, { useContext, useState, useEffect } from "react";
+import { useContext, useState, useEffect } from "react";
 import { ForumContext } from "../contexts/ForumContext";
-import { BiComment, BiLike } from "react-icons/bi";
+import { BiComment } from "react-icons/bi";
 import CommentForm from "../components/CommentForm";
 import { useParams } from "react-router-dom";
-import { AiOutlineWechat } from "react-icons/ai";
+import { AiOutlineWechat, AiFillLike, AiOutlineLike } from "react-icons/ai";
 import { BsChevronLeft } from "react-icons/bs";
 import { IoShareSocialOutline } from "react-icons/io5";
 import Navbar from "../components/Navbar";
@@ -13,28 +13,51 @@ import "dayjs/locale/id";
 import relativeTime from "dayjs/plugin/relativeTime";
 import {
   handlePostComment,
-  handleLikeDiscussion,
-  handleUnlikeDiscussion,
+  handleLikeUnlikeDiscussion,
   handleUpdateComment,
   handleDeleteComment, // Tambahkan ini
-  handleDeleteDiscussion, // Tambahkan ini
+  fetchForum // Tambahkan ini
 } from "../utils/api";
+import { jwtDecode } from "jwt-decode";
 
 function DetailDiskusi() {
   const { id } = useParams();
   const [newComment, setNewComment] = useState("");
   const [discussion, setDiscussion] = useState(null);
   const [editingCommentId, setEditingCommentId] = useState(null);
-  const [deletingCommentId, setDeletingCommentId] = useState(null);
 
-  const { isLoading, forumData } = useContext(ForumContext);
+  const { isLoading, forumData, setForumData } = useContext(ForumContext);
+
+  const token = JSON.parse(localStorage.getItem("token"));
+  if (!token) {
+    window.location.href = "/login";
+  }
+
+  const { accessToken } = token;
+
+  const decodedToken = jwtDecode(accessToken);
+  const userId = decodedToken.user_id;
+
 
   useEffect(() => {
-    if (forumData) {
-      const foundDiscussion = forumData.data.find((item) => item.id === id);
-      setDiscussion(foundDiscussion);
-    }
-  }, [forumData, id]);
+    const fetchData = async () => {
+      try {
+        const forumResponse = await fetchForum(accessToken);
+
+        if (forumResponse) {
+          const foundDiscussion = forumResponse.data.find(
+            (item) => item.id === id
+          );
+
+          setDiscussion(foundDiscussion);
+        }
+      } catch (error) {
+        console.error("Error fetching forum data:", error.message);
+      }
+    };
+
+    fetchData();
+  }, [accessToken, forumData, id]);
   const goBack = () => {
     window.history.back();
   };
@@ -48,36 +71,30 @@ function DetailDiskusi() {
   };
 
   const handleLike = () => {
-    handleLikeDiscussion(id);
+    handleLikeUnlikeDiscussion(id, setForumData);
   };
 
-  const handleSubmitComment = () => {
+
+  const handleSubmitComment = async () => {
     if (editingCommentId) {
       // Mengedit komentar
-      handleUpdateComment(id, editingCommentId, { text: newComment });
+      await handleUpdateComment(editingCommentId, newComment, setForumData);
       setEditingCommentId(null);
     } else {
       // Menambahkan komentar baru
-      handlePostComment(id, newComment);
+      await handlePostComment(id, newComment, setForumData);
     }
     setNewComment("");
   };
 
-  const handleDelete = () => {
-    if (deletingCommentId) {
-      // Menghapus komentar
-      handleDeleteComment(id, deletingCommentId);
-      setDeletingCommentId(null);
-    } else {
-      // Menghapus diskusi
-      // Implement a confirmation dialog if needed
-      handleDeleteDiscussion(id, setForumData);
-    }
+  const handleDelete = async (commentId) => {
+    await handleDeleteComment(commentId, setForumData);
   };
 
-  const handleEdit = () => {
-    // Implement navigation to the edit page or a modal for editing
-    console.log("Editing discussion:", discussion);
+  const handleEdit = (commentId) => {
+    const comment = discussion.comments.find((item) => item.id === commentId);
+    setEditingCommentId(commentId);
+    setNewComment(comment.comment_content);
   };
 
   dayjs.extend(relativeTime);
@@ -137,50 +154,51 @@ function DetailDiskusi() {
                     onClick={handleLike}
                     className="text-teal-500 hover:underline mr-2"
                   >
-                    <BiLike /> Like (
-                    {discussion?.likes ? discussion.likes.length : 0})
+                    {discussion?.is_liked ? (
+                      <AiFillLike className="text-teal-500 w-5 h-5" />
+                    ) : (
+                      <AiOutlineLike className="w-5 h-5" />
+                    )}
+                    Like ({discussion?.like_count})
                   </button>
                   <button
                     onClick={handleSubmitComment}
                     className="text-red-500 hover:underline"
                   >
-                    <BiComment />{" "}
-                    {forumData.comments && forumData.comments.length > 0
-                      ? forumData.comments.length
-                      : ""}
+                    <BiComment  className="w-5 h-5"/>{" "}
+                    {discussion?.comment_count}
                   </button>
                 </div>
-
                 <div>
-                  {forumData.comments && forumData.comments.length > 0 ? (
+                  {discussion?.comment_count > 0 ? (
                     <ul className="space-y-4">
                       <h2 className="font-medium text-md">
-                        Semua komentar({forumData.comments.length})
+                        Semua komentar ({discussion.comment_count})
                       </h2>
-                      {forumData.comments.map((comment) => (
+                      {discussion.comments.map((comment) => (
                         <li
                           key={comment.id}
                           className="border-t border-slate-200 pt-4"
                         >
                           <div className="flex gap-4 items-center">
                             <img
-                              src={comment.userProfile}
+                              src={comment.commenter_profile}
                               alt={`user profile ${comment.id}`}
                               className="rounded-full w-12"
                             />
                             <div>
                               <p className="font-semibold text-md">
-                                {comment.username}
+                                {comment.commenter_username}
                               </p>
                               <span className="text-sm text-slate-600">
-                                {dayjs(comment.createdAt).fromNow()}
+                                {dayjs(comment.created_at).fromNow()}
                               </span>
-                              <p className="text-lg">{comment.text}</p>
-                              {comment.userId === token.userId && (
+                              <p className="text-lg">{comment.comment_content}</p>
+                              {comment.commenter_id === userId && (
                                 <div className="flex gap-2">
                                   <button
                                     onClick={() =>
-                                      setEditingCommentId(comment.id)
+                                      handleEdit(comment.id)
                                     }
                                     className="text-blue-500 hover:underline"
                                   >
@@ -188,7 +206,7 @@ function DetailDiskusi() {
                                   </button>
                                   <button
                                     onClick={() =>
-                                      setDeletingCommentId(comment.id)
+                                      handleDelete(comment.id)
                                     }
                                     className="text-red-500 hover:underline"
                                   >
@@ -212,20 +230,14 @@ function DetailDiskusi() {
                   )}
                 </div>
                 <div className="mt-4">
-                  {editingCommentId ? (
-                    // Form untuk mengedit komentar
                     <CommentForm
                       onSubmit={handleSubmitComment}
                       value={newComment}
                       onChange={(e) => setNewComment(e.target.value)}
+                      editingCommentId={editingCommentId}
+                      setEditingCommentId={setEditingCommentId}
+                      setNewComment={setNewComment}
                     />
-                  ) : (
-                    <CommentForm
-                      onSubmit={handleSubmitComment}
-                      value={newComment}
-                      onChange={(e) => setNewComment(e.target.value)}
-                    />
-                  )}
                 </div>
               </div>
             </div>

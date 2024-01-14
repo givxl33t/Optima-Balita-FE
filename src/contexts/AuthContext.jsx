@@ -224,7 +224,6 @@ export const AuthProvider = ({ children }) => {
     };
 
     if (token) {
-      const { refreshToken } = JSON.parse(token);
       const refreshTimer = setTimeout(async () => {
         try {
           await refreshAccessToken();

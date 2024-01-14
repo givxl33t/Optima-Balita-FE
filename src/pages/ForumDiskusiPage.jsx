@@ -3,8 +3,7 @@ import { ForumContext } from "../contexts/ForumContext";
 import { AuthContext } from "../contexts/AuthContext";
 import {
   postDiscussion,
-  handleLikeDiscussion,
-  handleUnlikeDiscussion,
+  handleLikeUnlikeDiscussion,
   handleDeleteDiscussion,
   handleUpdateDiscussion as apiHandleUpdateDiscussion,
   fetchForum,
@@ -14,9 +13,11 @@ import "dayjs/locale/id";
 import relativeTime from "dayjs/plugin/relativeTime";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
-import { BiComment, BiLike } from "react-icons/bi";
+import { BiComment } from "react-icons/bi";
+import { AiFillLike, AiOutlineLike } from "react-icons/ai";
 import { Link } from "react-router-dom";
 import Loader from "../components/Loader";
+import { jwtDecode } from "jwt-decode";
 
 const ForumDiskusiPage = () => {
   const { isLoading, forumData, setForumData } = useContext(ForumContext);
@@ -32,18 +33,18 @@ const ForumDiskusiPage = () => {
   dayjs.extend(relativeTime);
   dayjs.locale("id");
 
+  const token = JSON.parse(localStorage.getItem("token"));
+  const { accessToken } = token;
+
+  const decodedToken = jwtDecode(accessToken);
+  const userId = decodedToken.user_id;
+
   const lastDiscussionRef = useRef(null);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const token = localStorage.getItem("token");
-        if (!token) {
-          console.error("Token not found in local storage");
-          return;
-        }
-
-        const forumResponse = await fetchForum(token);
+        const forumResponse = await fetchForum(accessToken);
         console.log("Forum Response:", forumResponse);
         setForumData(forumResponse);
       } catch (error) {
@@ -52,7 +53,7 @@ const ForumDiskusiPage = () => {
     };
 
     fetchData();
-  }, [setForumData]);
+  }, [setForumData, accessToken]);
 
   const handlePostDiscussion = async (e) => {
     e.preventDefault();
@@ -75,27 +76,19 @@ const ForumDiskusiPage = () => {
         return;
       }
 
-      const forumResponse = await fetchForum(token);
+      const forumResponse = await fetchForum(accessToken);
       setForumData(forumResponse);
-
-      // Lakukan penelusuran ke postingan terakhir
-      if (lastDiscussionRef.current) {
-        lastDiscussionRef.current.scrollIntoView({ behavior: "smooth" });
-      }
     } catch (error) {
       console.error("Failed to post discussion:", error.message);
     }
   };
 
-  useEffect(() => {
-    // Ini akan dipanggil setiap kali forumData berubah
-    // Gunakan ini untuk melakukan tindakan apa pun yang diperlukan setelah perubahan forumData
-    console.log("ForumData updated:", forumData);
-  }, [forumData]);
-
   const handleDelete = async (discussionId) => {
     try {
       await handleDeleteDiscussion(discussionId, setForumData);
+
+      const forumResponse = await fetchForum(accessToken);
+      setForumData(forumResponse);
     } catch (error) {
       console.error("Failed to delete discussion:", error.message);
     }
@@ -132,6 +125,9 @@ const ForumDiskusiPage = () => {
       setIsEditing(false);
       setEditingDiscussionId(null);
       setNewDiscussion({ title: "", post_content: "" });
+
+      const forumResponse = await fetchForum(accessToken);
+      setForumData(forumResponse);
     } catch (error) {
       console.error("Failed to update discussion:", error.message);
     }
@@ -184,7 +180,7 @@ const ForumDiskusiPage = () => {
               />
               <button
                 type="submit"
-                className="bg-teal-500 text-white py-1 px-4 mt-2 rounded-md float-right"
+                className="bg-teal-500 text-white py-1 px-4 mt-2 rounded-md float-right hover:bg-teal-700 transition duration-300"
               >
                 {isEditing ? "Perbarui" : "Kirim"}
               </button>
@@ -193,7 +189,7 @@ const ForumDiskusiPage = () => {
                 onClick={handleCancelEdit}
                 className={`${
                   isEditing ? "block" : "hidden"
-                } bg-yellow-500 text-white py-1 px-4 mt-2 mr-2 rounded-md float-right`}
+                } bg-yellow-500 text-white py-1 px-4 mt-2 mr-2 rounded-md float-right hover:bg-yellow-700 transition duration-300`}
               >
                 Batal
               </button>
@@ -235,50 +231,47 @@ const ForumDiskusiPage = () => {
                       </div>
                       <div className="flex gap-4">
                         <button
-                          onClick={() =>
-                            discussion.likes &&
-                            discussion.likes.includes(currentUser.userId)
-                              ? handleUnlikeDiscussion(
-                                  discussion.id,
-                                  setForumData,
-                                )
-                              : handleLikeDiscussion(
-                                  discussion.id,
-                                  setForumData,
-                                )
-                          }
+                          onClick={() => handleLikeUnlikeDiscussion(
+                            discussion.id,
+                            setForumData,
+                          )}
                           className={`${
-                            discussion.likes &&
-                            discussion.likes.includes(currentUser.userId)
-                              ? "bg-blue-500"
-                              : "bg-gray-300"
+                            discussion.is_liked
+                              ? "bg-gradient-to-r from-teal-600 to-teal-400 text-white"
+                              : "bg-gray-300 hover:bg-gray-500 transition duration-300"
                           } py-1 px-4 rounded-full flex items-center gap-1`}
                         >
-                          <BiLike />(
-                          {discussion.likes ? discussion.likes.length : 0})
+                          {discussion.is_liked ? (
+                            <AiFillLike />
+                          ) : (
+                            <AiOutlineLike />
+                          )}
+                          {discussion.like_count > 0
+                            ? discussion.like_count
+                            : ""}
                         </button>
 
                         <Link
                           to={`/forum/${discussion.id}`}
-                          className="bg-gray-300 py-1 px-4 rounded-full flex items-center gap-1"
+                          className="bg-gray-300 py-1 px-4 rounded-full flex items-center gap-1 hover:bg-gray-500 transition duration-300"
                         >
                           <BiComment />{" "}
-                          {discussion.comments && discussion.comments.length > 0
-                            ? discussion.comments.length
+                          {discussion.comment_count > 0
+                            ? discussion.comment_count
                             : ""}
                         </Link>
-                        {currentUser?.username ===
-                          discussion.poster_username && (
+                        {userId ===
+                          discussion.poster_id && (
                           <>
                             <button
                               onClick={() => handleDelete(discussion.id)}
-                              className="bg-red-500 text-white py-1 px-4 rounded-full"
+                              className="bg-red-500 text-white py-1 px-4 rounded-full hover:bg-red-700 transition duration-300"
                             >
                               Hapus
                             </button>
                             <button
                               onClick={() => handleEdit(discussion.id)}
-                              className="bg-yellow-500 text-white py-1 px-4 rounded-full"
+                              className="bg-yellow-500 text-white py-1 px-4 rounded-full hover:bg-yellow-700 transition duration-300"
                             >
                               Edit
                             </button>

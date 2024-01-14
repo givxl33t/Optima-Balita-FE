@@ -1,8 +1,9 @@
-import { useContext, useEffect, useState } from "react";
-import { FaStar, FaStarHalfAlt } from "react-icons/fa";
+import { useContext, useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import { ForumContext } from "../../contexts/ForumContext";
-import { fetchForum } from "../../utils/api";
+import { fetchLandingPageForum } from "../../utils/api";
+import { BiComment } from "react-icons/bi";
+import { AiOutlineLike } from "react-icons/ai";
 
 const Forum = () => {
   const { forumData, loading, setForumData } = useContext(ForumContext);
@@ -10,7 +11,7 @@ const Forum = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const forumResponse = await fetchForum();
+        const forumResponse = await fetchLandingPageForum();
         console.log("Forum Response:", forumResponse);
         setForumData(forumResponse);
       } catch (error) {
@@ -60,6 +61,17 @@ const Forum = () => {
                 </h3>
               </div>
               <div className="text-center">{discussion.post_content}</div>
+              {/* show likes and comment count */}
+              <div className="flex justify-center mt-2">
+                <div className="flex items-center mr-5">
+                  <AiOutlineLike className="mr-1 text-teal-500" />
+                  <p className="text-teal-500">{discussion.like_count}</p>
+                </div>
+                <div className="flex items-center">
+                  <BiComment className="mr-1 text-teal-500" />
+                  <p className="text-teal-500">{discussion.comment_count}</p>
+                </div>
+              </div>
             </div>
           </div>
         ))}

@@ -1,4 +1,5 @@
-import React, { createContext, useContext, useEffect, useState } from "react";
+/* eslint-disable react/prop-types */
+import { createContext, useEffect, useState } from "react";
 import { fetchForum } from "../utils/api";
 
 export const ForumContext = createContext();

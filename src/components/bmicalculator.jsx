@@ -296,7 +296,7 @@ export const BmiCalculator = () => {
                 </div>
                 <div className="flex justify-end">
                   <button
-                    className="bg-blue-400 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                    className="bg-teal-500 text-white font-bold py-2 px-4 rounded hover:bg-teal-700 transition duration-300"
                     onClick={calculateBMI}
                   >
                     Hitung
