@@ -12,7 +12,6 @@ export const ForumProvider = ({ children }) => {
     const fetchData = async () => {
       try {
         const forumResponse = await fetchForum();
-        console.log("Forum Response:", forumResponse);
         setForumData(forumResponse);
         setLoading(false);
       } catch (error) {

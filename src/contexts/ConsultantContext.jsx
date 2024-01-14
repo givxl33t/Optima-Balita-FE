@@ -8,7 +8,11 @@ export const ConsultantContext = createContext();
 export const ConsultantProvider = ({ children }) => {
   const { data: consultants, isLoading } = useQuery(
     ["consultants"],
-    () => fetchConsultants()
+    fetchConsultants,
+    {
+      staleTime: 60000,
+      retry: false,
+    }
   );
 
   const value = {

@@ -1,4 +1,4 @@
-import axios from "axios";
+import { axiosInstance as axios } from "../configurations/axiosInstance";
 
 const apiUrl = `${import.meta.env.VITE_API_URL}/auth`;
 
@@ -85,17 +85,11 @@ export const updateUserInApi = async (userId, updatedUser) => {
   }
 };
 
-export const updateUser = async (updateData, accessToken) => {
+export const updateUser = async (updateData) => {
   try {
     const response = await axios.put(
       `${apiUrl}/profile`,
       updateData,
-      {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-          "Content-Type": "multipart/form-data",
-        },
-      },
     );
 
     console.log("User berhasil diupdate:", response.data);
@@ -147,18 +141,12 @@ export async function fetchArticlesSlug(articleSlug) {
 
 const BASE_URL = `${import.meta.env.VITE_API_URL}/forum`;
 
-export const fetchForum = async (accessToken) => {
+export const fetchForum = async () => {
   try {
     const response = await axios.get(
       `${BASE_URL}?option=WITHCOMMENT`,
-      {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      }
     )
 
-    console.log("Raw API Response:", response.data);
     return response.data;
   } catch (error) {
     console.error("Failed to fetch forum discussions:", error);
@@ -177,7 +165,6 @@ export const fetchLandingPageForum = async () => {
   try {
     const response = await axios.get(`${BASE_URL}/landing`);
 
-    console.log("Raw API Response:", response.data);
     return response.data;
   } catch (error) {
     console.error("Failed to fetch forum discussions:", error);
@@ -194,18 +181,11 @@ export const fetchLandingPageForum = async () => {
 
 export const postDiscussion = async (discussion, currentUser, setForumData) => {
   try {
-    const token = JSON.parse(localStorage.getItem("token"));
     const response = await axios.post(
       BASE_URL,
       {
         ...discussion,
         userId: currentUser.userId,
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${token.accessToken}`,
-          "Content-Type": "application/json",
-        },
       },
     );
 
@@ -227,16 +207,9 @@ export const postDiscussion = async (discussion, currentUser, setForumData) => {
 
 export const postComment = async (discussionId, comment) => {
   try {
-    const token = JSON.parse(localStorage.getItem("token"));
     const response = await axios.post(
       `${BASE_URL}/${discussionId}/comment`,
-      comment,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      },
+      comment
     );
     return response.data;
   } catch (error) {
@@ -250,16 +223,9 @@ export const handleUpdateDiscussion = async (
   setForumData,
 ) => {
   try {
-    const token = JSON.parse(localStorage.getItem("token"));
     const response = await axios.put(
       `${BASE_URL}/${discussionId}`,
       updatedDiscussion,
-      {
-        headers: {
-          Authorization: `Bearer ${token.accessToken}`,
-          "Content-Type": "application/json",
-        },
-      },
     );
 
     const updatedDiscussionFromAPI = response.data;
@@ -286,23 +252,14 @@ export const handleUpdateComment = async (
   setForumData,
 ) => {
   try {
-    const token = JSON.parse(localStorage.getItem("token"));
     await axios.put(
       `${BASE_URL}/comment/${commentId}`,
       {
         comment_content: updatedComment,
       },
-      {
-        headers: {
-          Authorization: `Bearer ${
-            token.accessToken
-          }`,
-          "Content-Type": "application/json",
-        },
-      },
     );
 
-    const forumResponse = await fetchForum(token.accessToken);
+    const forumResponse = await fetchForum();
     setForumData(forumResponse);
   } catch (error) {
     console.error("Failed to update comment:", error.message);
@@ -310,19 +267,11 @@ export const handleUpdateComment = async (
 };
 
 export const handleLikeUnlikeDiscussion = async (discussionId, setForumData) => {
-  const accessToken = JSON.parse(localStorage.getItem("token")).accessToken;
-
   try {
     await axios.post(
       `${BASE_URL}/${discussionId}/like`,
-      {},
-      {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      },
     );
-    const forumResponse = await fetchForum(accessToken);
+    const forumResponse = await fetchForum();
     setForumData(forumResponse);
   } catch (error) {
     console.error("Failed to like discussion:", error.message);
@@ -331,13 +280,7 @@ export const handleLikeUnlikeDiscussion = async (discussionId, setForumData) => 
 
 export const deleteDiscussion = async (discussionId) => {
   try {
-    const response = await axios.delete(`${BASE_URL}/${discussionId}`, {
-      headers: {
-        Authorization: `Bearer ${
-          JSON.parse(localStorage.getItem("token")).accessToken
-        }`,
-      },
-    });
+    const response = await axios.delete(`${BASE_URL}/${discussionId}`);
     return response.data;
   } catch (error) {
     throw new Error("Failed to delete discussion");
@@ -354,14 +297,8 @@ export const handleDeleteDiscussion = async (discussionId) => {
 
 export const deleteComment = async (commentId) => {
   try {
-    const token = JSON.parse(localStorage.getItem("token"));
     const response = await axios.delete(
       `${BASE_URL}/comment/${commentId}`,
-      {
-        headers: {
-          Authorization: `Bearer ${token.accessToken}`,
-        },
-      },
     );
     return response.data;
   } catch (error) {
@@ -374,10 +311,9 @@ export const handleDeleteComment = async (
   setForumData,
 ) => {
   try {
-    const token = JSON.parse(localStorage.getItem("token"));
     await deleteComment(commentId);
     // Remove the comment from the state
-    const forumResponse = await fetchForum(token.accessToken);
+    const forumResponse = await fetchForum();
     setForumData(forumResponse);
   } catch (error) {
     console.error("Failed to delete comment:", error.message);
@@ -390,19 +326,12 @@ export const handlePostComment = async (
   setForumData,
 ) => {
   try {
-    const token = JSON.parse(localStorage.getItem("token"));
     await axios.post(
       `${BASE_URL}/${discussionId}/comment`,
       { comment_content: newComment },
-      {
-        headers: {
-          Authorization: `Bearer ${token.accessToken}`,
-          "Content-Type": "application/json",
-        },
-      },
     );
 
-    const forumResponse = await fetchForum(token.accessToken);
+    const forumResponse = await fetchForum();
     setForumData(forumResponse);
   } catch (error) {
     console.error("Failed to post comment:", error.message);
@@ -411,13 +340,7 @@ export const handlePostComment = async (
 
 export const fetchConsultants = async () => {
   try {
-    const token = JSON.parse(localStorage.getItem("token"));
-    const response = await axios.get(`${import.meta.env.VITE_API_URL}/consultation/consultant`,
-    {
-      headers: {
-        Authorization: `Bearer ${token.accessToken}`,
-      },
-    });
+    const response = await axios.get(`${import.meta.env.VITE_API_URL}/consultation/consultant`);
     return response.data;
   } catch (error) {
     console.error("Gagal mendapatkan data konsultan:", error);

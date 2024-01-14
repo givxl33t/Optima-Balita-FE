@@ -18,8 +18,6 @@ const Navbar = () => {
   const { currentUser, logout } = useContext(AuthContext);
   const [isScrolled, setIsScrolled] = useState(false);
 
-  console.log(currentUser);
-
   const handleLogout = () => {
     Swal.fire({
       title: "Konfirmasi Logout?",

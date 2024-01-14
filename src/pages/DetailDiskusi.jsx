@@ -16,7 +16,6 @@ import {
   handleLikeUnlikeDiscussion,
   handleUpdateComment,
   handleDeleteComment, // Tambahkan ini
-  fetchForum // Tambahkan ini
 } from "../utils/api";
 import { jwtDecode } from "jwt-decode";
 
@@ -28,6 +27,19 @@ function DetailDiskusi() {
 
   const { isLoading, forumData, setForumData } = useContext(ForumContext);
 
+  // get this discussion data from forumData
+  useEffect(() => {
+    if (forumData) {
+      const foundDiscussion = forumData.data.find((item) => item.id === id);
+      setDiscussion(foundDiscussion);
+    }
+  }, [forumData, id]);
+
+  if (isLoading) {
+    return <p>Loading...</p>;
+  }
+
+
   const token = JSON.parse(localStorage.getItem("token"));
   if (!token) {
     window.location.href = "/login";
@@ -38,26 +50,6 @@ function DetailDiskusi() {
   const decodedToken = jwtDecode(accessToken);
   const userId = decodedToken.user_id;
 
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const forumResponse = await fetchForum(accessToken);
-
-        if (forumResponse) {
-          const foundDiscussion = forumResponse.data.find(
-            (item) => item.id === id
-          );
-
-          setDiscussion(foundDiscussion);
-        }
-      } catch (error) {
-        console.error("Error fetching forum data:", error.message);
-      }
-    };
-
-    fetchData();
-  }, [accessToken, forumData, id]);
   const goBack = () => {
     window.history.back();
   };
@@ -162,7 +154,6 @@ function DetailDiskusi() {
                     Like ({discussion?.like_count})
                   </button>
                   <button
-                    onClick={handleSubmitComment}
                     className="text-red-500 hover:underline"
                   >
                     <BiComment  className="w-5 h-5"/>{" "}

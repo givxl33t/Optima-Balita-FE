@@ -37,18 +37,6 @@ const ConsultantCard = ({ consultant }) => (
   </div>
 );
 
-const Arrow = (props) => {
-  const { className, style, onClick } = props;
-
-  return (
-    <div
-      className={className}
-      style={{ ...style }}
-      onClick={onClick}
-    />
-  )
-}
-
 const Consultation = () => {
   const { consultants, isLoading } = useContext(ConsultantContext);
   const sliderRef = useRef(null);
@@ -59,8 +47,6 @@ const Consultation = () => {
     speed: 500,
     slidesToShow: 2,
     slidesToScroll: 1,
-    prevArrow: <Arrow/>,
-    nextArrow: <Arrow/>,
     responsive: [
       {
         breakpoint: 768,
@@ -75,14 +61,6 @@ const Consultation = () => {
     return (
       <div className="flex items-center justify-center h-screen">
         Loading...
-      </div>
-    );
-  }
-
-  if (!Array.isArray(consultants.data) || consultants.data.length === 0) {
-    return (
-      <div className="flex items-center justify-center h-screen">
-        Konsultan tidak tersedia
       </div>
     );
   }

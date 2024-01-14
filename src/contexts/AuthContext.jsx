@@ -1,4 +1,5 @@
-import axios from "axios";
+/* eslint-disable react/prop-types */
+import { axiosInstance as axios } from "../configurations/axiosInstance";
 import { createContext, useEffect, useState } from "react";
 import { updateUser } from "../utils/api";
 
@@ -84,8 +85,6 @@ export const AuthProvider = ({ children }) => {
         throw new Error("No token found");
       }
 
-      const { accessToken: storedAccessToken } = JSON.parse(storedToken);
-
       if (updateData.profile === null) {
         delete updateData.profile;
       }
@@ -100,7 +99,7 @@ export const AuthProvider = ({ children }) => {
       Object.entries(updateData).forEach(([key, value]) => {
         formData.append(key, value);
       });
-      const response = await updateUser(formData, storedAccessToken);
+      const response = await updateUser(formData);
       await getUserProfile();
 
       return response;
@@ -121,16 +120,11 @@ export const AuthProvider = ({ children }) => {
         if (storedRefreshToken) {
           setRefreshToken(storedRefreshToken);
 
-          const response = await axios.get(`${API_URL}/me`, {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
-          });
+          const response = await axios.get(`${API_URL}/me`);
 
           if (response.data) {
             const { email, username, profile } = response.data.data;
             setCurrentUser({ email, username, profile });
-            console.log("User profile fetched successfully!");
           }
         }
       }
@@ -138,72 +132,10 @@ export const AuthProvider = ({ children }) => {
       console.error("Error fetching user profile:", error);
 
       if (error.response) {
-        if (error.response.status === 401) {
-          try {
-            const newAccessToken = await refreshAccessToken();
-
-            if (newAccessToken) {
-              const retryResponse = await axios.get(`${API_URL}/me`, {
-                headers: {
-                  Authorization: `Bearer ${newAccessToken}`,
-                },
-              });
-
-              if (retryResponse.data) {
-                const { email, username, profile } = retryResponse.data.data;
-                setCurrentUser({ email, username, profile });
-                console.log("Token refresh successful!");
-              }
-            }
-          } catch (refreshError) {
-            console.error("Error refreshing token:", refreshError);
-            logout();
-          }
-        } else {
-          console.error("Server error:", error.response.data);
-        }
+        console.error("Server error:", error.response.data);
       } else {
         console.error("Non-response error:", error.message);
       }
-    }
-  };
-
-  const refreshAccessToken = async () => {
-    try {
-      const storedToken = localStorage.getItem("token");
-
-      if (storedToken) {
-        const { refreshToken: storedRefreshToken } = JSON.parse(storedToken);
-
-        const refreshResponse = await axios.put(`${API_URL}/refresh`, {
-          refreshToken: storedRefreshToken,
-        });
-
-        if (refreshResponse.data.accessToken) {
-          const { accessToken, refreshToken: newRefreshToken } =
-            refreshResponse.data;
-
-          localStorage.setItem(
-            "token",
-            JSON.stringify({
-              accessToken,
-              refreshToken: newRefreshToken,
-            }),
-          );
-
-          setRefreshToken(newRefreshToken);
-
-          return accessToken;
-        } else {
-          console.error("Invalid refresh response:", refreshResponse.data);
-          throw new Error("Invalid refresh response");
-        }
-      }
-
-      return null;
-    } catch (error) {
-      console.error("Error refreshing token:", error);
-      throw error;
     }
   };
 
@@ -226,7 +158,6 @@ export const AuthProvider = ({ children }) => {
     if (token) {
       const refreshTimer = setTimeout(async () => {
         try {
-          await refreshAccessToken();
           await fetchUserProfile();
         } catch (refreshError) {
           console.error("Error during token refresh:", refreshError);
@@ -252,7 +183,6 @@ export const AuthProvider = ({ children }) => {
         login,
         logout,
         getUserProfile,
-        refreshAccessToken,
         updateProfile,
       }}
     >

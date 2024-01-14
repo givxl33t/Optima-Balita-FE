@@ -12,7 +12,6 @@ const Forum = () => {
     const fetchData = async () => {
       try {
         const forumResponse = await fetchLandingPageForum();
-        console.log("Forum Response:", forumResponse);
         setForumData(forumResponse);
       } catch (error) {
         console.error("Error fetching forum data:", error.message);

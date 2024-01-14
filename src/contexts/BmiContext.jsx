@@ -1,6 +1,7 @@
+/* eslint-disable react/prop-types */
 // BMIContext.jsx
 import { createContext, useEffect, useState, useContext } from "react";
-import axios from "axios";
+import { axiosInstance as axios } from "../configurations/axiosInstance";
 import { AuthContext } from "../contexts/AuthContext";
 import Swal from "sweetalert2";
 
@@ -20,21 +21,9 @@ export const BMIProvider = ({ children }) => {
           return;
         }
 
-        const { accessToken } = JSON.parse(token);
-
         const response = await axios.get(
           `${import.meta.env.VITE_API_URL}/bmi/me`,
-          {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
-            params: {
-              userId: currentUser.username,
-            },
-          },
         );
-
-        console.log("BMI List Response:", response.data);
 
         setBMIList(response.data.data);
       } catch (error) {
@@ -59,11 +48,6 @@ export const BMIProvider = ({ children }) => {
       await axios.post(
         `${import.meta.env.VITE_API_URL}/bmi`,
         newBMIEntry,
-        {
-          headers: {
-            Authorization: `Bearer ${tokenData.accessToken}`,
-          },
-        },
       ).then((res) => {
         Swal.fire({
           icon: "success",

@@ -10,7 +10,13 @@ export const ArticleContext = createContext();
 
 // eslint-disable-next-line react/prop-types
 export const ArticleProvider = ({ children }) => {
-  const { data: articles, isLoading } = useQuery(["articles", 1, 5], () => fetchArticles(1, 5));
+  const { data: articles, isLoading } = useQuery(
+    ["articles", 1, 5], 
+    () => fetchArticles(1, 5),
+    {
+      staleTime: 60000,
+    }
+  );
   const { data: randomArticles } = useQuery(
     "randomArticles",
     fetchArticlesRandom,

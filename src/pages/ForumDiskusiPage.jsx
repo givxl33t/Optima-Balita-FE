@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState, useRef } from "react";
+import { useContext, useState, useRef } from "react";
 import { ForumContext } from "../contexts/ForumContext";
 import { AuthContext } from "../contexts/AuthContext";
 import {
@@ -34,26 +34,15 @@ const ForumDiskusiPage = () => {
   dayjs.locale("id");
 
   const token = JSON.parse(localStorage.getItem("token"));
-  const { accessToken } = token;
+  if (!token) {
+    window.location.href = "/login";
+  }
 
+  const { accessToken } = token;
   const decodedToken = jwtDecode(accessToken);
   const userId = decodedToken.user_id;
 
   const lastDiscussionRef = useRef(null);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const forumResponse = await fetchForum(accessToken);
-        console.log("Forum Response:", forumResponse);
-        setForumData(forumResponse);
-      } catch (error) {
-        console.error("Error fetching forum data:", error.message);
-      }
-    };
-
-    fetchData();
-  }, [setForumData, accessToken]);
 
   const handlePostDiscussion = async (e) => {
     e.preventDefault();
@@ -76,7 +65,7 @@ const ForumDiskusiPage = () => {
         return;
       }
 
-      const forumResponse = await fetchForum(accessToken);
+      const forumResponse = await fetchForum();
       setForumData(forumResponse);
     } catch (error) {
       console.error("Failed to post discussion:", error.message);
@@ -87,7 +76,7 @@ const ForumDiskusiPage = () => {
     try {
       await handleDeleteDiscussion(discussionId, setForumData);
 
-      const forumResponse = await fetchForum(accessToken);
+      const forumResponse = await fetchForum();
       setForumData(forumResponse);
     } catch (error) {
       console.error("Failed to delete discussion:", error.message);
@@ -126,7 +115,7 @@ const ForumDiskusiPage = () => {
       setEditingDiscussionId(null);
       setNewDiscussion({ title: "", post_content: "" });
 
-      const forumResponse = await fetchForum(accessToken);
+      const forumResponse = await fetchForum();
       setForumData(forumResponse);
     } catch (error) {
       console.error("Failed to update discussion:", error.message);
