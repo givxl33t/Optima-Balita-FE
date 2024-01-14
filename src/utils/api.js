@@ -145,19 +145,12 @@ export const fetchForum = async () => {
   try {
     const response = await axios.get(
       `${BASE_URL}?option=WITHCOMMENT`,
+      { cache: 'no-store' },
     )
 
     return response.data;
   } catch (error) {
     console.error("Failed to fetch forum discussions:", error);
-
-    if (axios.isAxiosError(error)) {
-      throw new Error(`HTTP error! Status: ${error.response?.status}`);
-    } else {
-      throw new Error(
-        `Failed to fetch forum discussions. Error: ${error.message}`,
-      );
-    }
   }
 };
 
@@ -168,14 +161,6 @@ export const fetchLandingPageForum = async () => {
     return response.data;
   } catch (error) {
     console.error("Failed to fetch forum discussions:", error);
-
-    if (axios.isAxiosError(error)) {
-      throw new Error(`HTTP error! Status: ${error.response?.status}`);
-    } else {
-      throw new Error(
-        `Failed to fetch forum discussions. Error: ${error.message}`,
-      );
-    }
   }
 };
 

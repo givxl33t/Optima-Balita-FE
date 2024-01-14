@@ -15,7 +15,8 @@ import {
   handlePostComment,
   handleLikeUnlikeDiscussion,
   handleUpdateComment,
-  handleDeleteComment, // Tambahkan ini
+  handleDeleteComment,
+  fetchForum // Tambahkan ini
 } from "../utils/api";
 import { jwtDecode } from "jwt-decode";
 
@@ -29,11 +30,28 @@ function DetailDiskusi() {
 
   // get this discussion data from forumData
   useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const forumResponse = await fetchForum();
+        setForumData(forumResponse);
+        isLoading(false);
+      } catch (error) {
+        console.error("Error fetching forum data:", error.message);
+        isLoading(false);
+      }
+    };
+
     if (forumData) {
       const foundDiscussion = forumData.data.find((item) => item.id === id);
-      setDiscussion(foundDiscussion);
+
+      if (foundDiscussion && foundDiscussion.comments) {
+        setDiscussion(foundDiscussion);
+      } else {
+        fetchData();
+      }
+
     }
-  }, [forumData, id]);
+  }, [forumData, id, isLoading, setForumData]);
 
   if (isLoading) {
     return <p>Loading...</p>;
