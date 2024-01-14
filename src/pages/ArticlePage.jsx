@@ -14,7 +14,10 @@ const ArticlePage = () => {
 
   const fetchArticlesForCurrentPage = useQuery(
     ["articles", currentPage, 4],
-    () => fetchArticles(currentPage, 4)
+    () => fetchArticles(currentPage, 4),
+    {
+      retry: false,
+    }
   );
 
   const handleNextPage = () => {
@@ -126,7 +129,7 @@ const ArticlePage = () => {
         </div>
         <div className="sm:px-24">
           <h1 className="text-2xl font-semibold mb-8">Artikel Terbaru</h1>
-            <div className="grid grid-cols-1 gap-6 sm:grid-cols-4">
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
               {fetchArticlesForCurrentPage.data.data.map((article) => (
                 <div
                   key={article.id}

@@ -6,17 +6,18 @@ import { useQuery } from "react-query";
 export const ConsultantContext = createContext();
 
 export const ConsultantProvider = ({ children }) => {
-  const { data: consultants, isLoading } = useQuery(
+  const { data: consultants, isLoading, refetch } = useQuery(
     ["consultants"],
     fetchConsultants,
     {
-      staleTime: 60000,
+      retry: false
     }
   );
 
   const value = {
     consultants,
     isLoading,
+    refetch
   };
 
   return (

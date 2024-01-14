@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 import { FaWhatsapp } from "react-icons/fa";
-import { useContext, useRef } from "react";
+import { useContext, useEffect, useRef } from "react";
 import { ConsultantContext } from "../contexts/ConsultantContext";
 import Slider from "react-slick";
 
@@ -38,8 +38,12 @@ const ConsultantCard = ({ consultant }) => (
 );
 
 const Consultation = () => {
-  const { consultants, isLoading } = useContext(ConsultantContext);
+  const { consultants, isLoading, refetch } = useContext(ConsultantContext);
   const sliderRef = useRef(null);
+
+  useEffect(() => {
+    refetch();
+  }, [refetch]);
 
   const settings = {
     dots: true,
@@ -67,7 +71,7 @@ const Consultation = () => {
   
 
   return (
-    <div className="bg-gray-100 py-16">
+    <div className="bg-gray-100 py-16 lg:grid-cols-3 xl:grid-cols-4 sm:px-24">
       <Slider {...settings} className="mx-auto max-w-2xl" ref={sliderRef}>
         {consultants?.data?.map((consultant) => (
           <ConsultantCard key={consultant.id} consultant={consultant} />
