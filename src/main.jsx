@@ -9,6 +9,7 @@ import { QueryClient, QueryClientProvider } from "react-query";
 import { ForumProvider } from "./contexts/ForumContext";
 import { AuthProvider } from "./contexts/AuthContext";
 import { BMIProvider } from "./contexts/BmiContext";
+import { ConsultantProvider } from "./contexts/ConsultantContext";
 
 const queryClient = new QueryClient();
 
@@ -19,7 +20,9 @@ ReactDOM.render(
         <ArticleProvider>
           <ForumProvider>
             <BMIProvider>
+              <ConsultantProvider>
               <RouterComponent />
+              </ConsultantProvider>
             </BMIProvider>
           </ForumProvider>
         </ArticleProvider>

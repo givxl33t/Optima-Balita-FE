@@ -408,3 +408,19 @@ export const handlePostComment = async (
     console.error("Failed to post comment:", error.message);
   }
 };
+
+export const fetchConsultants = async () => {
+  try {
+    const token = JSON.parse(localStorage.getItem("token"));
+    const response = await axios.get(`${import.meta.env.VITE_API_URL}/consultation/consultant`,
+    {
+      headers: {
+        Authorization: `Bearer ${token.accessToken}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Gagal mendapatkan data konsultan:", error);
+    throw error;
+  }
+};

@@ -19,3 +19,14 @@
 ul .active {
   color: #14b8a6;
 }
+
+.slick-prev:before {
+  margin-left: -40px;
+  font-size: 50px !important;
+  color: teal !important;
+}
+.slick-next:before {
+  margin-left: 10px;
+  font-size: 50px !important;
+  color: teal !important;
+}

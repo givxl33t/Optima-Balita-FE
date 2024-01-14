@@ -5,7 +5,6 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { ArticleContext } from "../../contexts/ArticleContext";
-import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 
 const ArticleCard = ({ article }) => (
   <div key={article.id} className="p-3">
@@ -61,14 +60,6 @@ const Article = () => {
     ],
   };
 
-  const goToNext = () => {
-    sliderRef.current.slickNext();
-  };
-
-  const goToPrev = () => {
-    sliderRef.current.slickPrev();
-  };
-
   return (
     <div className="mx-auto">
       <div className="text-center relative">
@@ -81,23 +72,6 @@ const Article = () => {
             <ArticleCard key={article.id} article={article} />
           ))}
         </Slider>
-        <div className="absolute top-1/2 transform -translate-y-1/2 left-10 p-10">
-          <button
-            className="py-3 px-5 text-lg bg-gradient-to-r from-teal-600 to-teal-300 rounded-full font-semibold text-white mr-4"
-            onClick={goToPrev}
-          >
-            <FaChevronLeft /> {/* Replace "Prev" with left arrow icon */}
-          </button>
-        </div>
-
-        <div className="absolute top-1/2 transform -translate-y-1/2 right-10 p-10">
-          <button
-            className="py-3 px-5 text-lg bg-gradient-to-r from-teal-600 to-teal-300 rounded-full font-semibold text-white"
-            onClick={goToNext}
-          >
-            <FaChevronRight /> {/* Replace "Next" with right arrow icon */}
-          </button>
-        </div>
       </div>
       <div className="flex justify-center mt-8">
         <button className="py-3 px-5 text-lg bg-gradient-to-r from-teal-600 to-teal-300 rounded-full font-semibold text-white">
