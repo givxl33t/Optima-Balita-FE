@@ -11,7 +11,6 @@ export const ConsultantProvider = ({ children }) => {
     fetchConsultants,
     {
       staleTime: 60000,
-      retry: false,
     }
   );
 
