@@ -166,7 +166,7 @@ function DetailDiskusi() {
                       <h2 className="font-medium text-md">
                         Semua komentar ({discussion.comment_count})
                       </h2>
-                      {discussion.comments.map((comment) => (
+                      {discussion?.comments?.map((comment) => (
                         <li
                           key={comment.id}
                           className="border-t border-slate-200 pt-4"

@@ -151,25 +151,26 @@ const ForumDiskusiPage = () => {
                 placeholder="Judul Diskusi"
                 className="border-2 border-gray-300 rounded-md p-2 w-full"
                 value={newDiscussion.title}
-                onChange={(e) =>
+                onChange={(e) => {
                   setNewDiscussion({ ...newDiscussion, title: e.target.value })
-                }
+                }}
               />
               <textarea
                 value={newDiscussion.post_content}
-                onChange={(e) =>
+                onChange={(e) => {
                   setNewDiscussion({
                     ...newDiscussion,
                     post_content: e.target.value,
                   })
-                }
+                }}
                 placeholder="Pertanyaan atau tanggapan kamu"
                 className="border-2 border-gray-300 rounded-md p-2 w-full"
                 rows={4}
               />
               <button
                 type="submit"
-                className="bg-teal-500 text-white py-1 px-4 mt-2 rounded-md float-right hover:bg-teal-700 transition duration-300"
+                className={newDiscussion.title === "" || newDiscussion.post_content === "" ? "bg-teal-700 text-gray py-1 px-4 mt-2 rounded-md float-right transition duration-300" : "bg-teal-500 text-white py-1 px-4 mt-2 rounded-md float-right hover:bg-teal-700 transition duration-300"}
+                disabled={newDiscussion.title === "" || newDiscussion.post_content === "" ? true : false}
               >
                 {isEditing ? "Perbarui" : "Kirim"}
               </button>

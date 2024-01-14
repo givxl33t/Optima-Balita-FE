@@ -39,10 +39,12 @@ function CommentForm({ onSubmit, value, onChange, editingCommentId, setEditingCo
           <IoCloseSharp className="w-10 h-10 bg-red-500 text-white p-2 rounded-full hover:bg-red-400" />
         </button>
       )}
-      <button type="submit">
+      <button 
+        type="submit"
+        disabled={value === "" ? true : false}>
         {editingCommentId 
-          ? <IoSendSharp className="w-10 h-10 bg-yellow-500 text-white p-2 rounded-full hover:bg-yellow-400" /> 
-          : <IoSendSharp className="w-10 h-10 bg-teal-500 text-white p-2 rounded-full hover:bg-teal-400" />
+          ? <IoSendSharp className={value === "" ? "w-10 h-10 bg-yellow-700 text-black p-2 rounded-full transition duration-300" : "w-10 h-10 bg-yellow-500 text-white p-2 rounded-full hover:bg-yellow-400 transition duration-300"} /> 
+          : <IoSendSharp className={value === "" ? "w-10 h-10 bg-teal-700 text-black p-2 rounded-full transition duration-300" : "w-10 h-10 bg-teal-500 text-white p-2 rounded-full hover:bg-teal-400 transition duration-300"} />
         }
       </button>
     </form>
