@@ -147,7 +147,14 @@ function DetailDiskusi() {
                   />
                   <div>
                     <p className="font-semibold text-lg">
-                      {discussion?.poster_username}
+                    {discussion?.poster_username} {discussion?.poster_role === "ADMIN" 
+                      ? <span className="text-red-500">[Admin]</span> 
+                      : discussion?.poster_role === "GUEST" 
+                      ? <span className="text-yellow-500">[Pengguna]</span> 
+                      : discussion?.poster_role === "DOCTOR" 
+                      ? <span className="text-green-500">[Nakes]</span> 
+                      : ""
+                    }
                     </p>
                     <span className="text-sm text-slate-600">
                       {dayjs(discussion?.created_at).fromNow()}
@@ -197,7 +204,14 @@ function DetailDiskusi() {
                             />
                             <div>
                               <p className="font-semibold text-md">
-                                {comment.commenter_username}
+                                {comment.commenter_username} {comment.commenter_role === "ADMIN"
+                                  ? <span className="text-red-500">[Admin]</span> 
+                                  : comment.commenter_role === "GUEST" 
+                                  ? <span className="text-yellow-500">[Pengguna]</span> 
+                                  : comment.commenter_role === "DOCTOR" 
+                                  ? <span className="text-green-500">[Nakes]</span> 
+                                  : ""
+                                }
                               </p>
                               <span className="text-sm text-slate-600">
                                 {dayjs(comment.created_at).fromNow()}

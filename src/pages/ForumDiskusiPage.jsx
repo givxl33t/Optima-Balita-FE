@@ -205,7 +205,14 @@ const ForumDiskusiPage = () => {
                         />
                         <div>
                           <p className="font-semibold text-lg">
-                            {discussion.poster_username}
+                          {discussion.poster_username} {discussion.poster_role === "ADMIN" 
+                            ? <span className="text-red-500">[Admin]</span> 
+                            : discussion.poster_role === "GUEST" 
+                            ? <span className="text-yellow-500">[Pengguna]</span> 
+                            : discussion.poster_role === "DOCTOR" 
+                            ? <span className="text-green-500">[Nakes]</span> 
+                            : ""
+                          }
                           </p>
                           <p className="text-sm text-slate-600">
                             {dayjs(discussion.created_at).fromNow()}
