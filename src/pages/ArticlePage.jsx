@@ -76,7 +76,7 @@ const ArticlePage = () => {
     <>
       <Navbar />
       <div className="pt-8 sm:px-24"><Breadcrumb items={breadcrumbItems} /></div>
-      <div className="flex flex-col items-center gap-10 py-2 sm:py-10">
+      <div className="flex flex-col items-center gap-10 py-2">
         <div className="sm:px-24">
           <h1 className="text-2xl font-semibold mb-8">Artikel Pilihan</h1>
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2">
@@ -89,7 +89,7 @@ const ArticlePage = () => {
                         <img
                           src={article.image}
                           alt={`article pilihan ${article.slug}`}
-                          className="rounded-lg max-h-[355px] max-w-[533px] hover:shadow-xl transition duration-300"
+                          className="rounded-lg h-1/2 max-w-[600px] hover:shadow-xl transition duration-300"
                         />
                         <h2 className="absolute bottom-0 rounded-b-lg bg-gradient-to-t from-black bg-opacity-40 left-0 w-full px-4 py-4 text-white text-lg font-semibold sm:text-2xl">
                           {article.title}
@@ -101,7 +101,7 @@ const ArticlePage = () => {
                 </div>
               ))}
             </div>
-            <div className="overflow-y-auto max-h-[355px] overflow-x-hidden rounded">
+            <div className="overflow-y-auto max-h-[400px] overflow-x-hidden rounded">
                 {randomArticles?.data?.map((article) => (
                   <div key={article.id} className="mb-4">
                     <Link to={`/article/${article.slug}`}>
@@ -133,7 +133,7 @@ const ArticlePage = () => {
               {fetchArticlesForCurrentPage.data.data.map((article) => (
                 <div
                   key={article.id}
-                  className="w-64 border-slate-300 border-2 rounded-lg gap-3 shadow-lg hover:shadow-xl transition duration-300"
+                  className="w-72 border-slate-300 border-2 rounded-lg gap-3 shadow-lg hover:shadow-xl transition duration-300"
                 >
                   <Link to={`/article/${article.slug}`}>
                     <img
