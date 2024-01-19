@@ -11,12 +11,22 @@ import dayjs from "dayjs";
 const ArticlePage = () => {
   const { randomArticles } = useContext(ArticleContext);
   const [currentPage, setCurrentPage] = useState(1);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [submittedQuery, setSubmittedQuery] = useState("");
 
   const fetchArticlesForCurrentPage = useQuery(
-    ["articles", currentPage, 4],
-    () => fetchArticles(currentPage, 4),
+    ["articles", currentPage, 4, submittedQuery], // Step 4: Include search query in the query key
+    () => fetchArticles(currentPage, 4, submittedQuery), // Step 4: Pass search query to fetchArticles
     {
-      retry: false,
+      keepPreviousData: true,
+      staleTime: 5000,
+
+      // Step 5: Refetch data when search query changes
+      refetchOnWindowFocus: false,
+      refetchOnMount: false,
+      refetchOnReconnect: false,
+      refetchOnPageChange: false,
+      refetchOnSettle: false,
     }
   );
 
@@ -30,18 +40,21 @@ const ArticlePage = () => {
     }
   };
 
+  const handleSearchChange = (e) => {
+    setSearchQuery(e.target.value);
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setSubmittedQuery(searchQuery); // Update submitted query on form submission
+    setCurrentPage(1);
+  };
+
+
   if (fetchArticlesForCurrentPage.isLoading) {
     return (
       <div className="flex items-center justify-center h-screen">
         Loading...
-      </div>
-    );
-  }
-
-  if (!Array.isArray(fetchArticlesForCurrentPage.data.data) || fetchArticlesForCurrentPage.data.data.length === 0) {
-    return (
-      <div className="flex items-center justify-center h-screen">
-        Artikel tidak tersedia
       </div>
     );
   }
@@ -89,7 +102,7 @@ const ArticlePage = () => {
                         <img
                           src={article.image}
                           alt={`article pilihan ${article.slug}`}
-                          className="rounded-lg h-1/2 max-w-[600px] hover:shadow-xl transition duration-300"
+                          className="rounded-lg h-1/2 w-[600px] hover:shadow-xl transition duration-300"
                         />
                         <h2 className="absolute bottom-0 rounded-b-lg bg-gradient-to-t from-black bg-opacity-40 left-0 w-full px-4 py-4 text-white text-lg font-semibold sm:text-2xl">
                           {article.title}
@@ -109,7 +122,7 @@ const ArticlePage = () => {
                         <img
                           src={article.image}
                           alt={`article pilihan ${article.slug}`}
-                          className="max-w-lg w-36 rounded-lg"
+                          className="max-w-lg w-1/3 h-1/3 rounded-lg"
                         />
                         <div>
                           <h2 className="text-lg font-medium">{article.title}</h2>
@@ -128,32 +141,53 @@ const ArticlePage = () => {
           </div>
         </div>
         <div className="sm:px-24">
-          <h1 className="text-2xl font-semibold mb-8">Artikel Terbaru</h1>
-            <div className="grid grid-cols-1 gap-6 sm:grid-cols-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-              {fetchArticlesForCurrentPage.data.data.map((article) => (
-                <div
-                  key={article.id}
-                  className="w-72 border-slate-300 border-2 rounded-lg gap-3 shadow-lg hover:shadow-xl transition duration-300"
-                >
-                  <Link to={`/article/${article.slug}`}>
-                    <img
-                      src={article.image}
-                      alt={`article terbaru ${article.slug}`}
-                      className="rounded-t-md"
-                    />
-                    <div className="m-2">
-                      <h2 className="text-lg font-medium line-clamp-3">
-                        {article.title}
-                      </h2>
-                      <span className="text-md text-slate-500">
-                        {dayjs(article.created_at).locale("Id").format("DD MMMM YYYY")}
-                      </span>
-                      <p className="line-clamp-2">{article.description}</p>
-                    </div>
-                  </Link>
+          <h1 className="text-2xl font-semibold mb-8 mr-10">Artikel Terbaru</h1>
+          <form onSubmit={handleSubmit}>   
+            <div className="relative w-72 md:w-96 mb-10">
+                <div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                    <svg className="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                        <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
+                    </svg>
                 </div>
-              ))}
+                <input type="search" onChange={handleSearchChange} id="default-search" className="block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Cari Judul Artikel..."/>
+                <button type="submit" className="text-white absolute end-2.5 bottom-2.5 bg-teal-500 hover:bg-teal-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Cari</button>
             </div>
+          </form>
+            {fetchArticlesForCurrentPage?.data?.data?.length === 0 ? (
+              <div className="grid grid-cols-1 gap-6 sm:grid-cols-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                <div className="w-72">
+                  <h4 className="font-bold mb-3 sm:w-96 text-2xl sm:text-3xl text-slate-300">
+                    Artikel Tidak Ditemukan
+                  </h4>
+                </div>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 gap-6 sm:grid-cols-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                {fetchArticlesForCurrentPage?.data?.data?.map((article) => (
+                  <div
+                    key={article.id}
+                    className="w-72 h-90 border-slate-300 border-2 rounded-lg gap-3 shadow-lg hover:shadow-xl transition duration-300"
+                  >
+                    <Link to={`/article/${article.slug}`}>
+                      <img
+                        src={article.image}
+                        alt={`article terbaru ${article.slug}`}
+                        className="rounded-t-md"
+                      />
+                      <div className="m-2">
+                        <h2 className="text-lg font-medium line-clamp-3">
+                          {article.title}
+                        </h2>
+                        <span className="text-md text-slate-500">
+                          {dayjs(article.created_at).locale("Id").format("DD MMMM YYYY")}
+                        </span>
+                        <p className="line-clamp-2">{article.description}</p>
+                      </div>
+                    </Link>
+                  </div>
+                ))}
+              </div>
+            )}
         </div>
         {/* Pagination UI */}
         <nav aria-label="Page navigation example" className="flex justify-center">

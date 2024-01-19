@@ -71,7 +71,7 @@ const Consultation = () => {
   
 
   return (
-    <div className="bg-gray-100 py-16 lg:grid-cols-3 xl:grid-cols-4 sm:px-24">
+    <div className="py-16 lg:grid-cols-3 xl:grid-cols-4 sm:px-24">
       <Slider {...settings} className="mx-auto max-w-2xl" ref={sliderRef}>
         {consultants?.data?.map((consultant) => (
           <ConsultantCard key={consultant.id} consultant={consultant} />

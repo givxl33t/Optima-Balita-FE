@@ -99,8 +99,8 @@ export const updateUser = async (updateData) => {
     throw error;
   }
 };
-export async function fetchArticles(page = 1, limit = 4) {
-  const response = await fetch(`${import.meta.env.VITE_API_URL}/article?limit=${limit}&page=${page}`);
+export async function fetchArticles(page = 1, limit = 4, filter = "") {
+  const response = await fetch(`${import.meta.env.VITE_API_URL}/article?limit=${limit}&page=${page}&filter=${filter}`);
   if (!response.ok) {
     throw new Error("Failed to fetch articles");
   }
@@ -145,7 +145,6 @@ export const fetchForum = async () => {
   try {
     const response = await axios.get(
       `${BASE_URL}?option=WITHCOMMENT`,
-      { cache: 'no-store' },
     )
 
     return response.data;

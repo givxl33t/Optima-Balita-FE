@@ -20,7 +20,7 @@ import Loader from "../components/Loader";
 import { jwtDecode } from "jwt-decode";
 
 const ForumDiskusiPage = () => {
-  const { isLoading, forumData, setForumData } = useContext(ForumContext);
+  const { forumData, setForumData } = useContext(ForumContext);
   const { currentUser } = useContext(AuthContext);
   const [isEditing, setIsEditing] = useState(false);
   const [editingDiscussionId, setEditingDiscussionId] = useState(null);
@@ -123,10 +123,7 @@ const ForumDiskusiPage = () => {
   };
 
   if (
-    isLoading ||
-    forumData.isLoading ||
-    forumData === null ||
-    forumData.error
+    forumData === null
   ) {
     return <Loader />;
   }
