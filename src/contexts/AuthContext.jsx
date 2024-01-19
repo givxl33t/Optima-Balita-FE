@@ -49,6 +49,10 @@ export const AuthProvider = ({ children }) => {
       setRefreshToken(null);
     } catch (error) {
       console.error("Error during logout:", error);
+
+      localStorage.removeItem("token");
+      setCurrentUser(null);
+      setRefreshToken(null);
     }
   };
 
@@ -114,7 +118,7 @@ export const AuthProvider = ({ children }) => {
       const storedToken = localStorage.getItem("token");
 
       if (storedToken) {
-        const { accessToken, refreshToken: storedRefreshToken } =
+        const { refreshToken: storedRefreshToken } =
           JSON.parse(storedToken);
 
         if (storedRefreshToken) {

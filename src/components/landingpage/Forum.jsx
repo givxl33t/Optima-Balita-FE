@@ -1,32 +1,35 @@
-import { useContext, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
-import { ForumContext } from "../../contexts/ForumContext";
 import { fetchLandingPageForum } from "../../utils/api";
 import { BiComment } from "react-icons/bi";
 import { AiOutlineLike } from "react-icons/ai";
 
 const Forum = () => {
-  const { forumData, loading, setForumData } = useContext(ForumContext);
+  const [landingForumData, setLandingForumData] = useState({ data: [] });
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
+      console.log("here")
       try {
         const forumResponse = await fetchLandingPageForum();
-        setForumData(forumResponse);
+        setLandingForumData(forumResponse);
+        setLoading(false);
       } catch (error) {
         console.error("Error fetching forum data:", error.message);
+        setLoading(false);
       }
     };
 
     fetchData();
-  }, [setForumData]);
+  }, [setLandingForumData]);
 
   if (loading) {
     return <p>Loading...</p>;
   }
 
-  const limitedForumData = Array.isArray(forumData?.data)
-    ? forumData.data.slice(0, 3)
+  const limitedForumData = Array.isArray(landingForumData?.data)
+    ? landingForumData.data.slice(0, 3)
     : [];
 
   return (

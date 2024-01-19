@@ -90,6 +90,13 @@ const ProfilePage = () => {
           text: "Email tidak valid.",
         });
         return;
+      } else if (error.response.data.message.includes("taken")) {
+        Swal.fire({
+          icon: "error",
+          title: "Profile Gagal Diubah",
+          text: "Email sudah digunakan.",
+        });
+        return;
       } else {
         Swal.fire({
           icon: "error",
