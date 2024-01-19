@@ -89,7 +89,7 @@ const ArticlePage = () => {
                         <img
                           src={article.image}
                           alt={`article pilihan ${article.slug}`}
-                          className="rounded-lg max-h-[355px] max-w-[700px] hover:shadow-xl transition duration-300"
+                          className="rounded-lg max-h-[355px] max-w-[533px] hover:shadow-xl transition duration-300"
                         />
                         <h2 className="absolute bottom-0 rounded-b-lg bg-gradient-to-t from-black bg-opacity-40 left-0 w-full px-4 py-4 text-white text-lg font-semibold sm:text-2xl">
                           {article.title}
