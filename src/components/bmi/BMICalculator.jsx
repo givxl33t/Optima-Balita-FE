@@ -1,10 +1,14 @@
 import { useContext, useState } from "react";
-import { BMIContext } from "../contexts/BmiContext";
+import { BMIContext } from "../../contexts/BmiContext";
+import HistoryTable from "./HistoryTable";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import { ZScoreLengthChart, ZScoreWeightChart } from "./zScoreChart";
 
-export const BmiCalculator = () => {
+const BMICalculator = () => {
   const { bmiList, addBMIEntry } = useContext(BMIContext);
+  const [selectedViewOption, setSelectedViewOption] = useState("Riwayat Status Gizi (Semua)");
+  
 
   const [formBmiState, setFormBmiState] = useState({
     child_name: "",
@@ -21,6 +25,11 @@ export const BmiCalculator = () => {
   const [genderError, setGenderError] = useState("");
   const [tinggiError, setTinggiError] = useState("");
   const [beratError, setBeratError] = useState("");
+
+  const handleSelectViewChange = (e) => {
+    setSelectedViewOption(e.target.value);
+    // You can add additional logic based on the selected option if needed
+  };
 
   const handleDateChange = (date) => {
     setSelectedDate(date);
@@ -307,62 +316,44 @@ export const BmiCalculator = () => {
           </div>
           <div className="flex flex-col max-w-md md:max-w-full">
             <div className="space-y-4 bg-white p-4 rounded-lg">
-              <h1 className="text-lg font-bold text-center leading-tight tracking-tight md:text-xl">
-                Riwayat Status Gizi
-              </h1>
-              {bmiList.length > 0 ? (
-                <div>
-                  <table className="w-full border-collapse">
-                    <thead className="text-md text-left font-medium text-gray-900">
-                      <tr>
-                        <th className="border-b border-gray-500 md:px-4 px-1">
-                          Nama
-                        </th>
-                        <th className="border-b border-gray-500 md:px-4 px-1">
-                          Umur
-                        </th>
-                        <th className="border-b border-gray-500 md:px-4 px-1">
-                          TB
-                        </th>
-                        <th className="border-b border-gray-500 md:px-4 px-1">
-                          BB
-                        </th>
-                        <th className="border-b border-gray-500 md:px-4 px-1">
-                          IMT
-                        </th>
-                        <th className="border-b border-gray-500 md:px-4 px-1">
-                          Kategori IMT/U
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {bmiList.map((bmi) => (
-                        <tr key={bmi.id} className="text-sm text-gray-900">
-                          <td className="border-b border-gray-500 md:px-4 px-1 py-2 ">
-                            {bmi.child_name}
-                          </td>
-                          <td className="border-b border-gray-500 md:px-4 px-1 py-2">
-                            {bmi.age_text}
-                          </td>
-                          <td className="border-b border-gray-500 md:px-4 px-1 py-2">
-                            {bmi.height}
-                          </td>
-                          <td className="border-b border-gray-500 md:px-4 px-1 py-2">
-                            {bmi.weight}
-                          </td>
-                          <td className="border-b border-gray-500 md:px-4 px-1 py-2">
-                            {bmi.bmi}
-                          </td>
-                          <td className="border-b border-gray-500 md:px-4 px-1 py-2">
-                            {bmi.weight_category}
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
+              <select
+                value={selectedViewOption}
+                onChange={handleSelectViewChange}
+                className="block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:border-blue-300"
+              >
+                <option value="Riwayat Status Gizi (Semua)">Riwayat Status Gizi (Semua)</option>
+                {[...new Set(bmiList.map((bmi) => bmi.child_name))].map((uniqueChildName) => (
+                  <option key={uniqueChildName} value={`${uniqueChildName}`}>
+                    Riwayat Status Gizi ({uniqueChildName})
+                  </option>
+                ))}
+                {[...new Set(bmiList.map((bmi) => bmi.child_name))].map((uniqueChildName) => (
+                  <option key={uniqueChildName} value={`${uniqueChildName}_curve`}>
+                    Kurva Pertumbuhan ({uniqueChildName})
+                  </option>
+                ))}
+              </select>
+              {selectedViewOption === "Riwayat Status Gizi (Semua)" ? (
+                <HistoryTable bmiList={bmiList} />
+              ) : selectedViewOption.includes("curve") ? (
+                <div className="flex flex-col">
+                  <h1 className="text-xl font-bold text-center leading-tight tracking-tight text-gray-900 md:text-xl">
+                    Kurva Pertumbuhan Tinggi Badan
+                  </h1>
+                  <ZScoreLengthChart data={bmiList.filter(
+                    (bmi) => bmi.child_name === `${selectedViewOption.replace("_curve", "")}`,
+                  )} />
+                  <h1 className="text-xl font-bold text-center leading-tight tracking-tight text-gray-900 md:text-xl">
+                    Kurva Pertumbuhan Berat Badan
+                  </h1>
+                  <ZScoreWeightChart data={bmiList.filter(
+                    (bmi) => bmi.child_name === `${selectedViewOption.replace("_curve", "")}`,
+                  )} />
                 </div>
               ) : (
-                <p className="text-gray-900">Riwayat BMI kosong</p>
+                <HistoryTable bmiList={bmiList.filter(
+                  (bmi) => bmi.child_name === selectedViewOption,
+                )} />
               )}
             </div>
           </div>
@@ -371,3 +362,5 @@ export const BmiCalculator = () => {
     </>
   );
 };
+
+export default BMICalculator;
