@@ -1,5 +1,6 @@
 import { useContext, useState } from "react";
 import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
 import { AuthContext } from "../contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
@@ -176,7 +177,7 @@ const ProfilePage = () => {
       <Navbar />
       <div className="container mx-auto mt-4 flex justify-center">
         <div className="max-w-md w-full bg-white border-2 border-gray-300 p-8 rounded-lg">
-          <h1 className="text-2xl font-bold mb-4">Profile Page</h1>
+          <h1 className="text-2xl font-bold mb-4">Profil Anda</h1>
           <div className="mb-4">
             <label htmlFor="name" className="text-lg font-semibold mb-2">
               Nama
@@ -191,9 +192,11 @@ const ProfilePage = () => {
                 onChange={(e) => setName(e.target.value)}
               />
             </div>
-            <span id="nameError" className="ml-4" style={{ color: "red" }}>
-              {nameError}
-            </span>
+            {nameError && (
+              <span id="nameError" className="ml-4" style={{ color: "red" }}>
+                {nameError}
+              </span>
+            )}
           </div>
           <div className="mb-4">
             <label htmlFor="email" className="text-lg font-semibold mb-2">
@@ -209,9 +212,11 @@ const ProfilePage = () => {
                 onChange={(e) => setEmail(e.target.value)}
               />
             </div>
-            <span id="emailError" className="ml-4" style={{ color: "red" }}>
-              {emailError}
-            </span>
+            {emailError && (
+              <span id="emailError" className="ml-4" style={{ color: "red" }}>
+                {emailError}
+              </span>
+            )}
           </div>
           <div className="mb-4">
             <label
@@ -324,6 +329,7 @@ const ProfilePage = () => {
           </div>
         </div>
       </div>
+      <Footer />
     </>
   );
 };
