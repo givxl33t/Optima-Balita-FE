@@ -45,13 +45,13 @@ const Forum = () => {
         </p>
       </div>
 
-      <div className="flex justify-center">
+      <div className="flex flex-wrap justify-center">
         {limitedForumData.map((discussion) => (
           <div
             key={discussion.id}
-            className="w-full mb-4 md:w-1/3 md:ml-2 md:mr-2 lg:w-1/3"
+            className="w-full mb-4 md:w-1/3 md:ml-2 md:mr-2 lg:w-1/3 flex flex-col h-full justify-between"
           >
-            <div className="box-lg bg-white m-2 p-2 md:m-4 md:p-4 w-auto text-center relative border-2 border-slate-400 shadow-md rounded-xl hover:shadow-xl transition duration-300">
+            <div className="box-lg bg-white m-2 p-2 md:m-4 md:p-4 w-auto text-center relative border-2 border-slate-400 shadow-md rounded-xl hover:shadow-xl transition duration-300 flex flex-col h-full">
               <div className="user flex-col">
                 <img
                   src={discussion.poster_profile}
@@ -62,8 +62,11 @@ const Forum = () => {
                   {discussion.poster_username}
                 </h3>
               </div>
-              <div className="text-center">{discussion.post_content}</div>
-              {/* show likes and comment count */}
+              {/* text ellipsis post content */}
+              <div className="text-center overflow-hidden h-20">
+                {discussion.post_content}
+              </div>
+              <div className="flex-grow"></div>
               <div className="flex justify-center mt-2">
                 <div className="flex items-center mr-5">
                   <AiOutlineLike className="mr-1 text-teal-500" />
@@ -78,6 +81,7 @@ const Forum = () => {
           </div>
         ))}
       </div>
+
 
       <div className="flex justify-center">
         <button className="py-3 px-5 text-lg bg-gradient-to-r from-teal-600 to-teal-300 rounded-full font-semibold text-white hover:shadow-xl transition duration-300">

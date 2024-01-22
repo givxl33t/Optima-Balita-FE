@@ -334,7 +334,15 @@ const BMICalculator = () => {
                 ))}
               </select>
               {selectedViewOption === "Riwayat Status Gizi (Semua)" ? (
-                <HistoryTable bmiList={bmiList} />
+                <div className="flex flex-col overflow-x-auto">
+                  <div className="sm:-mx-6 lg:-mx-8">
+                    <div className="inline-block min-w-full py-2 sm:px-6 lg:px-8">
+                      <div className="overflow-x-auto">
+                        <HistoryTable bmiList={bmiList} />
+                      </div>
+                    </div>
+                  </div>
+                </div>
               ) : selectedViewOption.includes("curve") ? (
                 <div className="flex flex-col">
                   <h1 className="text-xl font-bold text-center leading-tight tracking-tight text-gray-900 md:text-xl">
