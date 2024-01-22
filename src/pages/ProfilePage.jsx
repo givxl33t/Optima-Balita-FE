@@ -149,6 +149,10 @@ const ProfilePage = () => {
   const handleResetImage = () => {
     setProfileImage(null);
     setProfile(currentUser?.profile || ""); // Reset to the original profile image
+
+    // Reset the input file
+    const input = document.getElementById("profileImage");
+    input.value = null;
   };
 
   const handleDragOver = (e) => {

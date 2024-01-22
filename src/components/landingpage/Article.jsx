@@ -7,18 +7,17 @@ import "slick-carousel/slick/slick-theme.css";
 import { ArticleContext } from "../../contexts/ArticleContext";
 
 const ArticleCard = ({ article }) => (
-  <div key={article.id} className="p-3">
-    <div className="max-w-md mx-auto bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition duration-300">
+  <div key={article.id} className="p-3 flex flex-col h-full justify-between">
+    <div className="max-w-md mx-auto bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition duration-300 flex flex-col h-full">
       <a href={`/article/${article.slug}`}>
         <img
           src={article.image}
           alt={`article pilihan ${article.slug}`}
-          className="max-w-full h-auto rounded-t-md"
+          className="mx-auto max-w-auto min-h-[190px] rounded-t-md"
         />
-        <div className="p-4">
-          <h2 className="text-lg font-medium mb-2">{article.title}</h2>
-          <span className="text-md text-slate-500">{article.author}</span>
-        </div>
+        <h2 className="p-4 text-lg font-medium mb-2 overflow-hidden h-[100px]">{article.title}</h2>
+        <div className="flex-grow"></div>
+        <div className="flex justify-center text-md text-slate-500 mb-2">{article.author}</div>
       </a>
     </div>
   </div>
