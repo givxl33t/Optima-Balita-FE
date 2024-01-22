@@ -88,9 +88,9 @@ const ArticlePage = () => {
   return (
     <>
       <Navbar />
-      <div className="pt-8 pl-3 sm:px-24"><Breadcrumb items={breadcrumbItems} /></div>
       <div className="flex flex-col items-center gap-10 py-2 pr-4 pl-4">
         <div className="sm:px-24">
+        <div className="xl:mt-8 lg:mt-8 md:mt-8"><Breadcrumb items={breadcrumbItems} /></div>
           <h1 className="text-2xl font-semibold mb-8">Artikel Pilihan</h1>
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-1 xl:grid-cols-2">
             <div className="col-span-1">
