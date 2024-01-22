@@ -88,11 +88,11 @@ const ArticlePage = () => {
   return (
     <>
       <Navbar />
-      <div className="pt-8 sm:px-24"><Breadcrumb items={breadcrumbItems} /></div>
-      <div className="flex flex-col items-center gap-10 py-2">
+      <div className="flex flex-col items-center gap-10 py-2 pr-4 pl-4">
         <div className="sm:px-24">
+        <div className="xl:mt-8 lg:mt-8 md:mt-8"><Breadcrumb items={breadcrumbItems} /></div>
           <h1 className="text-2xl font-semibold mb-8">Artikel Pilihan</h1>
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2">
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-1 xl:grid-cols-2">
             <div className="col-span-1">
               {randomArticles?.data?.slice(0, 1).map((article) => (
                 <div key={article.id}>
@@ -143,7 +143,7 @@ const ArticlePage = () => {
         <div className="sm:px-24">
           <h1 className="text-2xl font-semibold mb-8 mr-10">Artikel Terbaru</h1>
           <form onSubmit={handleSubmit}>   
-            <div className="relative w-72 md:w-96 mb-10">
+            <div className="relative xl:w-1/2 lg:w-full md:w-full sm:w-full mb-10">
                 <div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
                     <svg className="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
                         <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
@@ -154,19 +154,19 @@ const ArticlePage = () => {
             </div>
           </form>
             {fetchArticlesForCurrentPage?.data?.data?.length === 0 ? (
-              <div className="grid grid-cols-1 gap-6 sm:grid-cols-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-                <div className="w-72">
-                  <h4 className="font-bold mb-3 sm:w-96 text-2xl sm:text-3xl text-slate-300">
+              <div className="grid grid-cols-2 gap-6 sm:grid-cols-4 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4">
+                <div className="max-w-72 mx-auto flex flex-col h-full justify-between">
+                  <h4 className="font-bold text-2xl w-96 sm:text-3xl text-slate-300">
                     Artikel Tidak Ditemukan
                   </h4>
                 </div>
               </div>
             ) : (
-              <div className="grid grid-cols-1 gap-6 sm:grid-cols-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+              <div className="grid grid-cols-2 gap-6 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4">
                 {fetchArticlesForCurrentPage?.data?.data?.map((article) => (
                   <div
                     key={article.id}
-                    className="w-72 h-90 border-slate-300 border-2 rounded-lg gap-3 shadow-lg hover:shadow-xl transition duration-300"
+                    className="max-w-72 mx-auto flex flex-col h-full justify-between border-slate-300 border-2 rounded-lg gap-3 shadow-lg hover:shadow-xl transition duration-300"
                   >
                     <Link to={`/article/${article.slug}`}>
                       <img
