@@ -102,8 +102,8 @@ const BMICalculator = () => {
   return (
     <>
       <section className="justify-center sm:p-8 sm:px-24">
-        <div className="grid grid-cols-1 md:grid-cols-2 bg-teal-400 rounded-lg p-4 gap-4 md:p-6">
-          <div className=" flex flex-col max-w-md md:max-w-full rounded-lg">
+        <div className="grid grid-cols-1 md:grid-cols-1 xl:grid-cols-2 bg-teal-400 rounded-lg p-4 gap-4 md:p-6">
+          <div className=" flex flex-col max-w-full rounded-lg">
             <div className="space-y-4">
               <form className="space-y-3 md:space-y-4 bg-white p-4 rounded-lg">
                 <h1 className="text-xl font-bold text-center leading-tight tracking-tight text-gray-900 md:text-xl">
@@ -314,7 +314,7 @@ const BMICalculator = () => {
               </form>
             </div>
           </div>
-          <div className="flex flex-col max-w-md md:max-w-full">
+          <div className="flex flex-col max-w-full">
             <div className="space-y-4 bg-white p-4 rounded-lg">
               <select
                 value={selectedViewOption}
@@ -359,9 +359,17 @@ const BMICalculator = () => {
                   )} />
                 </div>
               ) : (
-                <HistoryTable bmiList={bmiList.filter(
-                  (bmi) => bmi.child_name === selectedViewOption,
-                )} />
+                <div className="flex flex-col overflow-x-auto">
+                  <div className="sm:-mx-6 lg:-mx-8">
+                    <div className="inline-block min-w-full py-2 sm:px-6 lg:px-8">
+                      <div className="overflow-x-auto">
+                        <HistoryTable bmiList={bmiList.filter(
+                          (bmi) => bmi.child_name === selectedViewOption,
+                        )} />
+                      </div>
+                    </div>
+                  </div>
+                </div>
               )}
             </div>
           </div>

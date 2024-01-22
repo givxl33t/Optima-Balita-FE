@@ -63,7 +63,7 @@ const Forum = () => {
                 </h3>
               </div>
               {/* text ellipsis post content */}
-              <div className="text-center overflow-hidden h-20">
+              <div className="text-center h-12 line-clamp-2">
                 {discussion.post_content}
               </div>
               <div className="flex-grow"></div>
