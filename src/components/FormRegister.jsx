@@ -13,6 +13,8 @@ const RegisterForm = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleRegisterSuccess = () => {
@@ -22,25 +24,48 @@ const RegisterForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const success = await register(username, email, password);
+    try {
+      setLoading(true);
 
-    if (success) {
-      // Redirect to login page
-      Swal.fire({
-        icon: "success",
-        title: "Akun Berhasil Dibuat",
-        text: "Login untuk melanjutkan",
-      }).then(() => {
-        handleRegisterSuccess();
-      });
-      console.log("Registration successful");
-    } else {
-      Swal.fire({
-        icon: "error",
-        title: "Akun Gagal Dibuat",
-        text: "Gagal mendaftar. Coba lagi nanti.",
-      });
-      console.log("Registration failed");
+      const success = await register(username, email, password);
+
+      if (success) {
+        // Redirect to login page
+        Swal.fire({
+          icon: "success",
+          title: "Akun Berhasil Dibuat",
+          text: "Login untuk melanjutkan",
+        }).then(() => {
+          handleRegisterSuccess();
+        });
+        console.log("Registration successful");
+      } else {
+        setErrorMessage("Terjadi kesalahan. Coba lagi nanti.");
+      }
+    } catch (error) {
+      if (error.message) {
+        console.log(error.message);
+        if (error.message.includes("password")) {
+          setErrorMessage("Password anda kurang kuat.");
+        } else if (error.message.includes("email")) {
+          setErrorMessage("Email tidak valid.");
+        } else if (error.message.includes("Email")) {
+          setErrorMessage("Email sudah terdaftar.");
+        } else {
+          setErrorMessage(error.message);
+        }
+      } else if (
+        error.response &&
+        error.response.data &&
+        error.response.data.message
+      ) {
+        setErrorMessage("cat");
+      } else {
+        setErrorMessage("Terjadi kesalahan. Coba lagi nanti.");
+      }
+      console.error("Error during registration:", error.message);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -53,7 +78,7 @@ const RegisterForm = () => {
       <div className="w-full max-w-md flex overflow-hidden">
         <div className="w-full p-8">
           <h1 className="text-center pb-16 text-2xl font-bold text-black">
-            Silahkan login untuk melanjutkan
+            Silahkan daftar untuk membuat akun!
           </h1>
           <div className="flex pb-8">
             <NavLink
@@ -158,10 +183,18 @@ const RegisterForm = () => {
               type="submit"
               className="w-full text-white font-bold py-1 px-3 rounded-full flex-1 mb-2"
               style={{ backgroundColor: "rgba(17, 118, 143, 255)" }}
+              onMouseOver={(e) => { e.target.style.backgroundColor = "rgba(86, 118, 143, 255)"}}
+              onMouseOut={(e) => {
+                e.target.style.backgroundColor = "rgba(17, 118, 143, 255)";
+              }}
             >
               Daftar
             </button>
             <p className="text-center text-gray-800 mb-4">
+              {errorMessage && (
+                <span className="text-red-500 text-sm">{errorMessage}</span>
+              )}
+              <br />
               Sudah punya akun?{" "}
               <NavLink
                 to="/login"

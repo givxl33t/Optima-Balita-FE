@@ -1,11 +1,15 @@
 import { NavLink } from "react-router-dom";
 import { FaBook, FaCalculator, FaComments } from "react-icons/fa";
+import { useContext } from "react";
+import { AuthContext } from "../../contexts/AuthContext";
 
 const HeroBanner = () => {
+  const { currentUser } = useContext(AuthContext);
+  
   return (
     <>
       <main>
-        <div className="pt-40 pb-60 flex content-center items-center justify-center">
+        <div className="pt-40 pb-40 flex content-center items-center justify-center">
           <div
             className="absolute top-0 w-full h-full bg-center bg-cover"
             style={{
@@ -29,12 +33,14 @@ const HeroBanner = () => {
                   stunting dan mencapai kesehatan bersama.
                 </p>
                 <div className="mt-8">
-                  <NavLink
+                  {!currentUser && (
+                    <NavLink
                     to="/login"
-                    className="py-3 px-7 font-medium rounded-full text-md bg-gradient-to-r from-teal-600 to-teal-400 text-white hover:bg-teal-500"
+                    className="py-3 px-7 font-medium rounded-full text-md bg-gradient-to-r from-teal-600 to-teal-400 text-white hover:shadow-xl transition duration-300"
                   >
                     Get Started
                   </NavLink>
+                  )}
                 </div>
               </div>
             </div>
@@ -45,14 +51,14 @@ const HeroBanner = () => {
         <div className="lg:pt-12 pt-6 w-full md:w-4/12 px-4 text-center">
           <div className="relative flex flex-col min-w-0 break-words bg-white w-full mb-8 shadow-lg rounded-lg">
             <div className="px-4 py-5 flex-auto">
-              <div className="text-white p-3 text-center inline-flex items-center justify-center w-16 h-16 mb-5 shadow-lg rounded-full bg-red-400">
+              <div className="text-white p-3 text-center inline-flex items-center justify-center w-16 h-16 mb-5 shadow-lg rounded-full bg-red-400 hover:bg-red-700 transition duration-300">
                 <FaCalculator size={32} />
               </div>
               <h6 className="text-xl font-semibold">
                 Pantau Tumbuh Kembang Anak
               </h6>
               <p className="mt-2 mb-4 text-blueGray-500">
-                Fitur BMI Calculator di Stunting Center telah dilengkapi dengan
+                Fitur Status Gizi di OptimaBalita telah dilengkapi dengan
                 riwayat perhitungan, sehingga memudahkan pemantauan pertumbuhan
                 anak
               </p>
@@ -63,7 +69,7 @@ const HeroBanner = () => {
         <div className="w-full md:w-4/12 px-4 text-center">
           <div className="relative flex flex-col min-w-0 break-words bg-white w-full mb-8 shadow-lg rounded-lg">
             <div className="px-4 py-5 flex-auto">
-              <div className="text-white p-3 text-center inline-flex items-center justify-center w-16 h-16 mb-5 shadow-lg rounded-full bg-blue-400">
+              <div className="text-white p-3 text-center inline-flex items-center justify-center w-16 h-16 mb-5 shadow-lg rounded-full bg-blue-400 hover:bg-blue-700 transition duration-300">
                 <FaBook size={32} />
               </div>
               <h6 className="text-xl font-semibold">
@@ -80,7 +86,7 @@ const HeroBanner = () => {
         <div className="lg:pt-12 pt-6 w-full md:w-4/12 px-4 text-center">
           <div className="relative flex flex-col min-w-0 break-words bg-white w-full mb-8 shadow-lg rounded-lg">
             <div className="px-4 py-5 flex-auto">
-              <div className="text-white p-3 text-center inline-flex items-center justify-center w-16 h-16 mb-5 shadow-lg rounded-full bg-emerald-400">
+              <div className="text-white p-3 text-center inline-flex items-center justify-center w-16 h-16 mb-5 shadow-lg rounded-full bg-emerald-400 hover:bg-emerald-700 transition duration-300">
                 <FaComments size={32} />
               </div>
               <h6 className="text-xl font-semibold">Forum Diskusi Stunting</h6>

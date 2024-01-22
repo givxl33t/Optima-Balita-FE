@@ -1,4 +1,3 @@
-import React from "react";
 import RegisterForm from "../components/FormRegister";
 const RegisterPage = () => {
   return (

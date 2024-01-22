@@ -16,6 +16,7 @@ import DetailDiskusi from "../pages/DetailDiskusi";
 import BmiPage from "../pages/BmiPage";
 
 import { AuthContext } from "../contexts/AuthContext";
+import ConsultatePage from "../pages/ConsultatePage";
 
 const RouterComponent = () => {
   const { isLoggedIn } = useContext(AuthContext);
@@ -26,12 +27,16 @@ const RouterComponent = () => {
         <Route path="/register" element={<Register />} />
         <Route path="/" element={<HomePages />} />
         <Route path="/article" element={<ArticlePage />} />
-        <Route path="/article/:id" element={<ArticleDetail />} />
-        <Route path="/profile" element={<ProfilePage />} />
+        <Route path="/article/:articleSlug" element={<ArticleDetail />} />
         <Route path="/" element={<Navigate to="/home" />} />
+        <Route path="/profile" element={isLoggedIn ? <ProfilePage /> : <Navigate to="/login" />} />
         <Route
           path="/forum"
           element={isLoggedIn ? <ForumPage /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/consult"
+          element={isLoggedIn ? <ConsultatePage /> : <Navigate to="/login" />}
         />
         <Route
           path="/bmi"

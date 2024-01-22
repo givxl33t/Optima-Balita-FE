@@ -1,15 +1,15 @@
+import Consultation from "../components/Consultation";
 import Footer from "../components/Footer";
 import Navbar from "../components/Navbar";
-import BMICalculator from "../components/bmi/BMICalculator";
 
-const BmiPage = () => {
+const ConsultatePage = () => {
   return (
     <>
       <Navbar />
-      <BMICalculator />
+      <Consultation />
       <Footer />
     </>
   );
 };
 
-export default BmiPage;
+export default ConsultatePage;

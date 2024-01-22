@@ -1,95 +1,196 @@
-import axios from "axios";
-import { createContext } from "react";
-import { useEffect } from "react";
-import { useState } from "react";
+/* eslint-disable react/prop-types */
+import { axiosInstance as axios } from "../configurations/axiosInstance";
+import { createContext, useEffect, useState } from "react";
+import { updateUser } from "../utils/api";
 
-const MOCKAPI_USERS_URL =
-  "https://6450b0c5a3221969114f68c0.mockapi.io/api/loginRegister/users";
+const API_URL = `${import.meta.env.VITE_API_URL}/auth`;
 
 export const AuthContext = createContext();
 
-// eslint-disable-next-line react/prop-types
 export const AuthProvider = ({ children }) => {
-  const [currentUser, setCurrentUser] = useState();
+  const [currentUser, setCurrentUser] = useState(null);
   const [checkingUser, setCheckingUser] = useState(true);
+  const [refreshToken, setRefreshToken] = useState(null);
 
   const login = async (email, password) => {
     try {
-      const response = await axios.get(MOCKAPI_USERS_URL);
-      const foundedUser = response.data.find(
-        (user) => user.email === email && user.password === password,
-      );
+      const response = await axios.post(`${API_URL}/login`, {
+        email,
+        password,
+      });
 
-      if (!foundedUser) {
+      if (response.data.accessToken) {
+        const { accessToken, refreshToken } = response.data;
+        setCurrentUser(response.data);
+        localStorage.setItem(
+          "token",
+          JSON.stringify({ accessToken, refreshToken }),
+        );
+        await getUserProfile();
+        return true;
+      } else {
         return false;
       }
-
-      localStorage.setItem("user", JSON.stringify(foundedUser));
-      setCurrentUser(foundedUser);
-      return true;
     } catch (error) {
-      console.error(error);
+      console.error("Error during login:", error);
       return false;
     }
   };
-
   const logout = async () => {
     try {
-      localStorage.removeItem("user");
+      await axios.delete(`${API_URL}/logout`, {
+        data: {
+          refreshToken,
+        },
+      });
+
+      localStorage.removeItem("token");
       setCurrentUser(null);
+      setRefreshToken(null);
     } catch (error) {
-      console.error(error);
+      console.error("Error during logout:", error);
+
+      localStorage.removeItem("token");
+      setCurrentUser(null);
+      setRefreshToken(null);
     }
   };
 
   const register = async (username, email, password) => {
     try {
-      const response = await axios.get(MOCKAPI_USERS_URL);
-      const foundedUser = response.data.find((user) => user.email === email);
-
-      if (foundedUser) {
-        alert("Email sudah dipakai");
-        return false;
-      }
-
-      // Harus sama dengan yang ada di mockapi bentuknya
-      const newUser = {
+      const response = await axios.post(`${API_URL}/register`, {
+        username,
         email,
         password,
-        username,
-      };
+      });
 
-      const newUserResponse = await axios.post(MOCKAPI_USERS_URL, newUser);
-
-      if (!newUserResponse) {
-        alert("Terjadi kesalahan");
-        return false;
-      }
-
-      return true;
+      return response;
     } catch (error) {
-      console.error(error);
-      return false;
+      console.error("Error during registration:", error);
+
+      if (
+        error.response &&
+        error.response.data &&
+        error.response.data.message
+      ) {
+        throw new Error(error.response.data.message);
+      } else {
+        console.error(error);
+        throw new Error(error.message);
+      }
     }
   };
 
-  const isLoggedIn = Boolean(currentUser);
+  const updateProfile = async (updateData) => {
+    try {
+      const storedToken = localStorage.getItem("token");
+
+      if (!storedToken) {
+        throw new Error("No token found");
+      }
+
+      if (updateData.profile === null) {
+        delete updateData.profile;
+      }
+
+      if (updateData.password === "" || updateData.current_password === "") {
+        delete updateData.password;
+        delete updateData.current_password;
+      }
+
+      const formData = new FormData();
+
+      Object.entries(updateData).forEach(([key, value]) => {
+        formData.append(key, value);
+      });
+      const response = await updateUser(formData);
+      await getUserProfile();
+
+      return response;
+    } catch (error) {
+      console.error("Error updating profile", error);
+      throw error;
+    }
+  };
+
+  const getUserProfile = async () => {
+    try {
+      const storedToken = localStorage.getItem("token");
+
+      if (storedToken) {
+        const { refreshToken: storedRefreshToken } =
+          JSON.parse(storedToken);
+
+        if (storedRefreshToken) {
+          setRefreshToken(storedRefreshToken);
+
+          const response = await axios.get(`${API_URL}/me`);
+
+          if (response.data) {
+            const { email, username, profile } = response.data.data;
+            setCurrentUser({ email, username, profile });
+          }
+        }
+      }
+    } catch (error) {
+      console.error("Error fetching user profile:", error);
+
+      if (error.response) {
+        console.error("Server error:", error.response.data);
+      } else {
+        console.error("Non-response error:", error.message);
+      }
+    }
+  };
 
   useEffect(() => {
-    const user = localStorage.getItem("user");
-    if (user) {
-      setCurrentUser(JSON.parse(user));
+    const token = localStorage.getItem("token");
+    const fetchUserProfile = async () => {
+      if (token) {
+        const { email, username, profile } = JSON.parse(token);
+        setCurrentUser({ email, username, profile });
+        try {
+          await getUserProfile();
+        } catch (error) {
+          console.error("Error fetching user profile:", error);
+          logout();
+        }
+      }
+      setCheckingUser(false);
+    };
+
+    if (token) {
+      const refreshTimer = setTimeout(async () => {
+        try {
+          await fetchUserProfile();
+        } catch (refreshError) {
+          console.error("Error during token refresh:", refreshError);
+          logout();
+        }
+      });
+
+      fetchUserProfile();
+
+      return () => clearTimeout(refreshTimer);
+    } else {
+      setCheckingUser(false);
     }
-    setCheckingUser(false);
   }, []);
+  const isLoggedIn = Boolean(currentUser);
 
   return (
-    <>
-      <AuthContext.Provider
-        value={{ currentUser, isLoggedIn, register, login, logout }}
-      >
-        {!checkingUser && children}
-      </AuthContext.Provider>
-    </>
+    <AuthContext.Provider
+      value={{
+        currentUser,
+        isLoggedIn,
+        register,
+        login,
+        logout,
+        getUserProfile,
+        updateProfile,
+      }}
+    >
+      {!checkingUser && children}
+    </AuthContext.Provider>
   );
 };

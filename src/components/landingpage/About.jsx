@@ -1,13 +1,27 @@
+import { useEffect } from "react";
+import AOS from "aos";
+import "aos/dist/aos.css";
+
 const About = () => {
+  useEffect(() => {
+    AOS.init({
+      duration: 1000,
+      once: false,
+    });
+  }, []);
+
   return (
     <>
-      <section className="bg-white py-5" id="about">
+      <section className="bg-white pt-5" id="about">
         <div className="container py-lg-5">
-          <div className="flex flex-col md:flex-row justify-center items-center mb-5">
+          <div 
+            className="flex flex-col md:flex-row justify-center items-center mt-3"
+            data-aos="fade-up"
+          >
             <div className="md:w-1/2 mb-4 md:mb-0">
               <img
                 src="https://i.postimg.cc/66HgKtmK/tentang-kami.jpg"
-                className="w-3/4 md:w-100 rounded-lg md:justify-center mx-auto"
+                className="w-3/4 md:w-100 rounded-lg md:justify-center mx-auto mt-11"
                 alt="about image"
               />
             </div>

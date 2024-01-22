@@ -1,10 +1,12 @@
+/* eslint-disable react/prop-types */
+// BMIContext.jsx
 import { createContext, useEffect, useState, useContext } from "react";
-import axios from "axios";
+import { axiosInstance as axios } from "../configurations/axiosInstance";
 import { AuthContext } from "../contexts/AuthContext";
+import Swal from "sweetalert2";
 
 export const BMIContext = createContext();
 
-// eslint-disable-next-line react/prop-types
 export const BMIProvider = ({ children }) => {
   const [bmiList, setBMIList] = useState([]);
   const { currentUser } = useContext(AuthContext);
@@ -12,13 +14,18 @@ export const BMIProvider = ({ children }) => {
   useEffect(() => {
     const fetchBMIList = async () => {
       try {
+        const token = localStorage.getItem("token");
+
+        if (!token) {
+          console.error("Token not found");
+          return;
+        }
+
         const response = await axios.get(
-          "https://6450b0c5a3221969114f68c0.mockapi.io/api/loginRegister/bmi",
+          `${import.meta.env.VITE_API_URL}/bmi/me`,
         );
-        const filteredBMIList = response.data.filter(
-          (data) => data.userId === currentUser.id,
-        );
-        setBMIList(filteredBMIList);
+
+        setBMIList(response.data.data);
       } catch (error) {
         console.error(error);
       }
@@ -31,14 +38,40 @@ export const BMIProvider = ({ children }) => {
 
   const addBMIEntry = async (newBMIEntry) => {
     try {
-      const response = await axios.post(
-        "https://6450b0c5a3221969114f68c0.mockapi.io/api/loginRegister/bmi",
-        newBMIEntry,
-      );
+      const tokenData = JSON.parse(localStorage.getItem("token"));
 
-      setBMIList([...bmiList, response.data]);
+      if (!tokenData || !tokenData.accessToken) {
+        console.error("Token not found or invalid");
+        return;
+      }
+
+      await axios.post(
+        `${import.meta.env.VITE_API_URL}/bmi`,
+        newBMIEntry,
+      ).then((res) => {
+        Swal.fire({
+          icon: "success",
+          title: "Kalkulasi Berhasil",
+          showConfirmButton: false,
+          timer: 1500,
+        })
+
+        setBMIList((prevBMIList) => [...prevBMIList, res.data.data]);
+      });
+
+
     } catch (error) {
-      console.error(error);
+      console.error("Error while sending BMI data to API:", error);
+
+      if (error.response) {
+        console.error("API Error:", error.response.data);
+
+        Swal.fire({
+          icon: "error",
+          title: "Kalkulasi Gagal",
+          text: error.response.data.message,
+        });
+      }
     }
   };
 

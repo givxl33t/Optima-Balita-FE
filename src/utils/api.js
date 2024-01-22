@@ -1,8 +1,7 @@
-import axios from "axios";
+import { axiosInstance as axios } from "../configurations/axiosInstance";
 
-const apiUrl =
-  "https://6450b0c5a3221969114f68c0.mockapi.io/api/loginRegister/users";
-const forumUrl = "https://647d55a0af98471085499e81.mockapi.io/forums";
+const apiUrl = `${import.meta.env.VITE_API_URL}/auth`;
+
 export const getUsers = async () => {
   try {
     const response = await axios.get(apiUrl);
@@ -12,6 +11,17 @@ export const getUsers = async () => {
     throw error;
   }
 };
+
+export const registerUser = async (user) => {
+  try {
+    const response = await axios.post(`${apiUrl}/register`, user);
+    return response.data;
+  } catch (error) {
+    console.error("Error during registration:", error);
+    throw error;
+  }
+};
+
 export const createUser = async (user) => {
   const response = await axios.post(apiUrl, user);
   return response.data;
@@ -39,8 +49,7 @@ export const saveUserToApi = async (user) => {
 };
 
 export const getUserFromApi = (email, password) => {
-  const url =
-    "https://6450b0c5a3221969114f68c0.mockapi.io/api/loginRegister/users";
+  const url = `${import.meta.env.VITE_API_URL}/auth`;
   return axios.get(url).then((response) => {
     const users = response.data;
 
@@ -76,81 +85,249 @@ export const updateUserInApi = async (userId, updatedUser) => {
   }
 };
 
-export const fetchArticles = () =>
-  fetch("https://644e64ed1b4567f4d5866c65.mockapi.io/article").then(
-    (response) => response.json(),
+export const updateUser = async (updateData) => {
+  try {
+    const response = await axios.put(
+      `${apiUrl}/profile`,
+      updateData,
+    );
+
+    console.log("User berhasil diupdate:", response.data);
+    return response.data;
+  } catch (error) {
+    console.error("Gagal mengupdate user:", error);
+    throw error;
+  }
+};
+export async function fetchArticles(page = 1, limit = 4, filter = "") {
+  const response = await fetch(`${import.meta.env.VITE_API_URL}/article?limit=${limit}&page=${page}&filter=${filter}`);
+  if (!response.ok) {
+    throw new Error("Failed to fetch articles");
+  }
+  const data = await response.json();
+  return data;
+}
+
+export async function fetchArticlesRandom() {
+  const response = await fetch(
+    `${import.meta.env.VITE_API_URL}/article?limit=5&page=1&sort=RANDOM`,
   );
+  if (!response.ok) {
+    throw new Error("Failed to fetch articles");
+  }
+  const data = await response.json();
+  return data;
+}
 
-export const fetchForum = () =>
-  fetch("https://647d55a0af98471085499e81.mockapi.io/forums")
-    .then((response) => response.json())
-    .then((forums) => {
-      const commentPromises = forums.map((forum) =>
-        fetch(`${forumUrl}/${forum.id}/replies`).then((response) =>
-          response.json(),
-        ),
+export async function fetchArticlesSlug(articleSlug) {
+  try {
+    const response = await fetch(
+      `${import.meta.env.VITE_API_URL}/article/slug/${articleSlug}`,
+    );
+
+    if (!response.ok) {
+      throw new Error(
+        `Failed to fetch article with slug ${articleSlug}. Status: ${response.status}`,
       );
+    }
 
-      return Promise.all(commentPromises).then((comments) => {
-        forums.forEach((forum, index) => {
-          forum.replies = comments[index];
-          forum.likes = 0;
-        });
-        return forums;
-      });
-    });
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error fetching article:", error);
+    throw error;
+  }
+}
 
-export const likeDiscussion = async (forumId) => {
+const BASE_URL = `${import.meta.env.VITE_API_URL}/forum`;
+
+export const fetchForum = async () => {
   try {
-    const response = await axios.put(`${forumUrl}/${forumId}`, {
-      likes: 1,
-    });
+    const response = await axios.get(
+      `${BASE_URL}?option=WITHCOMMENT`,
+    )
+
     return response.data;
   } catch (error) {
-    console.log("gagal menambahkan like", error);
-    throw error;
+    console.error("Failed to fetch forum discussions:", error);
   }
 };
 
-export const unlikeDiscussion = async (forumId) => {
+export const fetchLandingPageForum = async () => {
   try {
-    const response = await axios.put(`${forumUrl}/${forumId}`, {
-      likes: -1, // Decrease likes by 1
-    });
+    const response = await axios.get(`${BASE_URL}/landing`);
+
     return response.data;
   } catch (error) {
-    console.error("Gagal menghapus like:", error);
-    throw error;
+    console.error("Failed to fetch forum discussions:", error);
   }
 };
 
-export const postComment = async (forumId, comment) => {
+export const postDiscussion = async (discussion, currentUser, setForumData) => {
   try {
     const response = await axios.post(
-      `${forumUrl}/${forumId}/replies`,
-      comment,
+      BASE_URL,
+      {
+        ...discussion,
+        userId: currentUser.userId,
+      },
+    );
+
+    setForumData((prevData) => ({
+      ...prevData,
+      data: [response.data, ...prevData.data],
+      error: false,
+    }));
+
+    return response.data; // Mengembalikan data diskusi yang baru ditambahkan
+  } catch (error) {
+    console.error("Failed to post discussion:", error.message);
+    if (error.response) {
+      console.error("Server responded with:", error.response.data);
+    }
+    throw new Error("Failed to post discussion");
+  }
+};
+
+export const postComment = async (discussionId, comment) => {
+  try {
+    const response = await axios.post(
+      `${BASE_URL}/${discussionId}/comment`,
+      comment
     );
     return response.data;
   } catch (error) {
-    console.error("Gagal memposting komentar:", error);
-    throw error;
+    throw new Error("Failed to post comment");
   }
 };
 
-export const postDiscussion = (discussion) =>
-  fetch("https://647d55a0af98471085499e81.mockapi.io/forums", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(discussion),
-  }).then((response) => response.json());
+export const handleUpdateDiscussion = async (
+  discussionId,
+  updatedDiscussion,
+  setForumData,
+) => {
+  try {
+    const response = await axios.put(
+      `${BASE_URL}/${discussionId}`,
+      updatedDiscussion,
+    );
 
-export const deleteDiscussion = (discussion) =>
-  fetch("https://647d55a0af98471085499e81.mockapi.io/forums", {
-    method: "DELETE",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(discussion),
-  }).then((response) => response.json());
+    const updatedDiscussionFromAPI = response.data;
+
+    setForumData((prevData) => ({
+      data: Array.isArray(prevData?.data)
+        ? {
+            data: prevData.data.map((discussion) =>
+              discussion.id === discussionId
+                ? updatedDiscussionFromAPI
+                : discussion,
+            ),
+          }
+        : { data: [] },
+    }));
+  } catch (error) {
+    console.error("Failed to update discussion:", error.message);
+  }
+};
+
+export const handleUpdateComment = async (
+  commentId,
+  updatedComment,
+  setForumData,
+) => {
+  try {
+    await axios.put(
+      `${BASE_URL}/comment/${commentId}`,
+      {
+        comment_content: updatedComment,
+      },
+    );
+
+    const forumResponse = await fetchForum();
+    setForumData(forumResponse);
+  } catch (error) {
+    console.error("Failed to update comment:", error.message);
+  }
+};
+
+export const handleLikeUnlikeDiscussion = async (discussionId, setForumData) => {
+  try {
+    await axios.post(
+      `${BASE_URL}/${discussionId}/like`,
+    );
+    const forumResponse = await fetchForum();
+    setForumData(forumResponse);
+  } catch (error) {
+    console.error("Failed to like discussion:", error.message);
+  }
+};
+
+export const deleteDiscussion = async (discussionId) => {
+  try {
+    const response = await axios.delete(`${BASE_URL}/${discussionId}`);
+    return response.data;
+  } catch (error) {
+    throw new Error("Failed to delete discussion");
+  }
+};
+
+export const handleDeleteDiscussion = async (discussionId) => {
+  try {
+    await deleteDiscussion(discussionId);
+  } catch (error) {
+    console.error("Failed to delete discussion:", error.message);
+  }
+};
+
+export const deleteComment = async (commentId) => {
+  try {
+    const response = await axios.delete(
+      `${BASE_URL}/comment/${commentId}`,
+    );
+    return response.data;
+  } catch (error) {
+    throw new Error("Failed to delete comment");
+  }
+};
+
+export const handleDeleteComment = async (
+  commentId,
+  setForumData,
+) => {
+  try {
+    await deleteComment(commentId);
+    // Remove the comment from the state
+    const forumResponse = await fetchForum();
+    setForumData(forumResponse);
+  } catch (error) {
+    console.error("Failed to delete comment:", error.message);
+  }
+};
+
+export const handlePostComment = async (
+  discussionId,
+  newComment,
+  setForumData,
+) => {
+  try {
+    await axios.post(
+      `${BASE_URL}/${discussionId}/comment`,
+      { comment_content: newComment },
+    );
+
+    const forumResponse = await fetchForum();
+    setForumData(forumResponse);
+  } catch (error) {
+    console.error("Failed to post comment:", error.message);
+  }
+};
+
+export const fetchConsultants = async () => {
+  try {
+    const response = await axios.get(`${import.meta.env.VITE_API_URL}/consultation/consultant`);
+    return response.data;
+  } catch (error) {
+    console.error("Gagal mendapatkan data konsultan:", error);
+    throw error;
+  }
+};

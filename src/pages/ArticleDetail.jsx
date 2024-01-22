@@ -1,4 +1,6 @@
-import { useContext } from "react";
+// ArticleDetail.jsx
+
+import { useContext, useEffect, useState } from "react";
 import {
   FacebookIcon,
   FacebookShareButton,
@@ -8,19 +10,32 @@ import {
   WhatsappShareButton,
 } from "react-share";
 import { ArticleContext } from "../contexts/ArticleContext";
-import { useParams } from "react-router-dom";
-import { Loader } from "../components/Loader";
-import "dayjs/locale/id";
-import relativeTime from "dayjs/plugin/relativeTime";
-import dayjs from "dayjs";
 import Navbar from "../components/Navbar";
-import Breadcrumb from "../components/Breadcrumb";
 import Footer from "../components/Footer";
+import Breadcrumb from "../components/Breadcrumb";
+import { useParams } from "react-router-dom";
+import DOMPurify from "dompurify";
+import dayjs from "dayjs";
 
-function ArticleDetail() {
-  const { articles, isLoading } = useContext(ArticleContext);
-  const { id } = useParams();
-  const article = articles.find((article) => article.id === id);
+const ArticleDetail = () => {
+  const { getArticles } = useContext(ArticleContext);
+  const { articleSlug } = useParams();
+  const [article, setArticle] = useState(null);
+
+  useEffect(() => {
+    const fetchArticleDetail = async () => {
+      try {
+        const response = await getArticles(articleSlug);
+        setArticle(response.data);
+      } catch (error) {
+        console.error("Error fetching article detail:", error);
+        // Handle error, e.g., redirect to an error page
+      }
+    };
+
+    fetchArticleDetail();
+  }, [getArticles, articleSlug]);
+
   const breadcrumbItems = [
     {
       title: (
@@ -36,15 +51,8 @@ function ArticleDetail() {
       url: "/",
     },
     { title: "Article", url: "/article" },
-    { title: article ? article.title : "Article Title" },
+    { title: article?.title || "Article Detail" },
   ];
-
-  dayjs.extend(relativeTime);
-  dayjs.locale("id");
-
-  if (isLoading) {
-    return <Loader />;
-  }
 
   return (
     <>
@@ -62,7 +70,7 @@ function ArticleDetail() {
               <WhatsappShareButton
                 url={window.location.href}
                 quote={"Dapatkan informasi lengkap stunting"}
-                hashtag="#StuntingCenter"
+                hashtag="#OptimaBalita"
               >
                 <WhatsappIcon size={36} round />
               </WhatsappShareButton>
@@ -71,25 +79,25 @@ function ArticleDetail() {
           <div className="sm:max-w-2xl w-full px-4">
             <Breadcrumb items={breadcrumbItems} />
             {article ? (
-              <div key={article.id}>
-                <h1 className="font-bold text-3xl">{article.title}</h1>
-                <div className="flex flex-col sm:flex-row gap-2 text-slate-500 mb-4">
-                  <span>Oleh {article.author}</span>
-                  <span>
-                    pada {dayjs(article.createdAt).format("dddd, D MMMM YYYY")}
-                  </span>
-                </div>
-                <div className="space-y-10">
-                  <img
-                    src={article.image}
-                    alt="Article pilihan 1"
-                    className="w-full"
-                  />
-                  <p className="whitespace-pre-line">{article.content}</p>
-                </div>
+              <div className="max-w-3xl space-y-4 mt-4">
+                <h1 className="text-4xl font-semibold">{article.title}</h1>
+                <p className="text-slate-500">5 menit &#10242;Ditinjau oleh {article?.author} {dayjs(article?.created_at).locale("Id").format("DD MMMM YYYY")}</p>
+                <img
+                  src={article.image}
+                  alt={`article ${article.id}`}
+                  className="rounded-lg"
+                />
+                <div
+                  className="prose prose-slate"
+                  dangerouslySetInnerHTML={{
+                    __html: DOMPurify.sanitize(article.content),
+                  }}
+                />
               </div>
             ) : (
-              <div>Article not found</div>
+              <div className="flex items-center justify-center h-screen">
+                Loading...
+              </div>
             )}
           </div>
         </div>
@@ -97,6 +105,6 @@ function ArticleDetail() {
       <Footer />
     </>
   );
-}
+};
 
 export default ArticleDetail;

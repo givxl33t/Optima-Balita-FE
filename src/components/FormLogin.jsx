@@ -51,7 +51,7 @@ const LoginForm = () => {
       <div className="w-full max-w-md flex overflow-hidden">
         <div className="w-full p-8">
           <h1 className=" text-center pb-16 text-2xl font-bold text-black">
-            Silahkan login untuk melanjutkan
+            Silahkan login untuk melanjutkan!
           </h1>
           <div className="text-center mb-8"></div>
           <div className="flex pb-8">
@@ -136,6 +136,10 @@ const LoginForm = () => {
                 type="submit"
                 className="w-full text-white font-bold py-1 px-3 rounded-full flex-1"
                 style={{ backgroundColor: "rgba(17, 118, 143, 255)" }}
+                onMouseOver={(e) => { e.target.style.backgroundColor = "rgba(86, 118, 143, 255)"}}
+                onMouseOut={(e) => {
+                  e.target.style.backgroundColor = "rgba(17, 118, 143, 255)";
+                }}
               >
                 Masuk
               </button>
