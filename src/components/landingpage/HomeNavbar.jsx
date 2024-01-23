@@ -63,7 +63,7 @@ const NavbarDefault = () => {
     <header className={`sticky top-0 z-50 pt-2 px-2`}>
       <Navbar className={`flex justify-between py-4 py-2 items-center xl:max-w-7xl xl:mx-auto max-w-full flex-wrap px-4 ${isScrolled 
         ? "transition-colors duration-500 bg-white" 
-        : "transition-colors duration-100 bg-transparent border border-transparent shadow-none backdrop-saturate-100 backdrop-blur-0"}`}
+        : "transition-colors duration-100 bg-transparent border border-transparent shadow-none backdrop-saturate-100 backdrop-blur-none"}`}
       >
         <NavLink to="/">
           <img src={Logo} alt="Logo" className="sm:w-12 w-12 cursor-pointer ml-3" />
