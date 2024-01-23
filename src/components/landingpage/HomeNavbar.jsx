@@ -23,17 +23,22 @@ const NavbarDefault = () => {
       const isTop = window.scrollY < 50;
       setIsScrolled(!isTop);
     };
-
+  
+    const handleResize = () => {
+      if (window.innerWidth >= 960) {
+        setIsMobileMenuOpen(false);
+      }
+    };
+  
     window.addEventListener("scroll", handleScroll);
-
+    window.addEventListener("resize", handleResize);
+  
     return () => {
       window.removeEventListener("scroll", handleScroll);
-      window.addEventListener(
-        "resize",
-        () => window.innerWidth >= 960 && setIsMobileMenuOpen(false),
-      );
+      window.removeEventListener("resize", handleResize);
     };
   }, []);
+  
 
   const handleLogout = () => {
     Swal.fire({

@@ -1,11 +1,12 @@
 import { useEffect } from "react";
 import AOS from "aos";
 import "aos/dist/aos.css";
+import TentangKamiImg from "../../assets/tentang-kami.png";
 
 const About = () => {
   useEffect(() => {
     AOS.init({
-      duration: 1000,
+      duration: 500,
       once: false,
     });
   }, []);
@@ -20,8 +21,8 @@ const About = () => {
           >
             <div className="md:w-1/2 mb-4 md:mb-0">
               <img
-                src="https://i.postimg.cc/66HgKtmK/tentang-kami.jpg"
-                className="w-3/4 md:w-100 rounded-lg md:justify-center mx-auto mt-11"
+                src={TentangKamiImg}
+                className="w-3/4 md:w-100 rounded-lg md:justify-center mx-auto"
                 alt="about image"
               />
             </div>
