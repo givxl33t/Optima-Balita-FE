@@ -6,7 +6,7 @@ import Slider from "react-slick";
 
 const ConsultantCard = ({ consultant }) => (
   <div className="p-2" key={consultant.id}>
-    <div className="max-w-md bg-white p-8 rounded-lg shadow-lg">
+    <div className="max-w-md mx-auto bg-white p-8 rounded-lg shadow-lg">
       <div className="text-center">
         <img
           src={consultant.consultant_profile}
