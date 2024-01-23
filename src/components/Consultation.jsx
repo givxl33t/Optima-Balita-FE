@@ -71,12 +71,20 @@ const Consultation = () => {
   
 
   return (
-    <div className="py-16 lg:grid-cols-3 xl:grid-cols-4 sm:px-24">
-      <Slider {...settings} className="mx-auto max-w-2xl" ref={sliderRef}>
-        {consultants?.data?.map((consultant) => (
-          <ConsultantCard key={consultant.id} consultant={consultant} />
-        ))}
-      </Slider>
+    <div className="py-6 lg:grid-cols-2 xl:grid-cols-3 sm:px-24">
+      <div className="text-center relative">
+        <h4 className="font-bold mb-4 text-3xl text-teal-600">Konsultasi</h4>
+        <p className="text-lg text-slate-800 mb-4">
+          Geser untuk melihat konsultan yang tersedia
+        </p>
+      </div>
+      <div className="overflow-hidden">
+        <Slider {...settings} className="mx-auto max-w-3xl" ref={sliderRef}>
+          {consultants?.data?.map((consultant) => (
+            <ConsultantCard key={consultant.id} consultant={consultant} />
+          ))}
+        </Slider>
+      </div>
     </div>
   )
 };
