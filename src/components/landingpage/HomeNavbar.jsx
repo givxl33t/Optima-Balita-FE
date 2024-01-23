@@ -4,24 +4,35 @@ import {
   MobileNav,
   IconButton,
 } from "@material-tailwind/react";
-import "../styles/index.css";
+import "../../styles/index.css";
 import { useContext } from "react";
-import { AuthContext } from "../contexts/AuthContext";
+import { AuthContext } from "../../contexts/AuthContext";
 import Swal from "sweetalert2";
-import Logo from ".././assets/img/logo_puskesmas.png";
-import NavList from "./NavList";
+import Logo from "../../assets/img/logo_puskesmas.png";
+import NavList from "./HomeNavList";
 import { NavLink } from "react-router-dom";
 
 const NavbarDefault = () => {
   const [showDropdown, setShowDropdown] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { currentUser, logout } = useContext(AuthContext);
+  const [isScrolled, setIsScrolled] = useState(false);
 
   useEffect(() => {
-    window.addEventListener(
-      "resize",
-      () => window.innerWidth >= 960 && setIsMobileMenuOpen(false),
-    );
+    const handleScroll = () => {
+      const isTop = window.scrollY < 50;
+      setIsScrolled(!isTop);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      window.addEventListener(
+        "resize",
+        () => window.innerWidth >= 960 && setIsMobileMenuOpen(false),
+      );
+    };
   }, []);
 
   const handleLogout = () => {
@@ -50,12 +61,15 @@ const NavbarDefault = () => {
 
   return (
     <header className={`sticky top-0 z-50 pt-2 px-2`}>
-      <Navbar className="flex justify-between py-4 py-2 items-center xl:max-w-7xl xl:mx-auto max-w-full flex-wrap px-4 backdrop-saturate-200 backdrop-blur-2xl bg-opacity-80">
+      <Navbar className={`flex justify-between py-4 py-2 items-center xl:max-w-7xl xl:mx-auto max-w-full flex-wrap px-4 ${isScrolled 
+        ? "transition-colors duration-500 bg-white" 
+        : "transition-colors duration-100 bg-transparent border border-transparent shadow-none backdrop-saturate-100 backdrop-blur-0"}`}
+      >
         <NavLink to="/">
           <img src={Logo} alt="Logo" className="sm:w-12 w-12 cursor-pointer ml-3" />
         </NavLink>
         <div className="absolute hidden lg:block left-1/2 transform -translate-x-1/2">
-          <NavList />
+          <NavList isScrolled={isScrolled} />
         </div>
         <IconButton
           variant="text"
@@ -69,7 +83,7 @@ const NavbarDefault = () => {
               fill="none"
               className="h-6 w-6"
               viewBox="0 0 24 24"
-              stroke="currentColor"
+              stroke={isScrolled ? "currentColor" : "#fff"}
               strokeWidth={2}
             >
               <path
@@ -83,7 +97,7 @@ const NavbarDefault = () => {
               xmlns="http://www.w3.org/2000/svg"
               className="h-6 w-6"
               fill="none"
-              stroke="currentColor"
+              stroke={isScrolled ? "currentColor" : "#fff"}
               strokeWidth={2}
             >
               <path
@@ -107,7 +121,7 @@ const NavbarDefault = () => {
                 title={currentUser.username}
               />
               <span
-                className={`hover:text-teal-400 text-gray-500 font-semibold text-md sm:block hidden`}
+                className={`hover:text-teal-400 ${isScrolled ? "text-gray-500" : "text-gray-100"} font-semibold text-md sm:block hidden`}
               >
                 {currentUser.username}
               </span>
@@ -153,8 +167,8 @@ const NavbarDefault = () => {
         </div>
         <MobileNav open={isMobileMenuOpen}>
           <div className="container">
-            <hr className="border-gray-300 mt-3 w-screen" />
-            {<NavList/>}
+            <hr className="border-gray-500 mt-3 w-screen" />
+            {<NavList isScrolled={isScrolled}/>}
           </div>
         </MobileNav>
       </Navbar>
