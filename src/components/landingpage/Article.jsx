@@ -66,11 +66,13 @@ const Article = () => {
         <p className="text-lg text-slate-800 mb-4">
           Temukan berbagai informasi menarik tentang stunting
         </p>
-        <Slider {...settings} className="mx-auto max-w-4xl p-1" ref={sliderRef}>
-          {articles.data.map((article) => (
-            <ArticleCard key={article.id} article={article} />
-          ))}
-        </Slider>
+        <div className="overflow-hidden">
+          <Slider {...settings} className="mx-auto max-w-4xl p-1" ref={sliderRef}>
+              {articles.data.map((article) => (
+              <ArticleCard key={article.id} article={article} />
+            ))}
+          </Slider>
+        </div>
       </div>
       <div className="flex justify-center mt-8">
         <button className="py-3 px-5 text-lg bg-gradient-to-r from-teal-600 to-teal-300 rounded-full font-semibold text-white hover:shadow-xl transition duration-300">
