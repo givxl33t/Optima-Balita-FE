@@ -64,7 +64,7 @@ const Article = () => {
       <div className="text-center relative">
         <h4 className="font-bold mb-4 text-3xl text-teal-600">Artikel</h4>
         <p className="text-lg text-slate-800 mb-4">
-          Temukan berbagai informasi menarik tentang stunting
+          Geser untuk menemukan berbagai informasi menarik tentang stunting
         </p>
         <div className="overflow-hidden">
           <Slider {...settings} className="mx-auto max-w-4xl p-1" ref={sliderRef}>
