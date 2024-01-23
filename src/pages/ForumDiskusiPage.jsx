@@ -198,7 +198,7 @@ const ForumDiskusiPage = () => {
                         <img
                           src={discussion.poster_profile}
                           alt={`user profile ${discussion.id}`}
-                          className="rounded-full w-16"
+                          className="w-16 h-16 rounded-full object-cover"
                         />
                         <div>
                           <p className="font-semibold text-lg">

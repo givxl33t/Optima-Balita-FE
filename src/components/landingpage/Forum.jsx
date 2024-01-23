@@ -56,7 +56,7 @@ const Forum = () => {
                 <img
                   src={discussion.poster_profile}
                   alt={`user profile ${discussion.id}`}
-                  className="mx-auto w-20 h-20 rounded-full"
+                  className="mx-auto w-20 h-20 rounded-full object-cover"
                 />
                 <h3 className="text-center font-semibold">
                   {discussion.poster_username}

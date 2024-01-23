@@ -143,7 +143,7 @@ function DetailDiskusi() {
                   <img
                     src={discussion?.poster_profile}
                     alt={`user profile ${id}`}
-                    className="rounded-full w-16"
+                    className="w-16 h-16 rounded-full object-cover"
                   />
                   <div>
                     <p className="font-semibold text-lg">
@@ -198,7 +198,7 @@ function DetailDiskusi() {
                             <img
                               src={comment.commenter_profile}
                               alt={`user profile ${comment.id}`}
-                              className="rounded-full w-12"
+                              className="w-12 h-12 rounded-full object-cover"
                             />
                             <div>
                               <p className="font-semibold text-md">

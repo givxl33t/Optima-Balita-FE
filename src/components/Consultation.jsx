@@ -11,7 +11,7 @@ const ConsultantCard = ({ consultant }) => (
         <img
           src={consultant.consultant_profile}
           alt="Foto Dokter"
-          className="w-32 h-32 mx-auto rounded-full"
+          className="w-32 h-32 mx-auto rounded-full object-cover"
         />
         <h1 className="text-2xl font-bold mt-4">{consultant.consultant_username}</h1>
         <p className="text-gray-500">{consultant.consultant_description}</p>

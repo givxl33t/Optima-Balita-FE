@@ -232,7 +232,7 @@ const ProfilePage = () => {
             <img
                 src={profile}
                 alt="profile"
-                className="w-20 h-20 rounded-full mb-3 ml-4"
+                className="w-20 h-20 rounded-full mb-3 ml-4 object-cover"
               />
             <div className="flex items-center justify-center w-full" onDragOver={handleDragOver} onDrop={handleDrop}>
               <label htmlFor="profileImage" className="flex flex-col items-center justify-center w-full h-25 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">
