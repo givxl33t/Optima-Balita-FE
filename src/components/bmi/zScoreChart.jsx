@@ -1,4 +1,3 @@
-/* eslint-disable react/prop-types */
 import { CartesianGrid, Line, LineChart, Tooltip, XAxis, YAxis, ResponsiveContainer, Label } from 'recharts';
 import BoysLengthZScores from './data/boysLengthZScoreDataset';
 import GirlsLengthZScores from './data/girlsLengthZScoreDataset';

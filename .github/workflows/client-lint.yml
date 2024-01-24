@@ -1,0 +1,17 @@
+name: Client Lint
+
+on:
+  pull_request:
+    branches:
+      - main
+      - staging
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install dependencies
+        run: yarn install
+      - name: Static code analysis
+        run: yarn lint

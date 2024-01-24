@@ -10,7 +10,6 @@ const Forum = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      console.log("here")
       try {
         const forumResponse = await fetchLandingPageForum();
         setLandingForumData(forumResponse);

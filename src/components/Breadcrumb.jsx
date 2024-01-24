@@ -1,8 +1,5 @@
-/* eslint-disable react/prop-types */
-
 import { NavLink } from "react-router-dom";
 
-// eslint-disable-next-line react/prop-types
 const Breadcrumb = ({ items }) => {
   return (
     <nav className="flex" aria-label="Breadcrumb">

@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import {
   Navbar,
-  MobileNav,
+  Collapse,
   IconButton,
 } from "@material-tailwind/react";
 import "../../styles/index.css";
@@ -170,12 +170,12 @@ const NavbarDefault = () => {
             </div>
           )}
         </div>
-        <MobileNav open={isMobileMenuOpen}>
+        <Collapse open={isMobileMenuOpen}>
           <div className="container">
             <hr className="border-gray-500 mt-3 w-screen" />
             {<NavList isScrolled={isScrolled}/>}
           </div>
-        </MobileNav>
+        </Collapse>
       </Navbar>
     </header>
   );
