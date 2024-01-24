@@ -8,10 +8,11 @@ on:
 
 jobs:
   lint:
+    name: Analyze Static Code
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - name: Install dependencies
         run: yarn install
-      - name: Static code analysis
+      - name: Lint
         run: yarn lint
