@@ -1,6 +1,6 @@
 // main.js
 import "../src/styles/index.css";
-import ReactDOM from "react-dom";
+import { createRoot } from "react-dom/client";
 import { Provider } from "react-redux";
 import store from "./configurations/store";
 import RouterComponent from "./configurations/router";
@@ -12,22 +12,42 @@ import { BMIProvider } from "./contexts/BmiContext";
 import { ConsultantProvider } from "./contexts/ConsultantContext";
 
 const queryClient = new QueryClient();
+const root = document.getElementById("root");
 
-ReactDOM.render(
-  <QueryClientProvider client={queryClient}>
-    <Provider store={store}>
-      <AuthProvider>
-        <ArticleProvider>
-          <ForumProvider>
-            <BMIProvider>
-              <ConsultantProvider>
-              <RouterComponent />
-              </ConsultantProvider>
-            </BMIProvider>
-          </ForumProvider>
-        </ArticleProvider>
-      </AuthProvider>
-    </Provider>
-  </QueryClientProvider>,
-  document.getElementById("root"),
-);
+if (root.hasChildNodes()) {
+  createRoot(root).hydrate(
+    <QueryClientProvider client={queryClient}>
+      <Provider store={store}>
+        <AuthProvider>
+          <ArticleProvider>
+            <ForumProvider>
+              <BMIProvider>
+                <ConsultantProvider>
+                <RouterComponent />
+                </ConsultantProvider>
+              </BMIProvider>
+            </ForumProvider>
+          </ArticleProvider>
+        </AuthProvider>
+      </Provider>
+    </QueryClientProvider>,
+  );
+} else {
+  createRoot(root).render(
+    <QueryClientProvider client={queryClient}>
+      <Provider store={store}>
+        <AuthProvider>
+          <ArticleProvider>
+            <ForumProvider>
+              <BMIProvider>
+                <ConsultantProvider>
+                <RouterComponent />
+                </ConsultantProvider>
+              </BMIProvider>
+            </ForumProvider>
+          </ArticleProvider>
+        </AuthProvider>
+      </Provider>
+    </QueryClientProvider>,
+  );
+}

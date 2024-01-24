@@ -1,4 +1,3 @@
-/* eslint-disable react/prop-types */
 import { useContext, useRef } from "react";
 import { NavLink } from "react-router-dom";
 import Slider from "react-slick";

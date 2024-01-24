@@ -1,4 +1,3 @@
-/* eslint-disable react/prop-types */
 import { createContext } from "react";
 import { fetchConsultants } from "../utils/api";
 import { useQuery } from "react-query";

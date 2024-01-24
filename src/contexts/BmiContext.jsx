@@ -1,4 +1,3 @@
-/* eslint-disable react/prop-types */
 // BMIContext.jsx
 import { createContext, useEffect, useState, useContext } from "react";
 import { axiosInstance as axios } from "../configurations/axiosInstance";

@@ -1,7 +1,6 @@
 import { Table, Thead, Tbody, Tr, Th, Td } from 'react-super-responsive-table';
 import 'react-super-responsive-table/dist/SuperResponsiveTableStyle.css';
 
-/* eslint-disable react/prop-types */
 const HistoryTable = ({ bmiList }) => {
   return (
     <>
