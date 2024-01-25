@@ -86,7 +86,7 @@ const ArticlePage = () => {
 
 
   return (
-    <>
+    <div className="flex flex-col min-h-screen">
       <Navbar />
       <div className="flex flex-col items-center gap-10 py-2 pr-4 pl-4">
         <div className="sm:px-24">
@@ -229,8 +229,9 @@ const ArticlePage = () => {
           </ul>
         </nav>
       </div>
+      <div className="flex-grow"/>
       <Footer />
-    </>
+    </div>
   );
 };
 

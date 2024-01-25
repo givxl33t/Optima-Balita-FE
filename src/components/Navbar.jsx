@@ -107,7 +107,8 @@ const NavbarDefault = () => {
                 title={currentUser.username}
               />
               <span
-                className={`hover:text-teal-400 text-gray-500 font-semibold text-md sm:block hidden`}
+                className={`hover:text-teal-400 text-gray-500 font-semibold text-md sm:block hidden overflow-hidden whitespace-nowrap xl:w-full ${currentUser.username.length > 16 ?
+                'lg:w-[160px] truncate' : ''}`}
               >
                 {currentUser.username}
               </span>

@@ -4,11 +4,13 @@ import BMICalculator from "../components/bmi/BMICalculator";
 
 const BmiPage = () => {
   return (
-    <>
+    <div className="flex flex-col min-h-screen">
       <Navbar />
-      <BMICalculator />
+      <div className="flex-grow">
+        <BMICalculator />
+      </div>
       <Footer />
-    </>
+    </div>
   );
 };
 

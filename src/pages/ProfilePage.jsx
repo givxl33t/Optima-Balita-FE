@@ -177,7 +177,7 @@ const ProfilePage = () => {
   };
 
   return (
-    <>
+    <div className="flex flex-col min-h-screen">
       <Navbar />
       <div className="container mx-auto mt-4 flex justify-center">
         <div className="max-w-md w-full bg-white border-2 border-gray-300 p-8 rounded-lg">
@@ -333,8 +333,9 @@ const ProfilePage = () => {
           </div>
         </div>
       </div>
+      <div className="flex-grow" />
       <Footer />
-    </>
+    </div>
   );
 };
 

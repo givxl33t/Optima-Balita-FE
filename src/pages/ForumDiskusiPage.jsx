@@ -129,9 +129,9 @@ const ForumDiskusiPage = () => {
   }
 
   return (
-    <>
+    <div className="flex flex-col min-h-screen">
       <Navbar />
-      <div className="pt-10 mx-4 md:mx-32">
+      <div className="pt-10 mx-4 md:mx-32 flex-grow">
         <div className="max-w-2xl mx-auto">
           <div className="space-y-4 col-span-1 flex flex-col">
             <form
@@ -181,7 +181,7 @@ const ForumDiskusiPage = () => {
                 Batal
               </button>
             </form>
-            <div className="forumDetail overflow-y-auto overflow-x-hidden mt-8">
+            <div className="max-h-screen overflow-y-auto overflow-x-hidden mt-8">
               {Array.isArray(forumData?.data) ? (
                 forumData.data.map((discussion, index) => (
                   <div
@@ -283,7 +283,7 @@ const ForumDiskusiPage = () => {
         </div>
       </div>
       <Footer />
-    </>
+    </div>
   );
 };
 
