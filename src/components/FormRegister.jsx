@@ -14,7 +14,6 @@ const RegisterForm = () => {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleRegisterSuccess = () => {
@@ -25,8 +24,6 @@ const RegisterForm = () => {
     e.preventDefault();
 
     try {
-      setLoading(true);
-
       const success = await register(username, email, password);
 
       if (success) {
@@ -64,8 +61,6 @@ const RegisterForm = () => {
         setErrorMessage("Terjadi kesalahan. Coba lagi nanti.");
       }
       console.error("Error during registration:", error.message);
-    } finally {
-      setLoading(false);
     }
   };
 

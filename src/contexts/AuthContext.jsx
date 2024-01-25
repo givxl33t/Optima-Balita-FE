@@ -1,4 +1,3 @@
-/* eslint-disable react/prop-types */
 import { axiosInstance as axios } from "../configurations/axiosInstance";
 import { createContext, useEffect, useState } from "react";
 import { updateUser } from "../utils/api";
@@ -6,6 +5,7 @@ import { updateUser } from "../utils/api";
 const API_URL = `${import.meta.env.VITE_API_URL}/auth`;
 
 export const AuthContext = createContext();
+
 
 export const AuthProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState(null);
@@ -153,7 +153,7 @@ export const AuthProvider = ({ children }) => {
           await getUserProfile();
         } catch (error) {
           console.error("Error fetching user profile:", error);
-          logout();
+          await logout();
         }
       }
       setCheckingUser(false);
@@ -165,7 +165,7 @@ export const AuthProvider = ({ children }) => {
           await fetchUserProfile();
         } catch (refreshError) {
           console.error("Error during token refresh:", refreshError);
-          logout();
+          await logout();
         }
       });
 
@@ -175,6 +175,7 @@ export const AuthProvider = ({ children }) => {
     } else {
       setCheckingUser(false);
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   const isLoggedIn = Boolean(currentUser);
 

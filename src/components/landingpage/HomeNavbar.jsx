@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import {
   Navbar,
-  MobileNav,
+  Collapse,
   IconButton,
 } from "@material-tailwind/react";
 import "../../styles/index.css";
@@ -126,7 +126,8 @@ const NavbarDefault = () => {
                 title={currentUser.username}
               />
               <span
-                className={`hover:text-teal-400 ${isScrolled ? "text-gray-500" : "text-gray-100"} font-semibold text-md sm:block hidden`}
+                className={`hover:text-teal-400 ${isScrolled ? "text-gray-500" : "text-gray-100"} font-semibold text-md sm:block hidden overflow-hidden whitespace-nowrap xl:w-full ${currentUser.username.length > 16 ?
+                  'lg:w-[160px] truncate' : ''}`}
               >
                 {currentUser.username}
               </span>
@@ -170,12 +171,12 @@ const NavbarDefault = () => {
             </div>
           )}
         </div>
-        <MobileNav open={isMobileMenuOpen}>
+        <Collapse open={isMobileMenuOpen}>
           <div className="container">
             <hr className="border-gray-500 mt-3 w-screen" />
             {<NavList isScrolled={isScrolled}/>}
           </div>
-        </MobileNav>
+        </Collapse>
       </Navbar>
     </header>
   );

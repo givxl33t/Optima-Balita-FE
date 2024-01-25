@@ -1,4 +1,3 @@
-/* eslint-disable react/prop-types */
 import { createContext, useEffect, useState, useContext } from "react";
 import { fetchForum } from "../utils/api";
 import { AuthContext } from "../contexts/AuthContext";

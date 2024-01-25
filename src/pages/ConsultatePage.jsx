@@ -4,11 +4,13 @@ import Navbar from "../components/Navbar";
 
 const ConsultatePage = () => {
   return (
-    <>
+    <div className="flex flex-col min-h-screen">
       <Navbar />
-      <Consultation />
+      <div className="flex-grow">
+        <Consultation />
+      </div>
       <Footer />
-    </>
+    </div>
   );
 };
 

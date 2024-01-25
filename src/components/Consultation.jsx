@@ -1,4 +1,3 @@
-/* eslint-disable react/prop-types */
 import { FaWhatsapp } from "react-icons/fa";
 import { useContext, useEffect, useRef } from "react";
 import { ConsultantContext } from "../contexts/ConsultantContext";

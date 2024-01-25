@@ -111,9 +111,9 @@ function DetailDiskusi() {
   dayjs.locale("id");
 
   return (
-    <>
+    <div className="flex flex-col min-h-screen">
       <Navbar />
-      <div className="">
+      <div className="flex-grow">
         <div className="sm:max-w-2xl w-full px-4 justify-center mx-auto mt-10">
           <div className="flex justify-between mb-4">
             <button>
@@ -122,7 +122,7 @@ function DetailDiskusi() {
             {isLoading ? (
               <p>Loading...</p>
             ) : forumData ? (
-              <p className="font-semibold text-lg">
+              <p className="font-semibold text-lg text-center">
                 Postingan dari{" "}
                 {discussion?.poster_username || "poster_username is undefined"}
               </p>
@@ -266,7 +266,7 @@ function DetailDiskusi() {
         </div>
       </div>
       <Footer />
-    </>
+    </div>
   );
 }
 
