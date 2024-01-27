@@ -55,7 +55,7 @@ const ArticleDetail = () => {
   ];
 
   return (
-    <>
+    <div className="flex flex-col min-h-screen">
       <Navbar />
       <div className="flex flex-col items-center gap-10 py-2 sm:py-10">
         <div className="sm:space-x-24">
@@ -102,8 +102,9 @@ const ArticleDetail = () => {
           </div>
         </div>
       </div>
+      <div className="flex-grow"/>
       <Footer />
-    </>
+    </div>
   );
 };
 
