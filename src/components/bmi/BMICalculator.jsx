@@ -192,9 +192,9 @@ const BMICalculator = () => {
                       minDate={minDate}
                       maxDate={new Date()}
                     />
-                    <span className="text-md pt-1 font-medium">
+                    <div className="text-md pt-1 font-medium">
                       {formBmiState.age_text}
-                    </span>
+                    </div>
                   </div>
                 </div>
                 <span id="ageError" style={{ color: "red" }}>
