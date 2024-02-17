@@ -21,11 +21,11 @@ jobs:
         with:
           docker_image: ${{ secrets.DOCKER_USERNAME }}/optimabalita-client
           tag_with_sha: true
-      # - name: Build and Push Image to Docker Hub
-      #   uses: docker/build-push-action@v5
-      #   with:
-      #     push: true
-      #     tags: ${{ steps.prepare.outputs.tag }}
+      - name: Build and Push Image to Docker Hub
+        uses: docker/build-push-action@v5
+        with:
+          push: true
+          tags: ${{ steps.prepare.outputs.tag }}
       - name: Create Docker Tag File
         run: echo "${{ steps.prepare.outputs.tag }}" > docker-tag.txt
       - name: Publish Tag as Artifact
