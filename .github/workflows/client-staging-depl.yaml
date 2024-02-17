@@ -26,11 +26,6 @@ jobs:
         with:
           push: true
           tags: ${{ steps.prepare.outputs.tag }}
-      - name: Publish Tag as Artifact
-        uses: actions/upload-artifact@v2
-        with:
-          name: docker-tag
-          path: ${{ steps.prepare.outputs.tag }}
 
   deploy:
     name: Deploy to GKE
@@ -47,12 +42,5 @@ jobs:
         with:
           cluster_name: optimabalita-stage
           location: asia-southeast2-c
-      - name: Get Docker Tag
-        uses: actions/download-artifact@v2
-        with:
-          name: docker-tag
-      - name: Read Docker Tag
-        id: read-docker-tag
-        run: echo ::set-output name=docker-tag::$(cat docker-tag)
       - name: Set New Image in K8s Deployment
-        run: kubectl set image deployment/optimabalita-client-depl optimabalita-client=${{ steps.read-docker-tag.outputs.docker-tag }}
+        run: kubectl set image deployment/optimabalita-client-depl optimabalita-client=${{ needs.publish.outputs.tag }}
