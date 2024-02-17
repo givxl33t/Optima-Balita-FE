@@ -342,12 +342,12 @@ const BMICalculator = () => {
                       disabled={disableCredentialInput}
                       dropdownMode="select"
                       placeholderText="Pilih Tanggal"
-                      className={`p-2 rounded-md border border-gray-300 ${disableCredentialInput ? "text-gray-500" : "text-gray-900"}`}
+                      className={`p-2 w-48 rounded-md border border-gray-300 ${disableCredentialInput ? "text-gray-500" : "text-gray-900"}`}
                       minDate={minDate}
                       maxDate={new Date()}
                     />
                     <button
-                      className={`absolute py-2 px-2 ml-52 rounded hover:bg-teal-700 transition duration-300 ${selectedDate === null ? "bg-teal-700 text-gray" : "bg-teal-500 text-white"}`}
+                      className={`absolute ml-52 py-2 px-2 rounded hover:bg-teal-700 transition duration-300 ${selectedDate === null ? "bg-teal-700 text-gray" : "bg-teal-500 text-white"}`}
                       onClick={handleShowAgeText}
                       disabled={selectedDate === null}
                     >
