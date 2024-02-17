@@ -13,7 +13,7 @@ const About = () => {
 
   return (
     <>
-      <section className="bg-white pt-5" id="about">
+      <div className="bg-white pt-5 xl:pt-20" id="about">
         <div className="container py-lg-5">
           <div 
             className="flex flex-col md:flex-row justify-center items-center mt-3"
@@ -45,7 +45,7 @@ const About = () => {
             </div>
           </div>
         </div>
-      </section>
+      </div>
     </>
   );
 };
