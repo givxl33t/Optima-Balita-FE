@@ -23,16 +23,15 @@ jobs:
         with:
           docker_image: ${{ secrets.DOCKER_USERNAME }}/optimabalita-client
           tag_with_sha: true
-      - name: Build and Push Image to Docker Hub
-        uses: docker/build-push-action@v5
-        with:
-          push: true
-          tags: ${{ steps.prepare.outputs.tag }}
-      - name: Echo the Docker Tag
-        run: echo ${{ steps.prepare.outputs.tag }}
+      # - name: Build and Push Image to Docker Hub
+      #   uses: docker/build-push-action@v5
+      #   with:
+      #     push: true
+      #     tags: ${{ steps.prepare.outputs.tag }}
       - name: Set Variable
         id: set-var
         run: |
+          echo "dockertag=${{ steps.prepare.outputs.tag }}" >> $GITHUB_ENV
           echo "dockertag=${{ steps.prepare.outputs.tag }}" >> $GITHUB_OUTPUT
 
   deploy:
@@ -51,5 +50,7 @@ jobs:
           cluster_name: optimabalita-stage
           location: asia-southeast2-c
       - name: Echo the Docker Tag
-        run: |
-          echo "dockertag=${{ needs.publish.outputs.dockertag }}"
+        run: echo |
+          echo ${{ needs.publish.outputs.dockertag }}
+        env:
+          DOCKER_TAG: ${{ needs.publish.outputs.dockertag }}
