@@ -20,6 +20,7 @@ jobs:
         uses: Surgo/docker-smart-tag-action@v1
         with:
           docker_image: ${{ secrets.DOCKER_USERNAME }}/optimabalita-client
+          tag_with_sha: true
       - name: Buld and Push Image to Docker Hub
         uses: docker/build-push-action@v5
         with:
