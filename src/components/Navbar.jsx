@@ -51,7 +51,7 @@ const NavbarDefault = () => {
   return (
     <header className={`sticky top-0 z-50 pt-2 px-2`}>
       <Navbar className="flex justify-between py-4 py-2 items-center xl:max-w-7xl xl:mx-auto max-w-full flex-wrap px-4 backdrop-saturate-200 backdrop-blur-2xl bg-opacity-80">
-        <NavLink to="/">
+        <NavLink to="https://www.patikab.go.id/v2/id/">
           <img src={Logo} alt="Logo" className="sm:w-12 w-12 cursor-pointer ml-3" />
         </NavLink>
         <div className="absolute hidden lg:block left-1/2 transform -translate-x-1/2">

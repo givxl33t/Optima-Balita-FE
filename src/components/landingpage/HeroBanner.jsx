@@ -11,10 +11,12 @@ const HeroBanner = () => {
       <main>
         <div className="pt-40 pb-40 flex content-center items-center justify-center">
           <div
-            className="absolute top-0 w-full h-full bg-center bg-cover"
+            className="absolute top-0 w-full h-[920px] bg-center bg-cover"
             style={{
               backgroundImage:
                 "url('https://i.postimg.cc/d0bQ4GGW/bg-hero.jpg')",
+              backgroundAttachment: "fixed",
+
             }}
           >
             <span
@@ -32,13 +34,13 @@ const HeroBanner = () => {
                   Kami hadir untuk mendukung perjalanan dalam mengatasi masalah
                   stunting dan mencapai kesehatan bersama.
                 </p>
-                <div className="mt-8">
+                <div className="mt-8 absolute">
                   {!currentUser && (
                     <NavLink
                     to="/login"
                     className="py-3 px-7 font-medium rounded-full text-md bg-gradient-to-r from-teal-600 to-teal-400 text-white hover:shadow-xl transition duration-300"
                   >
-                    Get Started
+                    Mulai Sekarang
                   </NavLink>
                   )}
                 </div>

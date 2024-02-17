@@ -85,7 +85,7 @@ const ArticleDetail = () => {
                 <img
                   src={article.image}
                   alt={`article ${article.id}`}
-                  className="rounded-lg"
+                  className="sm:max-w-xl rounded-lg"
                 />
                 <div
                   className="prose prose-slate"
