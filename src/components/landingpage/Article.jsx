@@ -59,7 +59,7 @@ const Article = () => {
   };
 
   return (
-    <div className="mx-auto">
+    <div className="mx-auto mt-5">
       <div className="text-center relative">
         <h4 className="font-bold mb-4 text-3xl text-teal-600">Artikel</h4>
         <p className="text-lg text-slate-800 mb-4">

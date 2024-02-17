@@ -7,7 +7,7 @@ const About = () => {
   useEffect(() => {
     AOS.init({
       duration: 500,
-      once: false,
+      once: true,
     });
   }, []);
 
@@ -22,7 +22,7 @@ const About = () => {
             <div className="md:w-1/2 mb-4 md:mb-0">
               <img
                 src={TentangKamiImg}
-                className="w-3/4 md:w-100 rounded-lg md:justify-center mx-auto"
+                className="mt-5 w-3/4 md:w-100 rounded-lg md:justify-center mx-auto"
                 alt="about image"
               />
             </div>
@@ -38,7 +38,8 @@ const About = () => {
                   untuk berbagi informasi penting mengenai stunting kepada
                   pengguna dan menyediakan ruang diskusi bagi pengguna yang
                   mengalami kesulitan, baik dalam pencegahan stunting maupun
-                  pengobatan stunting.
+                  pengobatan stunting. Website ini dikembangkan untuk melayani
+                  kesehatan balita pada wilayah kerja UPT Puskesmas Dukuhseti.
                 </p>
               </div>
             </div>

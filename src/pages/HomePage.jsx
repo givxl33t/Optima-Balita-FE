@@ -1,4 +1,5 @@
 import HeroBanner from "../components/landingpage/HeroBanner";
+import DetailPuskesmas from "../components/landingpage/DetailPuskesmas";
 import About from "../components/landingpage/About";
 import Article from "../components/landingpage/Article";
 import Forum from "../components/landingpage/Forum";
@@ -13,6 +14,7 @@ const HomePage = () => {
       <div className="flex-grow">
         <HeroBanner />
         <About />
+        <DetailPuskesmas />
         <Article />
         <Forum />
       </div>
