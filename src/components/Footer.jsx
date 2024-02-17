@@ -11,7 +11,7 @@ const Footer = () => {
               Kontak kami
             </h6>
             <p className="text-white font-normal text-base">
-              Apabila terdapat kendala saat mengakses website, atau terdapat
+              Jika terjadi kendala saat mengakses website, atau terdapat
               pelanggaran yang terjadi di forum diskusi. Silahkan hubungi kami
               melalui media sosial berikut :
             </p>

@@ -21,7 +21,7 @@ jobs:
         with:
           docker_image: ${{ secrets.DOCKER_USERNAME }}/optimabalita-client
           tag_with_sha: true
-      - name: Buld and Push Image to Docker Hub
+      - name: Build and Push Image to Docker Hub
         uses: docker/build-push-action@v5
         with:
           push: true
