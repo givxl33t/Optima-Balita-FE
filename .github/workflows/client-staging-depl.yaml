@@ -23,11 +23,11 @@ jobs:
         with:
           docker_image: ${{ secrets.DOCKER_USERNAME }}/optimabalita-client
           tag_with_sha: true
-      # - name: Build and Push Image to Docker Hub
-      #   uses: docker/build-push-action@v5
-      #   with:
-      #     push: true
-      #     tags: ${{ steps.prepare.outputs.tag }}
+      # Split the tag to get the sha
+      - name: Split Tag
+        id: split-tag
+        run: |
+          echo "::set-output name=tag::$(echo ${{ steps.prepare.outputs.tag }} | cut -d ':' -f 2)"
       - name: Set Variable
         id: set-var
         run: |
