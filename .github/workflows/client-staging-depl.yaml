@@ -10,7 +10,7 @@ jobs:
     name: Publish Artifact
     runs-on: ubuntu-latest
     outputs:
-      dockertag: ${{ steps.prepare.outputs.tag }}
+      dockertag: ${{ steps.set-var.outputs.dockertag }}
     steps:
       - name: Login to Docker Hub
         uses: docker/login-action@v3
@@ -28,6 +28,10 @@ jobs:
       #   with:
       #     push: true
       #     tags: ${{ steps.prepare.outputs.tag }}
+      - name: Set Variable
+        id: set-var
+        run: |
+          echo "dockertag=cars" >> $GITHUB_OUTPUT
 
   deploy:
     name: Deploy to GKE
