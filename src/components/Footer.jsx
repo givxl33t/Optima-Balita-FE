@@ -8,12 +8,12 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 py-3">
           <div className="">
             <h6 className="text-uppercase mb-4 font-bold text-md md:text-xl">
-              Optima Balita
+              Kontak kami
             </h6>
             <p className="text-white font-normal text-base">
               Apabila terdapat kendala saat mengakses website, atau terdapat
               pelanggaran yang terjadi di forum diskusi. Silahkan hubungi kami
-              melalui kontak berikut :
+              melalui media sosial berikut :
             </p>
             <div className="flex mt-4">
               <NavLink
@@ -44,7 +44,7 @@ const Footer = () => {
           </div>
 
           <div className="ml-0 md:ml-4">
-            <h6 className="mb-4 font-bold text-lg">Produk</h6>
+            <h6 className="mb-4 font-bold text-lg">Layanan kami</h6>
             <p>
               <NavLink to="/" className="text-white font-normal text-base">
                 Home
@@ -65,40 +65,18 @@ const Footer = () => {
             </p>
             <p>
               <NavLink to="/bmi" className="text-white font-normal text-base">
-                BMI
+                Kalkulator Gizi
+              </NavLink>
+            </p>
+            <p>
+              <NavLink to="/consult" className="text-white font-normal text-base">
+                Konsultasi
               </NavLink>
             </p>
           </div>
 
-          <div className="">
-            <h6 className="mb-4 font-bold text-lg">Service</h6>
-            <p>
-              <NavLink to="#" className="text-white font-normal text-base">
-                Video
-              </NavLink>
-            </p>
-            <p>
-              <NavLink
-                to="/article"
-                className="text-white font-normal text-base"
-              >
-                Artikel
-              </NavLink>
-            </p>
-            <p>
-              <NavLink to="/bmi" className="text-white font-normal text-base">
-                Kalkulator BMI
-              </NavLink>
-            </p>
-            <p>
-              <NavLink to="/forum" className="text-white font-normal text-base">
-                Stunting Talk
-              </NavLink>
-            </p>
-          </div>
-
-          <div className="">
-            <h6 className="mb-4 font-bold text-lg">Kontak kami</h6>
+          <div className="ml-0 md:ml-4">
+            <h6 className="mb-4 font-bold text-lg">Kontak pembuat</h6>
             <p>
               <NavLink to="/" className="text-white font-normal text-base">
                 Semarang
@@ -106,13 +84,20 @@ const Footer = () => {
             </p>
             <p>
               <NavLink to="/" className="text-white font-normal text-base">
-                test@gmail.com
+                givaro@gmail.com
               </NavLink>
             </p>
             <p>
               <NavLink to="/" className="text-white font-normal text-base">
                 +62 823-3184-4648
               </NavLink>
+            </p>
+          </div>
+
+          <div className="ml-0 md:ml-4">
+            <h6 className="mb-4 font-bold text-lg">Optima Balita</h6>
+            <p className="text-white font-normal text-base">
+              © 2024 Givaro. All rights reserved
             </p>
           </div>
         </div>

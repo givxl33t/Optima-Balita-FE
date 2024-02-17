@@ -70,7 +70,7 @@ const NavbarDefault = () => {
         ? "transition-colors duration-500 bg-white" 
         : "transition-colors duration-100 bg-transparent border border-transparent shadow-none backdrop-saturate-100 backdrop-blur-none"}`}
       >
-        <NavLink to="/">
+        <NavLink to="https://www.patikab.go.id/v2/id/">
           <img src={Logo} alt="Logo" className="sm:w-12 w-12 cursor-pointer ml-3" />
         </NavLink>
         <div className="absolute hidden lg:block left-1/2 transform -translate-x-1/2">

@@ -15,6 +15,7 @@ const HeroBanner = () => {
             style={{
               backgroundImage:
                 "url('https://i.postimg.cc/d0bQ4GGW/bg-hero.jpg')",
+              backgroundAttachment: "fixed",
             }}
           >
             <span
@@ -38,7 +39,7 @@ const HeroBanner = () => {
                     to="/login"
                     className="py-3 px-7 font-medium rounded-full text-md bg-gradient-to-r from-teal-600 to-teal-400 text-white hover:shadow-xl transition duration-300"
                   >
-                    Get Started
+                    Mulai Sekarang
                   </NavLink>
                   )}
                 </div>

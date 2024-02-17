@@ -58,19 +58,19 @@ export const BMIProvider = ({ children }) => {
         setBMIList((prevBMIList) => [...prevBMIList, res.data.data]);
       });
 
-
+      return true;
     } catch (error) {
       console.error("Error while sending BMI data to API:", error);
 
       if (error.response) {
-        console.error("API Error:", error.response.data);
-
         Swal.fire({
           icon: "error",
           title: "Kalkulasi Gagal",
           text: error.response.data.message,
         });
       }
+
+      return false;
     }
   };
 

@@ -66,7 +66,7 @@ const HistoryTable = ({ bmiList }) => {
             </Tbody>
           </Table>
       ) : (
-        <p className="text-gray-900">Riwayat BMI kosong</p>
+        <p className="text-gray-900 text-center">Riwayat BMI kosong</p>
       )}
     </>
   );
