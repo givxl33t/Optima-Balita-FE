@@ -55,6 +55,6 @@ jobs:
           name: docker-tag
       - name: Read Docker Tag from File
         id: read-docker-tag
-        run: echo "::set-output name=docker-tag::$(cat docker-tag.txt)"
+        run: echo "::set-output name=docker-tag::$(cat docker-tag.txt | awk -F',' '{print $2}' | tr -d '[:space:]')"
       - name: Set Image in Kubernetes Deployment
         run: kubectl set image deployment/optimabalita-client-depl optimabalita-client=${{ steps.read-docker-tag.outputs.docker-tag }}
