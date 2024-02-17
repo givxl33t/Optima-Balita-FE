@@ -28,6 +28,11 @@ jobs:
         with:
           push: true
           tags: ${{ steps.prepare.outputs.tag }}
+      - name: Echo the Docker Tag
+        run: echo ${{ steps.prepare.outputs.tag }}
+      - name: Set Variable
+        id: set-output
+        run: echo "::set-output name=dockertag::${{ steps.prepare.outputs.tag }}"
 
   deploy:
     name: Deploy to GKE
