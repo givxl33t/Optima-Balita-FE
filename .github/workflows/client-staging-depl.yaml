@@ -31,7 +31,7 @@ jobs:
       - name: Set Variable
         id: set-var
         run: |
-          echo "dockertag=cars" >> $GITHUB_OUTPUT
+          echo "dockertag=${{ steps.prepare.outputs.tag }}" >> $GITHUB_OUTPUT
 
   deploy:
     name: Deploy to GKE
