@@ -15,8 +15,6 @@ const HeroBanner = () => {
             style={{
               backgroundImage:
                 "url('https://i.postimg.cc/d0bQ4GGW/bg-hero.jpg')",
-              backgroundAttachment: "fixed",
-
             }}
           >
             <span

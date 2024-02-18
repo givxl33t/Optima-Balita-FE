@@ -34,7 +34,7 @@ const Forum = () => {
   return (
     <section>
       <div className="py-10 flex flex-col items-center justify-center mx-4">
-        <h4 className="font-bold mb-2 md:text-3xl text-xl text-center text-teal-600">
+        <h4 className="font-bold mb-4 md:text-3xl text-xl text-center text-teal-600">
           Forum Diskusi Stunting
         </h4>
         <p className="md:max-w-2xl max-w-full text-center md:text-lg text-base text-slate-800">

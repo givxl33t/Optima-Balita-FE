@@ -34,6 +34,7 @@ const ArticleDetail = () => {
     };
 
     fetchArticleDetail();
+    window.scrollTo(0, 0);
   }, [getArticles, articleSlug]);
 
   const breadcrumbItems = [
