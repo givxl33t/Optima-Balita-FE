@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import HeroBanner from "../components/landingpage/HeroBanner";
 import DetailPuskesmas from "../components/landingpage/DetailPuskesmas";
 import About from "../components/landingpage/About";
@@ -8,6 +9,10 @@ import HomeNavbar from "../components/landingpage/HomeNavbar";
 import Footer from "../components/Footer";
 
 const HomePage = () => {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  });
+
   return (
     <div className="flex flex-col min-h-screen">
       <HomeNavbar />
