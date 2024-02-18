@@ -23,21 +23,21 @@ const DetailPuskesmas = () => {
   return (
     <>
       <div className="bg-white pt-5" id="detailpuskesmas">
-        <div className="container py-lg-5">
+        <div className="container py-lg-5 mx-auto">
           <div 
-            className="flex flex-col md:flex-row justify-right items-center mt-3"
+            className="flex flex-col xl:flex-row justify-center items-center mt-3"
             data-aos="fade-up"
           >
-            <div className="md:w-1/2 mb-4 md:mb-0">
+            <div className="mb-4 md:mb-0">
               <img
                 src={FotoPuskesmasImg}
-                className="mt-5 w-3/4 rounded-xl md:justify-center mx-auto"
+                className="mt-5 w-3/4 md:w-100 rounded-xl md:justify-center mx-auto"
                 alt="about image"
               />
             </div>
             <div className="md:w-[500px] p-4" data-aos="fade-up">
               <h4 className="font-bold mb-3 text-2xl sm:text-3xl">
-                UPT Puskesmas Dukuhseti
+                Profil Puskesmas
               </h4>
               <p className="font-normal mb-3 text-md sm:text-lg text-gray-800">
                 UPT Puskesmas Dukuhseti merupakan suatu kesatuan organisasi kesehatan
@@ -47,7 +47,7 @@ const DetailPuskesmas = () => {
                 di Kecamatan Dukuhseti yang berjarak 37 km dari pusat kota Pati.
               </p>
             </div>
-            <div className="min-w-72 h-64 p-4" data-aos="fade-up">
+            <div className="w-3/4 md:w-96 h-64 p-4" data-aos="fade-up">
               <GoogleMapReact
                 bootstrapURLKeys={{ key: "AIzaSyBudN-V7ZMxiYJXGvJAlx3J-791Ca-eoJg" }}
                 defaultCenter={{ lat: -6.47494131050319, lng: 111.03787375147829 }}
