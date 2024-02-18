@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect } from "react";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import { AuthContext } from "../contexts/AuthContext";
@@ -20,6 +20,10 @@ const ProfilePage = () => {
   const [password, setPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [profileImage, setProfileImage] = useState(null); // Add state for the profile image
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  });
 
   const handleUpdateProfile = async () => {
     if (name === "") {

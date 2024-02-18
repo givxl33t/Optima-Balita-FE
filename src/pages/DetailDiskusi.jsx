@@ -49,8 +49,9 @@ function DetailDiskusi() {
       } else {
         fetchData();
       }
-
     }
+
+    window.scrollTo(0, 0);
   }, [forumData, id, isLoading, setForumData]);
 
   if (isLoading) {

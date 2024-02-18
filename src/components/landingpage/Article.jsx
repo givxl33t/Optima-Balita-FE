@@ -62,7 +62,7 @@ const Article = () => {
     <div className="mx-auto pt-10">
       <div className="text-center relative">
         <h4 className="font-bold mb-4 text-3xl text-teal-600">Artikel</h4>
-        <p className="text-lg text-slate-800 mb-4">
+        <p className="text-lg text-slate-800 mb-4 mx-4">
           Geser untuk menemukan berbagai informasi menarik tentang stunting
         </p>
         <div className="overflow-hidden">
