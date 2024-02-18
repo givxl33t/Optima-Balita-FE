@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useQuery } from "react-query";
 import { fetchArticles } from "../utils/api";
 import { ArticleContext } from "../contexts/ArticleContext";
@@ -13,6 +13,11 @@ const ArticlePage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState("");
   const [submittedQuery, setSubmittedQuery] = useState("");
+  
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  });
+  
 
   const fetchArticlesForCurrentPage = useQuery(
     ["articles", currentPage, 4, submittedQuery], // Step 4: Include search query in the query key

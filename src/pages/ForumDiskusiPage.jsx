@@ -1,4 +1,4 @@
-import { useContext, useState, useRef } from "react";
+import { useContext, useState, useEffect, useRef } from "react";
 import { ForumContext } from "../contexts/ForumContext";
 import { AuthContext } from "../contexts/AuthContext";
 import {
@@ -28,6 +28,10 @@ const ForumDiskusiPage = () => {
     title: "",
     post_content: "",
     created_at: Date.now(),
+  });
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
   });
 
   dayjs.extend(relativeTime);
