@@ -4,7 +4,7 @@ import LoginForm from "../components/FormLogin";
 const LoginPage = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
-  });
+  }, []);
 
   return (
     <div>
