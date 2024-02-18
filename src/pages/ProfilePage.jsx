@@ -23,7 +23,7 @@ const ProfilePage = () => {
 
   useEffect(() => {
     window.scrollTo(0, 0);
-  });
+  }, []);
 
   const handleUpdateProfile = async () => {
     if (name === "") {

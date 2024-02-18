@@ -32,7 +32,7 @@ const ForumDiskusiPage = () => {
 
   useEffect(() => {
     window.scrollTo(0, 0);
-  });
+  }, []);
 
   dayjs.extend(relativeTime);
   dayjs.locale("id");
